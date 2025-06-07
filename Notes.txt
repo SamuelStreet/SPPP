@@ -1,0 +1,9 @@
+Notes:
+
+Need to ensure variables are overwitten when user gives them
+
+Issues:
+- cwd should not be able to be editied
+- no saftey when loading a json file - program may crash if broken json loaded
+- any variable used in the load button function may override and break the program if used in the custom varibale box,
+  temperary fix has been enacted by not using any simple variable names ex i, v, j
