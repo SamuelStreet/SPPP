@@ -1,4 +1,5 @@
 import wx
+import wx.lib.scrolledpanel
 import os
 import json
 from Default_Settings import Default
@@ -12,40 +13,52 @@ class popup_window(wx.Frame):
     def Help(self, text, cwd):
         icon = wx.Icon(cwd+"\\photos\\Help Icon.png")
         self.SetIcon(icon)
-        self.panel = wx.Panel(self)
-        size = (900, 500)
-        self.SetMinSize(size)
-        self.SetMaxSize(size)
+        size = (1150, 500)
+        self.panel = wx.lib.scrolledpanel.ScrolledPanel(self, -1, pos=(0,0), size=size, style=wx.SIMPLE_BORDER)
+        self.panel.SetupScrolling()
+        # self.panel.SetScrollPos(wx.VERTICAL, wx.EVT_SCROLL,True)
+        # need to add something that changes the position of the scrollbar on scrolling
         self.SetSize(size)
-        wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
+        font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        textbox_sizer = wx.BoxSizer(wx.VERTICAL) 
+        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-40, 1000), pos=(10,10))
+        textbox.SetFont(font)
+        textbox_sizer.Add(textbox)
+        self.panel.SetSizer(textbox_sizer)
         self.Show()
 
-    def Info(self, text, size = (250, 150), cwd=""):
+    def Info(self, text, size = (400, 250), cwd=""):
         icon = wx.Icon(cwd+"\\photos\\Info Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
         self.SetMaxSize(size)
         self.panel = wx.Panel(self)
-        wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-35), pos=(10,10))
+        textbox=wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-35), pos=(10,10))
+        font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        textbox.SetFont(font)
 
-    def Warning(self, text, size = (250, 150), cwd=""):
+    def Warning(self, text, size = (400, 250), cwd=""):
         icon = wx.Icon(cwd+"\\photos\\Warning Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
         self.SetMaxSize(size)
         self.panel = wx.Panel(self)
-        wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
+        textbox=wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
+        font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        textbox.SetFont(font)
 
-    def Error(self, text, size = (250, 150), cwd=""):
+    def Error(self, text, size = (400, 250), cwd=""):
         icon = wx.Icon(cwd+"\\photos\\Error Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
         self.SetMaxSize(size)
         self.panel = wx.Panel(self)
-        wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
+        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
+        font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        textbox.SetFont(font)
 
     def Update_Self_for_Settings(self, settings, load, size = (400, 550)):
         self.load = load

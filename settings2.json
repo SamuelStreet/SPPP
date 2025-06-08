@@ -1,1 +1,0 @@
-{"xmin": -10.0, "xmax": 10.0, "ymin": -5.0, "ymax": 5.0, "arrow_scale": 0.5, "starting_points": [[1, 1]], "h": 0.001, "xdensity": 10.0, "ydensity": 10.0, "steps": 10000, "method": "Euler", "stop_variable_override_warning": true, "termination_warning": true, "settings_file": "\\settings2.json", "cwd": "C:\\Users\\Samuel\\Downloads\\Programming related\\Python\\PPP"}

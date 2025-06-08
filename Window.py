@@ -31,8 +31,13 @@ class MainFrame(wx.Frame):
         self.SetBackgroundColour("#282a30") # dark blue grey for the time being
         self.SetMinSize((600,400))
         self.SetSize((850, 600))
+        font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        #(pixelSize, family, style(italic type), weight(boldness), underline)
+        # more info at https://docs.wxpython.org/4.0.7/wx.Font.html
+        self.SetFont(font)
 
         self.panel = wx.Panel(self) # for holding things (things should not be held just by the window)
+        self.panel.SetFont(font)
 
         # Sets up the settings allow allowing for multiple files. 
         if not os.path.exists(self.cwd+'\\settings.json'):
@@ -232,37 +237,52 @@ class MainFrame(wx.Frame):
 
     def help_button_pushed(self, sig):
         window = popup_windows.popup_window(self)
-        window.Help("HELP\n \
-        Functions which have been implemented: sin, cos, tan, arcsin, arccos, arctan, sinh, cosh, tanh, log = ln, log10, log2\n \
-        To use the Variables box just type in your variables in a comma separated formate, please do not use variables that have \
-        the smae name as implemented functions\n\n"
-        +"TO USE:\n \
-        Type formula for dx/dy and dydt, type out variables and then press the load button in order to get the plot to load. \
-        Use settings in order to modify how the plot is made. To save your formulas and variables press the save button  \
-        + ICON HERE +, to load a previously saved formula and variables press the open file button + ICON HERE + NOTE:  \
-        THESE FEATURES ARE NOT YET ACTIVE. If you would like you make also upgrade to the plus version of this program  \
-        which has all the same features as this program, but also plots 3D functions -- Also not yet implemented. \n\n\
-        SETTINGS:\n \
-        xmin           : Sets the minimium value for the x axis \n \
-        xmax           : Sets the maximium value for the x axis \n \
-        ymin           : Sets the minimium value for the y axis \n \
-        ymax           : Sets the maximium value for the y axis \n \
-        arrow_scale    : Sets the scale of the arrows used in the phase plot, less than 1 means arrows will appear smaller than they really are \n \
-        starting_points: this should be a list of tuple(s) which contain the starting points you would like the plot to start \
-        from, for example [(1,1)] would mean the plot will start from the coordinates (1,1), [(1,1),(1,2)] would mean the plot will \
-        draw 2 separate lines, 1 from (1,1) and the other from (2,1) \n \
-        h              : This is the change value used in numarical integration \n \
-        xdensity       : This number coresponds to the number of arrows that will be used along the x axis in the phase plot \
-        larger means more arrows \n \
-        ydensity       : This number coresponds to the number of arrows that will be used along the y axis in the phase plot \
-        larger means more arrows \n \
-        steps          : Sets the number of iterations the numarical integration technique chosen will use \n \
-        method         : Chose the numerical method that you would like to use. Currently can only select Euler, \
-        more will be added with updates\n\n \
-        Note: \n \
-        This plotter program will stop plotting soon after a max or min value is reached \n \
-        Do NOT DELETE settings.json, will revert to default settings even if other file was specified, can re-specify new file", self.settings["cwd"])
-
+        window.Help("HELP:\n"
+                    +"\tTo use this program enter the ODEs you would like to model in the dx/dt and dy/dt boxes\n"
+                    +"\tand then press the play button (►).\n"
+                    +"\t\tThe following functions may be used:\n"
+                    +"\t\t\tsin, cos, tan, arcsin, arccos, arctan, sinh, cosh, tanh, log = ln, log10, log2\n"
+                    +"\tIndicate any variables you would like to use in the variables box by typing them out\n"
+                    +"\t\tex: a=5, β = 10, length = 7\n"
+                    +"Settings:\n"
+                    +"\tThere are many settings to play with which include:\n"
+                    +"\txmin           : Sets the minimium value for the x axis \n"
+                    +"\txmax           : Sets the maximium value for the x axis \n"
+                    +"\tymin           : Sets the minimium value for the y axis \n"
+                    +"\tymax           : Sets the maximium value for the y axis \n"
+                    +"\tarrow_scale    : Sets the scale of the arrows used in the phase plot:\n"
+                        +"\t\t\t 1 means arrows are the actual size, <1 means arrows will appear smaller than they \n"
+                        +"\t\t\t really are, >1 means arrows appear bigger\n"
+                    +"\tstarting_points: This should be a list of tuple(s) which contain the starting points you\n"
+                        +"\t\t\t would like the plot to start from, for example [(1,1)] would mean the plot will \n"
+                        +"\t\t\t start from the coordinates (1,1), [(1,1),(1,2)] would mean the plot will draw 2 \n"
+                        +"\t\t\t separate lines, (from (1,1) and the other from (2,1))\n"
+                    +"\th              : This is the change value used in numarical integration\n"
+                    +"\txdensity       : This number coresponds to the number of arrows that will be used along\n"
+                        +"\t\t\t the x axis in the phase plot (larger means more arrows) \n"
+                    +"\tydensity       : This number coresponds to the number of arrows that will be used along\n"
+                        +"\t\t\t the y axis in the phase plot (larger means more arrows) \n"
+                    +"\tsteps          : Sets the number of iterations the numarical integration technique chosen\n"
+                        +"\t\t\t will use \n"
+                    +"\tmethod         : Choose the numerical method that you would like to use. Currently can only\n"
+                        +"\t\t\t select Euler, more will be added with updates\n"
+                    +"\tstop_WARNING   : Choose to stop seeing certain warnings by writing True in these boxes\n"
+                    +"\tsettings_file  : You may select a new settings file or svae multiple settings files if \n"
+                        +"\t\t\t you would like, but do not delete the origional settings file (if you do it will \n"
+                        +"\t\t\t just be recreated later)\n"
+                    +"\tSettings Buttons:\n"
+                    +"\t\tApply: Applies settings, but does not save them\n"
+                    +"\t\tSave: Applies and saves settings in the indicated file\n"
+                    +"\t\tReset: Resets all settings to the indicated file\n"
+                    +"\t\tDefault: Resets all setting to default values if needed\n"
+                    +"Save Button:\n"
+                        +"\tThis button allows you to save a copy of the formulas, settings, and loaded html file\n"
+                        +"\tto a folder for later use. - Not yet implemented\n"
+                    +"File button:\n"
+                        +"\tThis button allows ou to open a saved plot with saved settings and equations for easy\n"
+                        +"\tmodification. - Not yet implemented\n"
+                    +"\n\nNote: \n"
+                    +"\tThis plotter program will stop plotting soon after a max or min value is reached \n", self.settings["cwd"])
 
     def load_button_pushed(self, sig=None, from_settings = False):
         dxdt_text = self.dxdt_textbox_text.GetValue()

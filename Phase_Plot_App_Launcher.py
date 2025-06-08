@@ -15,6 +15,7 @@ if __name__ == "__main__":
 # https://stackoverflow.com/questions/12498691/how-can-i-place-a-panel-in-another-panel to help with class based set up
 # https://www.youtube.com/watch?v=GV6dx82E_PE buttons (also used other videos in this series for other information)
 # stack overflow in general - many questions
+# wxPython documentation - of course
 # many wxPython comment groups
 # Google Draw - for icons
 # Screen Shot of folder for folder icon
