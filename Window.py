@@ -1,5 +1,6 @@
 import wx
 import wx.html2
+import shutil # for copying files
 from plot_maker_2D import make_figure
 #from Settings_File import Settings
 from Default_Settings import Default
@@ -100,7 +101,7 @@ class MainFrame(wx.Frame):
         settings_button.SetMaxSize((bw, bh))
         settings_button.SetBackgroundColour("#ffffff")
         ##
-        settings_photo = wx.Bitmap(self.cwd+"\photos\Settings Icon.png")
+        settings_photo = wx.Bitmap(self.cwd+"\\photos\\Settings Icon.png")
         image = wx.ImageFromBitmap(settings_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         settings_photo = wx.BitmapFromImage(image)
@@ -226,14 +227,79 @@ class MainFrame(wx.Frame):
         settings_window.Show()
 
     def save_file_button_pushed(self, sig):
-        save_window = popup_windows.popup_window(self)
-        save_window.Save(cwd=self.settings["cwd"])
-        save_window.Show()
+        ##### this is from https://www.blog.pythonlibrary.org/2010/06/26/the-dialogs-of-wxpython-part-1-of-2/
+        # with very few modificarions
+        dlg = wx.DirDialog(self, "Choose a directory:",
+                           style=wx.DD_DEFAULT_STYLE,
+                           #| wx.DD_DIR_MUST_EXIST
+                           #| wx.DD_CHANGE_DIR
+                           )
+        if dlg.ShowModal() == wx.ID_OK:
+            print("You chose %s" % dlg.GetPath()) #prints where the user selected (program will not work without this statement)
+            save_location = dlg.GetPath()
+        dlg.Destroy()
+        ######
+        try:
+            with open(save_location+'\\settings.json', "w") as f:
+                f.write(json.dumps(self.settings))
+
+            shutil.copyfile(self.settings["cwd"]+"\\Display_Plot.html", save_location+'\\Display_Plot.html')
+
+            with open(save_location+'\\Equations.txt', "w") as f:
+                f.write(self.dxdt_textbox_text.GetValue()+",")
+                f.write(self.dydt_textbox_text.GetValue()+",")
+                f.write(self.variables_box_text.GetValue())
+        except:
+            save_error = popup_windows.popup_window(self)
+            save_error.Error("ERROR: file not saved properly", cwd=self.settings["cwd"])
+            save_error.Show()
 
     def open_file_button_pushed(self, sig):
-        file_window = popup_windows.popup_window(self)
-        file_window.File(cwd=self.settings["cwd"])
-        file_window.Show()
+        dlg = wx.DirDialog(self, "Choose a directory:",
+                    style=wx.DD_DEFAULT_STYLE,
+                    #| wx.DD_DIR_MUST_EXIST
+                    #| wx.DD_CHANGE_DIR
+                    )
+        if dlg.ShowModal() == wx.ID_OK:
+            print("You chose %s" % dlg.GetPath()) #prints where the user selected (program will not work without this statement)
+            file_location = dlg.GetPath()
+        dlg.Destroy()
+
+        try:
+            #sets the settings
+            with open(file_location+'\\settings.json', "r") as f:
+                self.settings = json.load(f)
+            
+            #makes directory
+            #Need to fix this bit so old directory can be created
+            if(os.path.exists(self.settings["cwd"]+self.settings["settings_file"]) != True):
+                os.makedirs(self.settings["cwd"]+self.settings["settings_file"], exist_ok=True)
+            #copies contents of loaded settings file
+            with open(self.settings["cwd"]+self.settings["settings_file"], "w") as f:
+                f.write(json.dumps(self.settings))
+
+            #sets the display
+            global filepath
+            filepath = "file:///"+file_location+'\\Display_Plot.html'
+            self.display.display.LoadURL(filepath)
+            
+            #sets the equation boxes
+            with open(file_location+'\\Equations.txt', "r") as f:
+                equation_stuff = f.readline()
+                equation_stuff = equation_stuff.split(",")
+            self.dxdt_textbox_text.SetValue(equation_stuff[0])
+            self.dydt_textbox_text.SetValue(equation_stuff[1])
+            self.variables_box_text.SetValue(equation_stuff[2])
+
+            #This does not actually have to be copied back, since if the load button is pushed then everything is all reset
+            #shutil.copyfile(file_location+'\\Display_Plot.html', self.settings["cwd"]+"\\Display_Plot.html") # This is copied at the end to the display updates quicker
+
+        except Exception as e:
+            file_error = popup_windows.popup_window(self)
+            file_error.Error("Error: something is wrong with the saved file " + file_location, cwd=self.settings["cwd"])
+            file_error.Show()
+            print("error: ", end="")
+            print(e)
 
     def help_button_pushed(self, sig):
         window = popup_windows.popup_window(self)
@@ -277,10 +343,12 @@ class MainFrame(wx.Frame):
                     +"\t\tDefault: Resets all setting to default values if needed\n"
                     +"Save Button:\n"
                         +"\tThis button allows you to save a copy of the formulas, settings, and loaded html file\n"
-                        +"\tto a folder for later use. - Not yet implemented\n"
+                        +"\tto a folder for later use.\n"
                     +"File button:\n"
                         +"\tThis button allows ou to open a saved plot with saved settings and equations for easy\n"
-                        +"\tmodification. - Not yet implemented\n"
+                        +"\tmodification. WARNING: if you load a saved file, the settings file stored in the\n"
+                        +"\tsettings_file section in settings will be overwritten with the saved file even if it\n"
+                        +"\thas been modified in a different session when using this program"
                     +"\n\nNote: \n"
                     +"\tThis plotter program will stop plotting soon after a max or min value is reached \n", self.settings["cwd"])
 

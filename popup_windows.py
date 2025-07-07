@@ -153,18 +153,20 @@ class popup_window(wx.Frame):
         self.settings["stop_variable_override_warning"] = bool(self.stop_variable_override_warning_setting_box.GetValue())
         self.settings["termination_warning"] = bool(self.termination_warning_setting_box.GetValue())
         self.settings["settings_file"] = self.settings_file_setting_box.GetValue()
+        if(self.settings["settings_file"][0]!="\\"):
+            self.settings["settings_file"] = "\\"+self.settings["settings_file"]
         # self.settings["cwd"] = self.cwd_setting_box.GetValue()
         # cwd should not be edited
         self.load(from_settings=True)
 
     def save_settings_button_pushed(self, sig):
         self.apply_settings_button_pushed()
-        if(self.settings["settings_file"][0]!="\\"):
-            self.settings["settings_file"] = "\\"+self.settings["cwd"]
         if(self.settings["settings_file"]==""):
             cwd = self.settings["cwd"]
             variable_override_warning = popup_window(self).Error("Error: settings_file is unspecified so unfortunatly I don't know where to get settings", cwd=cwd)
             variable_override_warning.Show()
+        elif(self.settings["settings_file"][0]!="\\"):
+            self.settings["settings_file"] = "\\"+self.settings["settings_file"]
         elif not os.path.exists(self.settings["cwd"]+"\\".join(self.settings["settings_file"].split("\\")[:-1])):
             # "\\".join(self.settings["settings_file"].split("\\")[:-1]) 
             # self.settings["settings_file"] = custome settings file
@@ -271,14 +273,6 @@ class popup_window(wx.Frame):
 
         # just need to make sure this is sent back properly
 
-    def Save(self, text="", size = (250, 150), cwd=""):
-        icon = wx.Icon(cwd+"\\photos\\Save Icon.png")
-        self.SetIcon(icon)
-        self.SetSize(size)
-        self.SetMinSize(size)
-        self.SetMaxSize(size)
-        self.panel = wx.Panel(self)
-        wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
 
     def File(self, text="", size = (250, 150), cwd=""):
         icon = wx.Icon(cwd+"\\photos\\File Icon.png")
