@@ -20,7 +20,7 @@ class Display_Window(wx.Panel):
 #This is the main class for the application, settings stored here when running
 class MainFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter")
+        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.1.0")
         
         self.cwd = os.getcwd()
 
@@ -32,7 +32,7 @@ class MainFrame(wx.Frame):
         self.SetBackgroundColour("#282a30") # dark blue grey for the time being
         self.SetMinSize((600,400))
         self.SetSize((850, 600))
-        font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        font = wx.Font(10, wx.FONTFAMILY_DECORATIVE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         #(pixelSize, family, style(italic type), weight(boldness), underline)
         # more info at https://docs.wxpython.org/4.0.7/wx.Font.html
         self.SetFont(font)
@@ -64,7 +64,7 @@ class MainFrame(wx.Frame):
 
         ## BUTTONS, pannels, textboxes, ...
         dxdt_label =wx.Panel(self.panel, size = (80, 40))
-        wx.StaticText(parent=dxdt_label, id=-1, label="dx/dt", style=wx.ALIGN_CENTER, size=dxdt_label.GetSize())
+        wx.StaticText(parent=dxdt_label, id=-1, label=r'$\frac{dx}{dt}$', style=wx.ALIGN_CENTER, size=dxdt_label.GetSize())
         dxdt_label.SetBackgroundColour("#ffffff") # #ffffff = white
 
         dydt_label = wx.Panel(self.panel, size = (80, 40))
@@ -91,7 +91,7 @@ class MainFrame(wx.Frame):
         bh = 40 # button height
         bw = 40 # button width
         global filepath
-        filepath = "file:///"+self.cwd+"/Display_Plot_Clear.html"
+        filepath = "file:///"+self.cwd+"/Graphs/Display_Plot_Clear.html"
         self.display = Display_Window(self.panel)
         self.display.SetBackgroundColour("#ffffff")
 
@@ -190,7 +190,7 @@ class MainFrame(wx.Frame):
 
         ba = 5 # border_adjustment
         l2_1.AddSpacer(ba)
-        l2_1.Add(self.display,       proportion=20, flag=wx.EXPAND)
+        l2_1.Add(self.display,  proportion=20, flag=wx.EXPAND)
         l2_1.AddSpacer(ba)
         l2_1.Add(l3_1,          proportion=1, flag=wx.EXPAND)
         l2_1.AddSpacer(ba)
@@ -217,16 +217,19 @@ class MainFrame(wx.Frame):
         self.display.display.SetSize(self.display.GetSize())
         self.Show()
 
-    #NOTE: every function must be passed at least a signal since the buttons all send a signal
+    #NOTE: every function must be passed at least a eventnal since the buttons all send a eventnal
     #from Phase_Plot_App import frame
 
-    def settings_button_pushed(self, sig):
+    def resize(self, event=None):
+        pass#self.display.display.SetSize(self.display.GetSize())
+
+    def settings_button_pushed(self, event):
         settings_window = popup_windows.popup_window(self)
         settings_window.Update_Self_for_Settings(settings=self.settings, load = self.load_button_pushed) #fills out information needed for Settings Window
         settings_window.Settings() #Makes settings window and then returns new setting (which are used) in settings_window.settings
         settings_window.Show()
 
-    def save_file_button_pushed(self, sig):
+    def save_file_button_pushed(self, event):
         ##### this is from https://www.blog.pythonlibrary.org/2010/06/26/the-dialogs-of-wxpython-part-1-of-2/
         # with very few modificarions
         dlg = wx.DirDialog(self, "Choose a directory:",
@@ -243,7 +246,7 @@ class MainFrame(wx.Frame):
             with open(save_location+'\\settings.json', "w") as f:
                 f.write(json.dumps(self.settings))
 
-            shutil.copyfile(self.settings["cwd"]+"\\Display_Plot.html", save_location+'\\Display_Plot.html')
+            shutil.copyfile(self.settings["cwd"]+"\\Graphs\\Display_Plot.html", save_location+'\\Display_Plot.html')
 
             with open(save_location+'\\Equations.txt', "w") as f:
                 f.write(self.dxdt_textbox_text.GetValue()+",")
@@ -254,7 +257,7 @@ class MainFrame(wx.Frame):
             save_error.Error("ERROR: file not saved properly", cwd=self.settings["cwd"])
             save_error.Show()
 
-    def open_file_button_pushed(self, sig):
+    def open_file_button_pushed(self, event):
         dlg = wx.DirDialog(self, "Choose a directory:",
                     style=wx.DD_DEFAULT_STYLE,
                     #| wx.DD_DIR_MUST_EXIST
@@ -292,7 +295,7 @@ class MainFrame(wx.Frame):
             self.variables_box_text.SetValue(equation_stuff[2])
 
             #This does not actually have to be copied back, since if the load button is pushed then everything is all reset
-            #shutil.copyfile(file_location+'\\Display_Plot.html', self.settings["cwd"]+"\\Display_Plot.html") # This is copied at the end to the display updates quicker
+            #shutil.copyfile(file_location+'\\Display_Plot.html', self.settings["cwd"]+"\\Graphs\\Display_Plot.html") # This is copied at the end to the display updates quicker
 
         except Exception as e:
             file_error = popup_windows.popup_window(self)
@@ -301,7 +304,7 @@ class MainFrame(wx.Frame):
             print("error: ", end="")
             print(e)
 
-    def help_button_pushed(self, sig):
+    def help_button_pushed(self, event):
         window = popup_windows.popup_window(self)
         window.Help("HELP:\n"
                     +"\tTo use this program enter the ODEs you would like to model in the dx/dt and dy/dt boxes\n"
@@ -310,6 +313,11 @@ class MainFrame(wx.Frame):
                     +"\t\t\tsin, cos, tan, arcsin, arccos, arctan, sinh, cosh, tanh, log = ln, log10, log2\n"
                     +"\tIndicate any variables you would like to use in the variables box by typing them out\n"
                     +"\t\tex: a=5, β = 10, length = 7\n"
+                    +"\t\t(WARNING: Do not use variables with a name more than 10 characters long, also)\n"
+                    +"\t\tdo not use \".\" inside of variable names and do not use the vairbale named\n"
+                    +"\t\t\"self\" or reserved words in python (ie True, False, if, ...) if unsure can\n"
+                    +"\t\tview https://realpython.com/lessons/reserved-keywords/\n"
+                    +"\t\t(all one letter variables will work and any variable including greek will work))\n"
                     +"Settings:\n"
                     +"\tThere are many settings to play with which include:\n"
                     +"\txmin           : Sets the minimium value for the x axis \n"
@@ -352,21 +360,23 @@ class MainFrame(wx.Frame):
                     +"\n\nNote: \n"
                     +"\tThis plotter program will stop plotting soon after a max or min value is reached \n", self.settings["cwd"])
 
-    def load_button_pushed(self, sig=None, from_settings = False):
-        dxdt_text = self.dxdt_textbox_text.GetValue()
-        dydt_text = self.dydt_textbox_text.GetValue()
+    def load_button_pushed(self, event=None, from_settings = False):
+        #For this function all variables have been made longer than 10 characters long so that the user input does not inpact the program
+        
+        dxdt_text99 = self.dxdt_textbox_text.GetValue()
+        dydt_text99 = self.dydt_textbox_text.GetValue()
         variable_text = self.variables_box_text.GetValue()
         
         if(from_settings==False):
-            if(dxdt_text == ''):
-                window = popup_windows.popup_window(self)
-                window.Info("load_button_pushed, no dxdt", cwd=self.settings["cwd"])
-                window.Show()
+            if(dxdt_text99 == ''):
+                window66666 = popup_windows.popup_window(self)
+                window66666.Info("load_button_pushed, no dxdt", cwd=self.settings["cwd"])
+                window66666.Show()
                 return
-            if(dydt_text==''):
-                window = popup_windows.popup_window(self)
-                window.Info("load_button_pushed, no dydt", cwd=self.settings["cwd"])
-                window.Show()
+            if(dydt_text99==''):
+                window66666 = popup_windows.popup_window(self)
+                window66666.Info("load_button_pushed, no dydt", cwd=self.settings["cwd"])
+                window66666.Show()
                 return
         
 
@@ -377,86 +387,86 @@ class MainFrame(wx.Frame):
         print("Variables:")
         if(variable_text.strip() != ''):
             special_vars = ["e", "pi", "π"]
-            vars = variable_text.split(",")
-            var_names = []
+            vars4444444 = variable_text.split(",")
+            var_names99 = []
             special_funcs = ["sin", "cos", "tan", "arcsin", "arccos", "arctan", "sinh", "cosh", "tanh", "log", "log10", "log2"]
-            for vvvvv in vars:
-                vvvvv = vvvvv.strip()
-                v_info = vvvvv.split("=")
-                name = v_info[0].strip()
-                var_names.append(name)
+            for v1111111111 in vars4444444:
+                v1111111111 = v1111111111.strip()
+                v_info66666 = v1111111111.split("=")
+                name4444444 = v_info66666[0].strip()
+                var_names99.append(name4444444)
                 try:
-                    exec(vvvvv) # used in the print statement, for log to ensure things are woking properly
+                    exec(v1111111111) # used in the print statement, for log to ensure things are woking properly
                     # if variable is a variable name in this program then the program will fail, need to make error pop up
                 except:
                     variable_error_window = popup_windows.popup_window(self)
                     variable_error_window.Error("ERROR, please check over your variables", self.settings["cwd"])
                     variable_error_window.Show()
-                for wwwww in special_vars:
-                    if(wwwww == name):
+                for w1111111111 in special_vars:
+                    if(w1111111111 == name4444444):
                         variable_override_warning = popup_windows.popup_window(self)
-                        variable_override_warning.Warning("WARNING: VALUE IN VARIABLES " + wwwww + " WILL BE THE VALUE DEFINED BY THE USER", cwd=self.settings["cwd"])
+                        variable_override_warning.Warning("WARNING: VALUE IN VARIABLES " + w1111111111 + " WILL BE THE VALUE DEFINED BY THE USER", cwd=self.settings["cwd"])
                         variable_override_warning.Show()
-                for wwwww in special_funcs:
-                    if(wwwww == name):
+                for w1111111111 in special_funcs:
+                    if(w1111111111 == name4444444):
                         variable_override_warning = popup_windows.popup_window(self)
-                        variable_override_warning.Warning("WARNING: VALUE IN VARIABLES " + wwwww + " WILL BE THE VALUE DEFINED BY THE USER", cwd=self.settings["cwd"])
+                        variable_override_warning.Warning("WARNING: VALUE IN VARIABLES " + w1111111111 + " WILL BE THE VALUE DEFINED BY THE USER", cwd=self.settings["cwd"])
                         variable_override_warning.Show()
-            for name in var_names:
-                var_text = name + " = " + str(eval(name))
-                print(var_text)
-                variables_text = variables_text+" global "+name+"; "+var_text+"; "
+            for name4444444 in var_names99:
+                var_text888 = name4444444 + " = " + str(eval(name4444444))
+                print(var_text888)
+                variables_text = variables_text+" global "+name4444444+"; "+var_text888+"; "
                 
         else:
             print("NONE")
         ####PROCESSING DXDT
-        for iiiii in range(len(dxdt_text)-1):
-            point1=iiiii
-            point2=iiiii+2
-            if(point2 == len(dxdt_text)):
-                text = dxdt_text[point1:]
+        for i1111111111 in range(len(dxdt_text99)-1):
+            point166666=i1111111111
+            point266666=i1111111111+2
+            if(point266666 == len(dxdt_text99)):
+                text4444444 = dxdt_text99[point166666:]
             else:
-                text = dxdt_text[point1:point2]
-            if(text == ")("):
-                sub1 = dxdt_text[:point1+1]
-                sub2 = dxdt_text[point2:]
-                dxdt_text = sub1+"*"+sub2
-            elif(text[0]=="^"):
-                sub1 = dxdt_text[:point1] # here I use the fact that the very last value cannot be an operation
-                sub2 = dxdt_text[point1+1:]
-                dxdt_text = sub1+"**"+sub2
+                text4444444 = dxdt_text99[point166666:point266666]
+            if(text4444444 == ")("):
+                sub14444444 = dxdt_text99[:point166666+1]
+                sub24444444 = dxdt_text99[point266666:]
+                dxdt_text99 = sub14444444+"*"+sub24444444
+            elif(text4444444[0]=="^"):
+                sub14444444 = dxdt_text99[:point166666] # here I use the fact that the very last value cannot be an operation
+                sub24444444 = dxdt_text99[point166666+1:]
+                dxdt_text99 = sub14444444+"**"+sub24444444
         ####PROCESSING DYDT
-        for iiiii in range(len(dydt_text)-1):
-            point1=iiiii
-            point2=iiiii+2
-            if(point2 == len(dydt_text)):
-                text = dydt_text[point1:]
+        for i1111111111 in range(len(dydt_text99)-1):
+            point166666=i1111111111
+            point266666=i1111111111+2
+            if(point266666 == len(dydt_text99)):
+                text4444444 = dydt_text99[point166666:]
             else:
-                text = dydt_text[point1:point2]
-            if(text == ")("):
-                sub1 = dydt_text[:point1+1]
-                sub2 = dydt_text[point2:]
-                dydt_text = sub1+"*"+sub2
-            elif(text[0]=="^"):
-                sub1 = dydt_text[:point1] # here I use the fact that the very last value cannot be an operation
-                sub2 = dydt_text[point1+1:]
-                dydt_text = sub1+"**"+sub2
+                text4444444 = dydt_text99[point166666:point266666]
+            if(text4444444 == ")("):
+                sub14444444 = dydt_text99[:point166666+1]
+                sub24444444 = dydt_text99[point266666:]
+                dydt_text99 = sub14444444+"*"+sub24444444
+            elif(text4444444[0]=="^"):
+                sub14444444 = dydt_text99[:point166666] # here I use the fact that the very last value cannot be an operation
+                sub24444444 = dydt_text99[point166666+1:]
+                dydt_text99 = sub14444444+"**"+sub24444444
         
         #var_text stors code to access all functions and variables from numpy and also the custom variables
 
-        dxdt_text = "lambda x, y: (" + dxdt_text + ")"
+        dxdt_text99 = "lambda x, y: (" + dxdt_text99 + ")"
 
-        dydt_text = "lambda x, y: (" + dydt_text + ")"
+        dydt_text99 = "lambda x, y: (" + dydt_text99 + ")"
 
         variables_text.strip() # takes extra white space off the ends
 
-        make_figure(self,dxdt_text=dxdt_text, dydt_text=dydt_text, settings=self.settings, variables_text = variables_text, from_settings=from_settings)
+        make_figure(self,dxdt_text=dxdt_text99, dydt_text=dydt_text99, settings=self.settings, variables_text = variables_text, from_settings=from_settings)
 
         self.reset_display()
     
     def reset_display(self):
         global filepath
-        filepath = "file:///"+self.settings["cwd"]+"/Display_Plot.html"
+        filepath = "file:///"+self.settings["cwd"]+"\\Graphs\\Display_Plot.html"
         
         #self.display.ClearBackground()
         self.display.display.LoadURL(filepath)

@@ -14,5 +14,8 @@ class Default:
         "stop_variable_override_warning": False,
         "termination_warning": False,
         "settings_file": "\settings.json",
-        "cwd": "current_working_directory_stored_here"
+        "cwd": "current_working_directory_stored_here",
+        "x_axis_title": "x-axis",
+        "y_axis_title": "y-axis",
+        "title": "Title"
     }

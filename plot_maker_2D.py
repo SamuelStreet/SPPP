@@ -43,9 +43,11 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
     ymin = settings["ymin"]
     ymax = settings["ymax"]
     
+    main_frame.display.display.SetSize(main_frame.display.GetSize())
+
     fig.update_layout(
-        width = 700,
-        height = 400,
+        width = main_frame.display.display.GetSize().Width-20,
+        height = main_frame.display.display.GetSize().Height-20,
     )
 
     #### phase plot
@@ -133,9 +135,23 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
 
     fig.update_layout(xaxis=dict(range=[xmin-xpad,xmax+xpad]))
     fig.update_layout(yaxis=dict(range=[ymin-ypad,ymax+ypad]))
+    fig.update_layout(
+    title=dict(
+        text= settings["title"]
+    ),
+    xaxis=dict(
+        title=dict(
+            text=settings["x_axis_title"]
+        )
+    ),
+    yaxis=dict(
+        title=dict(
+            text=settings["y_axis_title"]
+        )
+    )
+    )
 
-
-    fig.write_html(settings["cwd"]+"\\Display_Plot.html")
+    fig.write_html(settings["cwd"]+"\\Graphs\\Display_Plot.html")
     #fig.show()
 
 

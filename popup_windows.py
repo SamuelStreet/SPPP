@@ -60,7 +60,7 @@ class popup_window(wx.Frame):
         font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         textbox.SetFont(font)
 
-    def Update_Self_for_Settings(self, settings, load, size = (400, 550)):
+    def Update_Self_for_Settings(self, settings, load, size = (400, 590)):
         self.load = load
         self.settings = settings
         icon = wx.Icon(settings["cwd"]+"\\photos\\Settings Icon.png")
@@ -87,6 +87,9 @@ class popup_window(wx.Frame):
         self.l3_stop_variable_override_warning = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_termination_warning = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_settings_file = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_title=wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_x_axis_title=wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_y_axis_title=wx.BoxSizer(wx.HORIZONTAL)
         # self.l3_cwd = wx.BoxSizer(wx.HORIZONTAL)
         # cwd should not be editable by the user
 
@@ -153,6 +156,10 @@ class popup_window(wx.Frame):
         self.settings["stop_variable_override_warning"] = bool(self.stop_variable_override_warning_setting_box.GetValue())
         self.settings["termination_warning"] = bool(self.termination_warning_setting_box.GetValue())
         self.settings["settings_file"] = self.settings_file_setting_box.GetValue()
+        self.settings["title"] = self.title_setting_box.GetValue()
+        self.settings["x_axis_title"] = self.x_axis_title_setting_box.GetValue()
+        self.settings["y_axis_title"] = self.y_axis_title_setting_box.GetValue()
+        
         if(self.settings["settings_file"][0]!="\\"):
             self.settings["settings_file"] = "\\"+self.settings["settings_file"]
         # self.settings["cwd"] = self.cwd_setting_box.GetValue()
@@ -225,6 +232,9 @@ class popup_window(wx.Frame):
             self.stop_variable_override_warning_setting_box.SetValue(str(self.settings["stop_variable_override_warning"]))
             self.termination_warning_setting_box.SetValue(str(self.settings["termination_warning"]))
             self.settings_file_setting_box.SetValue(str(self.settings["settings_file"]))
+            self.title_setting_box.SetValue(str(self.settings["title"]))
+            self.x_axis_title_setting_box.SetValue(str(self.settings["x_axis_title"]))
+            self.x_axis_title_setting_box.SetValue(str(self.settings["y_axis_title"]))
             # self.cwd_setting_box.SetValue(str(self.settings["cwd"]))
             # cwd should not be edited
             self.load(from_settings=True)
@@ -250,6 +260,9 @@ class popup_window(wx.Frame):
         self.settings["stop_variable_override_warning"] = default_class_instance.settings["stop_variable_override_warning"]
         self.settings["termination_warning"] = default_class_instance.settings["termination_warning"]
         self.settings["settings_file"] = default_class_instance.settings["settings_file"]
+        self.settings["title"] = default_class_instance.settings["title"]
+        self.settings["x_axis_title"] = default_class_instance.settings["x_axis_title"]
+        self.settings["y_axis_title"] = default_class_instance.settings["y_axis_title"]
         #self.settings["cwd"] = default_class_instance.settings["cwd"]
         #cwd should not be edited
 
@@ -267,6 +280,9 @@ class popup_window(wx.Frame):
         self.stop_variable_override_warning_setting_box.SetValue(str(self.settings["stop_variable_override_warning"]))
         self.termination_warning_setting_box.SetValue(str(self.settings["termination_warning"]))
         self.settings_file_setting_box.SetValue(str(self.settings["settings_file"]))
+        self.title_setting_box.SetValue(str(self.settings["title"]))
+        self.x_axis_title_setting_box.SetValue(str(self.settings["x_axis_title"]))
+        self.x_axis_title_setting_box.SetValue(str(self.settings["y_axis_title"]))
         #self.cwd_setting_box.SetValue(str(self.settings["cwd"]))
         #cwd should not be edited
         self.apply_settings_button_pushed()
