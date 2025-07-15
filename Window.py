@@ -24,10 +24,10 @@ class MainFrame(wx.Frame):
         
         self.cwd = os.getcwd()
 
-        if not os.path.exists(self.cwd+'\\Photos'):
-            os.makedirs(self.cwd+'\\Photos')
+        if not os.path.exists(self.cwd+'/Photos'):
+            os.makedirs(self.cwd+'/Photos')
         
-        icon = wx.Icon(self.cwd+'\\Photos\\PPP Logo.png')
+        icon = wx.Icon(self.cwd+'/Photos/PPP Logo.png')
         self.SetIcon(icon)
         self.SetBackgroundColour("#282a30") # dark blue grey for the time being
         self.SetMinSize((600,400))
@@ -41,13 +41,13 @@ class MainFrame(wx.Frame):
         self.panel.SetFont(font)
 
         # Sets up the settings allow allowing for multiple files. 
-        if not os.path.exists(self.cwd+'\\settings.json'):
+        if not os.path.exists(self.cwd+'/settings.json'):
             default_class_instance = Default()
             self.settings = default_class_instance.settings
-            with open(self.cwd+'\\settings.json', "w") as f:
+            with open(self.cwd+'/settings.json', "w") as f:
                 f.write(json.dumps(default_class_instance.settings))
         else:
-            with open(self.cwd+'\\settings.json', "r") as json_file:
+            with open(self.cwd+'/settings.json', "r") as json_file:
                 self.settings = json.load(json_file)
             if not os.path.exists(self.cwd+self.settings["settings_file"]):
                 variable_override_warning = popup_windows.popup_window(self)
@@ -101,7 +101,7 @@ class MainFrame(wx.Frame):
         settings_button.SetMaxSize((bw, bh))
         settings_button.SetBackgroundColour("#ffffff")
         ##
-        settings_photo = wx.Bitmap(self.cwd+"\\Photos\\Settings Icon.png")
+        settings_photo = wx.Bitmap(self.cwd+"/Photos/Settings Icon.png")
         image = wx.ImageFromBitmap(settings_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         settings_photo = wx.BitmapFromImage(image)
@@ -115,7 +115,7 @@ class MainFrame(wx.Frame):
         save_file.SetMaxSize((bw, bh))
         save_file.SetMinSize((bw, bh))
         ##
-        save_file_photo = wx.Bitmap(self.cwd+"\\Photos\\Save Icon.png")
+        save_file_photo = wx.Bitmap(self.cwd+"/Photos/Save Icon.png")
         image = wx.ImageFromBitmap(save_file_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         save_file_photo = wx.BitmapFromImage(image)
@@ -127,7 +127,7 @@ class MainFrame(wx.Frame):
         open_file.SetBackgroundColour("#ffffff")
         open_file.SetMaxSize((bw, bh))
         ##
-        open_file_photo = wx.Bitmap(self.cwd+"\\Photos\\File Icon.png")
+        open_file_photo = wx.Bitmap(self.cwd+"/Photos/File Icon.png")
         image = wx.ImageFromBitmap(open_file_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         open_file_photo = wx.BitmapFromImage(image)
@@ -139,7 +139,7 @@ class MainFrame(wx.Frame):
         help.SetBackgroundColour("#ffffff")
         help.SetMaxSize((bw, bh))
         ##
-        help_photo = wx.Bitmap(self.cwd+"\\Photos\\Help Icon.png")
+        help_photo = wx.Bitmap(self.cwd+"/Photos/Help Icon.png")
         image = wx.ImageFromBitmap(help_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         help_photo = wx.BitmapFromImage(image)
@@ -151,7 +151,7 @@ class MainFrame(wx.Frame):
         load.SetBackgroundColour("#ffffff")
         load.SetMaxSize((bw, bh))
         ##
-        load_photo = wx.Bitmap(self.cwd+"\\Photos\\Load Icon.png")
+        load_photo = wx.Bitmap(self.cwd+"/Photos/Load Icon.png")
         image = wx.ImageFromBitmap(load_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         load_photo = wx.BitmapFromImage(image)
@@ -231,7 +231,7 @@ class MainFrame(wx.Frame):
             dc.SetClippingRect(rect)
         dc.Clear()
 
-        dydt_label_file_photo = wx.Bitmap(self.cwd+"\\Photos\\dx--dt.png")
+        dydt_label_file_photo = wx.Bitmap(self.cwd+"/Photos/dx--dt.png")
         image = wx.ImageFromBitmap(dydt_label_file_photo)
         image = image.Scale(30, 40, wx.IMAGE_QUALITY_HIGH)
         dydt_label_file_photo = wx.BitmapFromImage(image)
@@ -247,7 +247,7 @@ class MainFrame(wx.Frame):
             dc.SetClippingRect(rect)
         dc.Clear()
 
-        dydt_label_file_photo = wx.Bitmap(self.cwd+"\\Photos\\dy--dt.png")
+        dydt_label_file_photo = wx.Bitmap(self.cwd+"/Photos/dy--dt.png")
         image = wx.ImageFromBitmap(dydt_label_file_photo)
         image = image.Scale(30, 40, wx.IMAGE_QUALITY_HIGH)
         dydt_label_file_photo = wx.BitmapFromImage(image)
@@ -273,12 +273,12 @@ class MainFrame(wx.Frame):
         dlg.Destroy()
         ######
         try:
-            with open(save_location+'\\settings.json', "w") as f:
+            with open(save_location+'/settings.json', "w") as f:
                 f.write(json.dumps(self.settings))
 
-            shutil.copyfile(self.settings["cwd"]+"\\Graphs\\Display_Plot.html", save_location+'\\Display_Plot.html')
+            shutil.copyfile(self.settings["cwd"]+"/Graphs/Display_Plot.html", save_location+'/Display_Plot.html')
 
-            with open(save_location+'\\Equations.txt', "w") as f:
+            with open(save_location+'/Equations.txt', "w") as f:
                 f.write(self.dxdt_textbox_text.GetValue()+",")
                 f.write(self.dydt_textbox_text.GetValue()+",")
                 f.write(self.variables_box_text.GetValue())
@@ -300,7 +300,7 @@ class MainFrame(wx.Frame):
 
         try:
             #sets the settings
-            with open(file_location+'\\settings.json', "r") as f:
+            with open(file_location+'/settings.json', "r") as f:
                 self.settings = json.load(f)
             
             #makes directory
@@ -313,11 +313,11 @@ class MainFrame(wx.Frame):
 
             #sets the display
             global filepath
-            filepath = "file:///"+file_location+'\\Display_Plot.html'
+            filepath = "file:///"+file_location+'/Display_Plot.html'
             self.display.display.LoadURL(filepath)
             
             #sets the equation boxes
-            with open(file_location+'\\Equations.txt', "r") as f:
+            with open(file_location+'/Equations.txt', "r") as f:
                 equation_stuff = f.readline()
                 equation_stuff = equation_stuff.split(",")
             self.dxdt_textbox_text.SetValue(equation_stuff[0])
@@ -325,7 +325,7 @@ class MainFrame(wx.Frame):
             self.variables_box_text.SetValue(equation_stuff[2])
 
             #This does not actually have to be copied back, since if the load button is pushed then everything is all reset
-            #shutil.copyfile(file_location+'\\Display_Plot.html', self.settings["cwd"]+"\\Graphs\\Display_Plot.html") # This is copied at the end to the display updates quicker
+            #shutil.copyfile(file_location+'/Display_Plot.html', self.settings["cwd"]+"/Graphs/Display_Plot.html") # This is copied at the end to the display updates quicker
 
         except Exception as e:
             file_error = popup_windows.popup_window(self)
@@ -496,7 +496,7 @@ class MainFrame(wx.Frame):
     
     def reset_display(self):
         global filepath
-        filepath = "file:///"+self.settings["cwd"]+"\\Graphs\\Display_Plot.html"
+        filepath = "file:///"+self.settings["cwd"]+"/Graphs/Display_Plot.html"
         
         #self.display.ClearBackground()
         self.display.display.LoadURL(filepath)

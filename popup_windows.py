@@ -11,7 +11,7 @@ class popup_window(wx.Frame):
         self.SetSize((460, 200))
 
     def Help(self, text, cwd):
-        icon = wx.Icon(cwd+"\\Photos\\Help Icon.png")
+        icon = wx.Icon(cwd+"/Photos/Help Icon.png")
         self.SetIcon(icon)
         size = (1150, 500)
         self.panel = wx.lib.scrolledpanel.ScrolledPanel(self, -1, pos=(0,0), size=size, style=wx.SIMPLE_BORDER)
@@ -28,7 +28,7 @@ class popup_window(wx.Frame):
         self.Show()
 
     def Info(self, text, size = (400, 250), cwd=""):
-        icon = wx.Icon(cwd+"\\Photos\\Info Icon.png")
+        icon = wx.Icon(cwd+"/Photos/Info Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
@@ -39,7 +39,7 @@ class popup_window(wx.Frame):
         textbox.SetFont(font)
 
     def Warning(self, text, size = (400, 250), cwd=""):
-        icon = wx.Icon(cwd+"\\Photos\\Warning Icon.png")
+        icon = wx.Icon(cwd+"/Photos/Warning Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
@@ -50,7 +50,7 @@ class popup_window(wx.Frame):
         textbox.SetFont(font)
 
     def Error(self, text, size = (400, 250), cwd=""):
-        icon = wx.Icon(cwd+"\\Photos\\Error Icon.png")
+        icon = wx.Icon(cwd+"/Photos/Error Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
@@ -63,7 +63,7 @@ class popup_window(wx.Frame):
     def Update_Self_for_Settings(self, settings, load, size = (400, 590)):
         self.load = load
         self.settings = settings
-        icon = wx.Icon(settings["cwd"]+"\\Photos\\Settings Icon.png")
+        icon = wx.Icon(settings["cwd"]+"/Photos/Settings Icon.png")
         self.SetIcon(icon)
         self.SetSize(size); self.SetMinSize(size); self.SetMaxSize(size)
         self.panel = wx.Panel(self)
@@ -160,8 +160,8 @@ class popup_window(wx.Frame):
         self.settings["x_axis_title"] = self.x_axis_title_setting_box.GetValue()
         self.settings["y_axis_title"] = self.y_axis_title_setting_box.GetValue()
         
-        if(self.settings["settings_file"][0]!="\\"):
-            self.settings["settings_file"] = "\\"+self.settings["settings_file"]
+        if(self.settings["settings_file"][0]!="/"):
+            self.settings["settings_file"] = "/"+self.settings["settings_file"]
         # self.settings["cwd"] = self.cwd_setting_box.GetValue()
         # cwd should not be edited
         self.load(from_settings=True)
@@ -172,14 +172,14 @@ class popup_window(wx.Frame):
             cwd = self.settings["cwd"]
             variable_override_warning = popup_window(self).Error("Error: settings_file is unspecified so unfortunatly I don't know where to get settings", cwd=cwd)
             variable_override_warning.Show()
-        elif(self.settings["settings_file"][0]!="\\"):
-            self.settings["settings_file"] = "\\"+self.settings["settings_file"]
-        elif not os.path.exists(self.settings["cwd"]+"\\".join(self.settings["settings_file"].split("\\")[:-1])):
-            # "\\".join(self.settings["settings_file"].split("\\")[:-1]) 
+        elif(self.settings["settings_file"][0]!="/"):
+            self.settings["settings_file"] = "/"+self.settings["settings_file"]
+        elif not os.path.exists(self.settings["cwd"]+"/".join(self.settings["settings_file"].split("/")[:-1])):
+            # "/".join(self.settings["settings_file"].split("/")[:-1]) 
             # self.settings["settings_file"] = custome settings file
-            # .split("\\") = makes list sperarating all different directories in custome settings file
+            # .split("/") = makes list sperarating all different directories in custome settings file
             # [:-1] take all but the actual file name
-            # "\\".join put everything back together again with "\\" between every item in the list
+            # "/".join put everything back together again with "/" between every item in the list
             cwd = self.settings["cwd"]
             variable_override_warning = popup_window(self).Error("Error: settings file specified "+ self.settings["settings_file"][1:] + " is missing so I don't know where to go", cwd=cwd)
             variable_override_warning.Show()
@@ -190,23 +190,23 @@ class popup_window(wx.Frame):
             except:
                 pass #Warning here: make sure file system for specified file exists
 
-            if not os.path.exists(self.settings["cwd"]+'\\settings.json'):
+            if not os.path.exists(self.settings["cwd"]+'/settings.json'):
                 default_class_instance = Default()
                 settings = default_class_instance.settings
                 settings["settings_file"] = self.settings["settings_file"]
 
-                with open(self.settings["cwd"]+'\\settings.json', "w") as f:
+                with open(self.settings["cwd"]+'/settings.json', "w") as f:
                     f.write(json.dumps(settings))
             else:
-                with open(self.settings["cwd"]+'\\settings.json', "r") as json_file:
+                with open(self.settings["cwd"]+'/settings.json', "r") as json_file:
                     temp_settings = json.load(json_file)
                 temp_settings["settings_file"] = self.settings["settings_file"]
-                with open(self.settings["cwd"]+'\\settings.json', "w") as f:
+                with open(self.settings["cwd"]+'/settings.json', "w") as f:
                     f.write(json.dumps(temp_settings))
 
     def reset_settings_button_pushed(self, sig=None):
-        if(self.settings["settings_file"][0]!="\\"):
-            self.settings["settings_file"] = "\\"+self.settings["cwd"]
+        if(self.settings["settings_file"][0]!="/"):
+            self.settings["settings_file"] = "/"+self.settings["cwd"]
         if(self.settings["settings_file"]==""):
             cwd = self.settings["cwd"]
             variable_override_warning = popup_window(self).Error("Error: settings_file is unspecified so unfortunatly I don't know where to get settings", cwd=cwd)
@@ -291,7 +291,7 @@ class popup_window(wx.Frame):
 
 
     def File(self, text="", size = (250, 150), cwd=""):
-        icon = wx.Icon(cwd+"\\Photos\\File Icon.png")
+        icon = wx.Icon(cwd+"/Photos/File Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)

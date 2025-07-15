@@ -212,7 +212,7 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
     )
     )
 
-    fig.write_html(settings["cwd"]+"\\Graphs\\Display_Plot.html")
+    fig.write_html(settings["cwd"]+"/Graphs/Display_Plot.html")
     #fig.show()
 
 
