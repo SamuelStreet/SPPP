@@ -6,4 +6,29 @@ Issues:
 - no saftey when loading a json file - program may crash if broken json loaded
 - would be good to check over variables section, should be able to use any variable that is not a
   python reserved <= 10 characters, but had to modify variable names so would be good to check
-- issue with wxpython display with using pyinstaller
+- when using pyinstaller use -D to get a way faster program, slightly more work for user to accesss first time but loads way quicker
+- use the following for myself to load the application (Copy and past next line into terminal)
+- currently the same number of steps are used for forwards and backwards time
+- Currently no setting for disabeling backwards time, just forwards
+- When window is streched variable box looks like it is getting bigger, but does not actually get bigger.
+
+pyinstaller -D --icon="C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos/PPP Logo.png" --noconsole --add-binary "c:\Users\Samuel\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\WebView2Loader.dll;.\wx" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Graphs;Graphs" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos;Photos" "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Phase_Plot_App_Launcher.py"
+
+(for linux replace the ; with :)
+above line does not add Graphs or Photos folders properly, have to go into internals and then grab Graphs and Photos and copy them to parent directory
+
+To work will need
+- pip install wx 
+- pip install wx.html2
+- pip install shutil
+- pip install json (should be included in python)
+- pip install os (should be included in python)
+- pip install numpy
+- pip install plotly
+
+
+Need to make a virtual environment when done otherwise pyinstaller includes 
+every library I have installed to this python environment in the exe which makes it a bit bigger
+
+
+Need to Bind the display.display to wx.whatever_it_is_that_is_called_when_display_is_resized 

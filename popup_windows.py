@@ -11,7 +11,7 @@ class popup_window(wx.Frame):
         self.SetSize((460, 200))
 
     def Help(self, text, cwd):
-        icon = wx.Icon(cwd+"\\photos\\Help Icon.png")
+        icon = wx.Icon(cwd+"\\Photos\\Help Icon.png")
         self.SetIcon(icon)
         size = (1150, 500)
         self.panel = wx.lib.scrolledpanel.ScrolledPanel(self, -1, pos=(0,0), size=size, style=wx.SIMPLE_BORDER)
@@ -28,7 +28,7 @@ class popup_window(wx.Frame):
         self.Show()
 
     def Info(self, text, size = (400, 250), cwd=""):
-        icon = wx.Icon(cwd+"\\photos\\Info Icon.png")
+        icon = wx.Icon(cwd+"\\Photos\\Info Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
@@ -39,7 +39,7 @@ class popup_window(wx.Frame):
         textbox.SetFont(font)
 
     def Warning(self, text, size = (400, 250), cwd=""):
-        icon = wx.Icon(cwd+"\\photos\\Warning Icon.png")
+        icon = wx.Icon(cwd+"\\Photos\\Warning Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
@@ -50,7 +50,7 @@ class popup_window(wx.Frame):
         textbox.SetFont(font)
 
     def Error(self, text, size = (400, 250), cwd=""):
-        icon = wx.Icon(cwd+"\\photos\\Error Icon.png")
+        icon = wx.Icon(cwd+"\\Photos\\Error Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
@@ -63,7 +63,7 @@ class popup_window(wx.Frame):
     def Update_Self_for_Settings(self, settings, load, size = (400, 590)):
         self.load = load
         self.settings = settings
-        icon = wx.Icon(settings["cwd"]+"\\photos\\Settings Icon.png")
+        icon = wx.Icon(settings["cwd"]+"\\Photos\\Settings Icon.png")
         self.SetIcon(icon)
         self.SetSize(size); self.SetMinSize(size); self.SetMaxSize(size)
         self.panel = wx.Panel(self)
@@ -291,7 +291,7 @@ class popup_window(wx.Frame):
 
 
     def File(self, text="", size = (250, 150), cwd=""):
-        icon = wx.Icon(cwd+"\\photos\\File Icon.png")
+        icon = wx.Icon(cwd+"\\Photos\\File Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)

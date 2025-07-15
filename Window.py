@@ -13,7 +13,7 @@ filepath = ''
 class Display_Window(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self,parent=parent,id=-1)
-        self.display=wx.html2.WebView.New(self)
+        self.display=wx.html2.WebView.New(self, backend=wx.html2.WebViewBackendDefault)
         global filepath
         self.display.LoadURL(filepath)
 
@@ -24,14 +24,14 @@ class MainFrame(wx.Frame):
         
         self.cwd = os.getcwd()
 
-        if not os.path.exists(self.cwd+'\\photos'):
-            os.makedirs(self.cwd+'\\photos')
+        if not os.path.exists(self.cwd+'\\Photos'):
+            os.makedirs(self.cwd+'\\Photos')
         
-        icon = wx.Icon(self.cwd+'\\photos\\PPP Logo.png')
+        icon = wx.Icon(self.cwd+'\\Photos\\PPP Logo.png')
         self.SetIcon(icon)
         self.SetBackgroundColour("#282a30") # dark blue grey for the time being
         self.SetMinSize((600,400))
-        self.SetSize((850, 600))
+        self.SetSize((740, 760))
         font = wx.Font(10, wx.FONTFAMILY_DECORATIVE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         #(pixelSize, family, style(italic type), weight(boldness), underline)
         # more info at https://docs.wxpython.org/4.0.7/wx.Font.html
@@ -63,27 +63,27 @@ class MainFrame(wx.Frame):
         self.settings["cwd"] = self.cwd
 
         ## BUTTONS, pannels, textboxes, ...
-        dxdt_label =wx.Panel(self.panel, size = (80, 40))
-        wx.StaticText(parent=dxdt_label, id=-1, label=r'$\frac{dx}{dt}$', style=wx.ALIGN_CENTER, size=dxdt_label.GetSize())
+        dxdt_label =wx.Panel(self.panel, size = (30, 40))
+        dxdt_label.Bind(wx.EVT_ERASE_BACKGROUND, self.dxdt_label_maker)
         dxdt_label.SetBackgroundColour("#ffffff") # #ffffff = white
 
-        dydt_label = wx.Panel(self.panel, size = (80, 40))
-        wx.StaticText(parent=dydt_label, id=-1, label="dy/dt", style=wx.ALIGN_CENTER, size=dydt_label.GetSize())
+        dydt_label = wx.Panel(self.panel, size = (30, 40))
+        dydt_label.Bind(wx.EVT_ERASE_BACKGROUND, self.dydt_label_maker)
         dydt_label.SetBackgroundColour("#ffffff") # #ffffff = white
 
         dxdt_textbox = wx.Panel(self.panel)
-        self.dxdt_textbox_text = wx.TextCtrl(dxdt_textbox, -1, style=wx.ALIGN_LEFT, size = (450, 40))
+        self.dxdt_textbox_text = wx.TextCtrl(dxdt_textbox, -1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size = (450, 40))
         self.dxdt_textbox_text.SetHint("(a)(b) or a*b for multiplication, a/b for division, ** or a^b for exponents")
         dxdt_textbox.SetBackgroundColour("#ffffff") # #ffffff = white
         dxdt_textbox.SetMaxSize((1000, 40))
 
         dydt_textbox = wx.Panel(self.panel)
-        self.dydt_textbox_text = wx.TextCtrl(dydt_textbox, -1, style=wx.ALIGN_LEFT, size = (450, 40))
+        self.dydt_textbox_text = wx.TextCtrl(dydt_textbox, -1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size = (450, 40))
         self.dydt_textbox_text.SetHint("ln or log for natural log, log10 = base 10, log2 = base 2, for trig radians used")
         dydt_textbox.SetBackgroundColour("#ffffff") # #ffffff = white
         dydt_textbox.SetMaxSize((1000, 40))
 
-        variables_box = wx.Panel(self.panel, size = (200, 85))
+        variables_box = wx.Panel(self.panel, size = (220, 80))
         self.variables_box_text = wx.TextCtrl(parent=variables_box, id=-1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=variables_box.GetSize())
         self.variables_box_text.SetHint("comma separated variables here (ex. a = 5, b=7, ...)")
         variables_box.SetBackgroundColour("#ffffff") # #ffffff = white
@@ -101,7 +101,7 @@ class MainFrame(wx.Frame):
         settings_button.SetMaxSize((bw, bh))
         settings_button.SetBackgroundColour("#ffffff")
         ##
-        settings_photo = wx.Bitmap(self.cwd+"\\photos\\Settings Icon.png")
+        settings_photo = wx.Bitmap(self.cwd+"\\Photos\\Settings Icon.png")
         image = wx.ImageFromBitmap(settings_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         settings_photo = wx.BitmapFromImage(image)
@@ -115,7 +115,7 @@ class MainFrame(wx.Frame):
         save_file.SetMaxSize((bw, bh))
         save_file.SetMinSize((bw, bh))
         ##
-        save_file_photo = wx.Bitmap(self.cwd+"\\photos\\Save Icon.png")
+        save_file_photo = wx.Bitmap(self.cwd+"\\Photos\\Save Icon.png")
         image = wx.ImageFromBitmap(save_file_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         save_file_photo = wx.BitmapFromImage(image)
@@ -127,7 +127,7 @@ class MainFrame(wx.Frame):
         open_file.SetBackgroundColour("#ffffff")
         open_file.SetMaxSize((bw, bh))
         ##
-        open_file_photo = wx.Bitmap(self.cwd+"\\photos\\File Icon.png")
+        open_file_photo = wx.Bitmap(self.cwd+"\\Photos\\File Icon.png")
         image = wx.ImageFromBitmap(open_file_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         open_file_photo = wx.BitmapFromImage(image)
@@ -139,7 +139,7 @@ class MainFrame(wx.Frame):
         help.SetBackgroundColour("#ffffff")
         help.SetMaxSize((bw, bh))
         ##
-        help_photo = wx.Bitmap(self.cwd+"\\photos\\Help Icon.png")
+        help_photo = wx.Bitmap(self.cwd+"\\Photos\\Help Icon.png")
         image = wx.ImageFromBitmap(help_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         help_photo = wx.BitmapFromImage(image)
@@ -151,7 +151,7 @@ class MainFrame(wx.Frame):
         load.SetBackgroundColour("#ffffff")
         load.SetMaxSize((bw, bh))
         ##
-        load_photo = wx.Bitmap(self.cwd+"\\photos\\Load Icon.png")
+        load_photo = wx.Bitmap(self.cwd+"\\Photos\\Load Icon.png")
         image = wx.ImageFromBitmap(load_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         load_photo = wx.BitmapFromImage(image)
@@ -168,11 +168,11 @@ class MainFrame(wx.Frame):
         l4_1 = wx.BoxSizer(wx.HORIZONTAL)
         l4_2 = wx.BoxSizer(wx.HORIZONTAL)
 
-        l4_1.Add(dxdt_label,    proportion=1, flag=wx.EXPAND)
-        l4_1.Add(dxdt_textbox,  proportion=6, flag=wx.EXPAND)
+        l4_1.Add(dxdt_label,    proportion=1)
+        l4_1.Add(dxdt_textbox,  proportion=11, flag=wx.EXPAND)
 
         l4_2.Add(dydt_label,    proportion=1)
-        l4_2.Add(dydt_textbox,  proportion=6, flag=wx.EXPAND)
+        l4_2.Add(dydt_textbox,  proportion=11, flag=wx.EXPAND)
 
         space_between_buttons = 5
         l3_1.Add(settings_button,      proportion=1, flag=wx.EXPAND)
@@ -198,13 +198,13 @@ class MainFrame(wx.Frame):
         l2_2.AddSpacer(ba)
         l2_2.Add(l3_2,          proportion=1, flag=wx.EXPAND)
         l2_2.AddSpacer(ba)
-        l2_2.Add(variables_box, proportion=1, flag=wx.EXPAND)
+        l2_2.Add(variables_box, proportion=1)
         l2_2.AddSpacer(ba)
 
         l1.AddSpacer(ba)
-        l1.Add(l2_1,            proportion=4, flag=wx.EXPAND)
+        l1.Add(l2_1,            proportion=100, flag=wx.EXPAND)
         l1.AddSpacer(ba)
-        l1.Add(l2_2,            proportion=1, flag=wx.EXPAND)
+        l1.Add(l2_2,            proportion=10, flag=wx.EXPAND)
         l1.AddSpacer(ba)
 
         self.panel.SetSizer(l1)
@@ -220,8 +220,38 @@ class MainFrame(wx.Frame):
     #NOTE: every function must be passed at least a eventnal since the buttons all send a eventnal
     #from Phase_Plot_App import frame
 
-    def resize(self, event=None):
-        pass#self.display.display.SetSize(self.display.GetSize())
+    def dxdt_label_maker(self, evt):
+        # similar code found in a few spots, one of is https://www.youtube.com/watch?v=C3VX74g75Kc&t=1s
+        # Just put a screenshot of text on pannel
+        dc = evt.GetDC()
+                
+        if not dc:
+            dc = wx.ClientDC(self)
+            rect = self.GetUpdateRegion().GetBox()
+            dc.SetClippingRect(rect)
+        dc.Clear()
+
+        dydt_label_file_photo = wx.Bitmap(self.cwd+"\\Photos\\dx--dt.png")
+        image = wx.ImageFromBitmap(dydt_label_file_photo)
+        image = image.Scale(30, 40, wx.IMAGE_QUALITY_HIGH)
+        dydt_label_file_photo = wx.BitmapFromImage(image)
+        dc.DrawBitmap(dydt_label_file_photo, 5, 0)
+    
+    
+    def dydt_label_maker(self, evt):
+        dc = evt.GetDC()
+                
+        if not dc:
+            dc = wx.ClientDC(self)
+            rect = self.GetUpdateRegion().GetBox()
+            dc.SetClippingRect(rect)
+        dc.Clear()
+
+        dydt_label_file_photo = wx.Bitmap(self.cwd+"\\Photos\\dy--dt.png")
+        image = wx.ImageFromBitmap(dydt_label_file_photo)
+        image = image.Scale(30, 40, wx.IMAGE_QUALITY_HIGH)
+        dydt_label_file_photo = wx.BitmapFromImage(image)
+        dc.DrawBitmap(dydt_label_file_photo, 5, 0)
 
     def settings_button_pushed(self, event):
         settings_window = popup_windows.popup_window(self)
