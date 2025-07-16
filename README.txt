@@ -23,7 +23,7 @@ Low Priority
 
 To work will need
 - pip install wx 
-- pip install wx.html2 (It is a serious pain if you want these top 2 to work in linux)
+- pip install wx.html2 (For linux the above to are done together using a slightly more complex method described below)
 - pip install numpy
 - pip install plotly
 
@@ -44,3 +44,52 @@ LINUX
 /home/samuelstreet/Downloads/PPP_python_environtment/bin/pyinstaller -D --icon="/home/samuelstreet/Downloads/PPP Github Space/PPP/Photos/PPP Logo.png" --noconsole --add-data "/home/samuelstreet/Downloads/PPP Github Space/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/PPP Github Space/PPP/Photos:Photos" "/home/samuelstreet/Downloads/PPP Github Space/PPP/Phase_Plot_App_Launcher.py"
 
 Go into internals once compiled grab Graphs and Photos then place them in parent directory
+
+
+
+
+
+
+
+
+
+
+
+
+To install wxPython in Linux (Debian specific, but same instuctions for other distros, packages might just have different names)
+(It will be just as agognizingly painful as it looks \)
+
+Building wxPython on Debian12
+
+sudo apt update
+
+sudo apt install python-dev-is-python3
+
+sudo apt install libgtk-3-dev
+
+sudo apt install snapd -y
+sudo snap install snapd
+sudo snap install gstreamer --edge
+
+apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio -y
+
+sudo apt-get install freeglut3-dev
+
+sudo apt install libwebkit2gtk-4.0-dev   (was told in instructions to get same version as gtk, this is not the same version, but it could be downloaded)
+
+apt-get install libjpeg62
+
+sudo apt-get install libpng-dev
+
+sudo apt-get install libtiff-dev
+
+sudo apt-get install libsdl2-2.0-0
+
+sudo apt install libnotify-bin
+
+sudo apt-get install libsm6
+sudo ldconfig
+
+Then follow https://wxpython.org/blog/2017-08-17-builds-for-linux-with-pip/index.html
+
+and it will work (saved wheel file so it will work from the .whl file to make things easier)
