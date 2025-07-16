@@ -2,26 +2,33 @@ Notes:
 - when using pyinstaller use -D to get a way faster program, slightly more work for user to accesss first time but loads way quicker
 
 To Do:
-- no saftey when loading a json file - program may crash if broken json loaded
-- would be good to check over variables section, should be able to use any variable that is not a
-  python reserved <= 10 characters, but had to modify variable names so would be good to check
-- currently the same number of steps are used for forwards and backwards time should be custome
-- should not need to do forward and backward time at the same time
-- Variable and Equation boxes should stretch
-- Rung Kutta Needs added
-- Too many warnings setting to shut all warnings off needed
-- Need to make it so settings can be scrolled through so they are not quite so overwhelming (may need settings tabs)
-- Initial background image needs to match properly
-- Buttons background needs changed
-- Need to be able to click on the plot to pick a point
-- Need to have a little dot where the plot is being loaded from
+- Settings
+  - currently the same number of steps are used for forwards and backwards time should be custome
+  - should not need to do forward and backward time at the same time
+  - Too many warnings setting to shut all warnings off needed
+  - Need to make it so settings can be scrolled through so they are not quite so overwhelming (may need settings tabs or at least sections)
+
+-Display
+  - Variable and Equation boxes should stretch
+  - Initial background image needs to match properly
+  - Buttons background needs changed
+  - Need to have a little dot where the plot is being loaded from
+
+-Functionality
+  - Would be good to check over variables section, should be able to use any variable that is not a
+    python reserved <= 10 characters, but had to modify variable names so would be good to check (Euler)
+  - Rung Kutta Needs added
+  - Need to be able to click on the plot to pick a point
+  - Need to make it so graphs and photos do not need to be moved to the same folder as the exe, makes it so links do not work as well
 
 Low Priority
 - Would be good to generate a loading bar if plot it taking a while
+- no saftey when loading a json file - program may crash if broken json loaded 
+  (low priority since it requires that user went into json file and then modified it)
 
 
 
-To work will need
+To work in vscode will need
 - pip install wx 
 - pip install wx.html2 (For linux the above to are done together using a slightly more complex method described below)
 - pip install numpy
@@ -32,10 +39,11 @@ To work will need
 - json 
 - os
 
-
 Need to make a virtual environment when done otherwise pyinstaller includes 
 every library installed system python environment which can be quite a few and end file will be bigger
 
+
+To compile porject can use:
 
 Windows
 pyinstaller -D --icon="C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos/PPP Logo.png" --noconsole --add-binary "c:\Users\Samuel\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\WebView2Loader.dll;.\wx" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Graphs;Graphs" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos;Photos" "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Phase_Plot_App_Launcher.py"
