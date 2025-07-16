@@ -1,6 +1,7 @@
 import wx
 import wx.html2
 import shutil # for copying files
+import numpy as np
 from plot_maker_2D import make_figure
 #from Settings_File import Settings
 from Default_Settings import Default
@@ -31,7 +32,7 @@ class MainFrame(wx.Frame):
         self.SetIcon(icon)
         self.SetBackgroundColour("#282a30") # dark blue grey for the time being
         self.SetMinSize((600,400))
-        self.SetSize((740, 760))
+        self.SetSize((700, 550))
         font = wx.Font(10, wx.FONTFAMILY_DECORATIVE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         #(pixelSize, family, style(italic type), weight(boldness), underline)
         # more info at https://docs.wxpython.org/4.0.7/wx.Font.html
@@ -83,11 +84,14 @@ class MainFrame(wx.Frame):
         dydt_textbox.SetBackgroundColour("#ffffff") # #ffffff = white
         dydt_textbox.SetMaxSize((1000, 40))
 
-        variables_box = wx.Panel(self.panel, size = (220, 80))
-        self.variables_box_text = wx.TextCtrl(parent=variables_box, id=-1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=variables_box.GetSize())
+        self.variables_box = wx.Panel(self.panel, size = (220, 80))
+        self.variables_box_text = wx.TextCtrl(parent=self.variables_box, id=-1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=self.variables_box.GetSize())
         self.variables_box_text.SetHint("comma separated variables here (ex. a = 5, b=7, ...)")
-        variables_box.SetBackgroundColour("#ffffff") # #ffffff = white
+        self.variables_box.SetBackgroundColour("#ffffff") # #ffffff = white
+        self.variables_box.Bind(wx.EVT_SIZE, self.bottom_box_resizer) # this is to do stuf every time the screen is resized
 
+        self.bh = 40 # button height
+        self.bw = 40 # button width
         bh = 40 # button height
         bw = 40 # button width
         global filepath
@@ -96,75 +100,69 @@ class MainFrame(wx.Frame):
         self.display.SetBackgroundColour("#ffffff")
 
 
-        settings_button = wx.Button(self.panel, label="")
+        '''
+        # This is the old way the buttons were given a background, it does not work very well on linux which is why the 
+        # switch was made am keeping this code here as it may be useful latersettings_button = wx.Button(self.panel, label="")
         settings_button.SetMinSize((bw, bh))
         settings_button.SetMaxSize((bw, bh))
         settings_button.SetBackgroundColour("#ffffff")
-        ##
+
         settings_photo = wx.Bitmap(self.cwd+"/Photos/Settings Icon.png")
         image = wx.ImageFromBitmap(settings_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         settings_photo = wx.BitmapFromImage(image)
         settings_button.SetBitmap(settings_photo)
+        '''
         ##
+        settings_photo = wx.Bitmap(self.cwd+"/Photos/Settings Icon.png")
+        image = wx.ImageFromBitmap(settings_photo)
+        image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
+        settings_photo = wx.BitmapFromImage(image)
+        settings_button=wx.BitmapButton(self.panel, -1, settings_photo, pos=(bw, bh), style=wx.NO_BORDER)
         settings_button.Bind(wx.EVT_BUTTON, self.settings_button_pushed)
+        ##
 
 
-        save_file = wx.Button(self.panel, label="")
-        save_file.SetBackgroundColour("#ffffff")
-        save_file.SetMaxSize((bw, bh))
-        save_file.SetMinSize((bw, bh))
         ##
         save_file_photo = wx.Bitmap(self.cwd+"/Photos/Save Icon.png")
         image = wx.ImageFromBitmap(save_file_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         save_file_photo = wx.BitmapFromImage(image)
-        save_file.SetBitmap(save_file_photo)
-        ##
+        save_file = wx.BitmapButton(self.panel, -1, save_file_photo, pos=(bw, bh), style=wx.NO_BORDER)
         save_file.Bind(wx.EVT_BUTTON, self.save_file_button_pushed)
+        ##
 
-        open_file = wx.Button(self.panel, label="")
-        open_file.SetBackgroundColour("#ffffff")
-        open_file.SetMaxSize((bw, bh))
         ##
         open_file_photo = wx.Bitmap(self.cwd+"/Photos/File Icon.png")
         image = wx.ImageFromBitmap(open_file_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         open_file_photo = wx.BitmapFromImage(image)
-        open_file.SetBitmap(open_file_photo)
-        ##
+        open_file = wx.BitmapButton(self.panel, -1, open_file_photo, pos=(bw, bh), style=wx.NO_BORDER)
         open_file.Bind(wx.EVT_BUTTON, self.open_file_button_pushed)
 
-        help = wx.Button(self.panel, label="")
-        help.SetBackgroundColour("#ffffff")
-        help.SetMaxSize((bw, bh))
         ##
         help_photo = wx.Bitmap(self.cwd+"/Photos/Help Icon.png")
         image = wx.ImageFromBitmap(help_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         help_photo = wx.BitmapFromImage(image)
-        help.SetBitmap(help_photo)
-        ##
+        help = wx.BitmapButton(self.panel, -1, help_photo, pos=(bw, bh), style=wx.NO_BORDER)
         help.Bind(wx.EVT_BUTTON, self.help_button_pushed)
+        ##
 
-        load = wx.Button(self.panel, label="")
-        load.SetBackgroundColour("#ffffff")
-        load.SetMaxSize((bw, bh))
         ##
         load_photo = wx.Bitmap(self.cwd+"/Photos/Load Icon.png")
         image = wx.ImageFromBitmap(load_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         load_photo = wx.BitmapFromImage(image)
-        load.SetBitmap(load_photo)
-        ##
+        load = wx.BitmapButton(self.panel, -1, load_photo, pos=(bw, bh), style=wx.NO_BORDER)
         load.Bind(wx.EVT_BUTTON, self.load_button_pushed)
 
         ########## Layouts
         l1 = wx.BoxSizer(wx.VERTICAL)
         l2_1 = wx.BoxSizer(wx.HORIZONTAL)
-        l2_2 = wx.BoxSizer(wx.HORIZONTAL)
+        self.l2_2 = wx.BoxSizer(wx.HORIZONTAL)
         l3_1 = wx.BoxSizer(wx.VERTICAL)
-        l3_2 = wx.BoxSizer(wx.VERTICAL)
+        self.l3_2 = wx.BoxSizer(wx.VERTICAL)
         l4_1 = wx.BoxSizer(wx.HORIZONTAL)
         l4_2 = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -175,36 +173,38 @@ class MainFrame(wx.Frame):
         l4_2.Add(dydt_textbox,  proportion=11, flag=wx.EXPAND)
 
         space_between_buttons = 5
-        l3_1.Add(settings_button,      proportion=1, flag=wx.EXPAND)
+        l3_1.Add(settings_button)
         l3_1.AddSpacer(space_between_buttons)
-        l3_1.Add(save_file,     proportion=1, flag=wx.EXPAND)
+        l3_1.Add(save_file)
         l3_1.AddSpacer(space_between_buttons)
-        l3_1.Add(open_file,     proportion=1, flag=wx.EXPAND)
+        l3_1.Add(open_file)
         l3_1.AddSpacer(space_between_buttons)
-        l3_1.Add(help,          proportion=1, flag=wx.EXPAND)
+        l3_1.Add(help)
         l3_1.AddSpacer(space_between_buttons)
-        l3_1.Add(load,          proportion=1, flag=wx.EXPAND)
+        l3_1.Add(load)
+        l3_1.AddSpacer(space_between_buttons)
 
-        l3_2.Add(l4_1,          proportion=1, flag=wx.EXPAND)
-        l3_2.Add(l4_2,          proportion=1, flag=wx.EXPAND)
+        self.l3_2.Add(l4_1,          proportion=1, flag=wx.EXPAND)
+        self.l3_2.AddSpacer(5)
+        self.l3_2.Add(l4_2,          proportion=1, flag=wx.EXPAND)
 
         ba = 5 # border_adjustment
         l2_1.AddSpacer(ba)
-        l2_1.Add(self.display,  proportion=20, flag=wx.EXPAND)
+        l2_1.Add(self.display,  proportion=40, flag=wx.EXPAND)
         l2_1.AddSpacer(ba)
         l2_1.Add(l3_1,          proportion=1, flag=wx.EXPAND)
         l2_1.AddSpacer(ba)
 
-        l2_2.AddSpacer(ba)
-        l2_2.Add(l3_2,          proportion=1, flag=wx.EXPAND)
-        l2_2.AddSpacer(ba)
-        l2_2.Add(variables_box, proportion=1)
-        l2_2.AddSpacer(ba)
+        self.l2_2.AddSpacer(ba)
+        self.l2_2.Add(self.l3_2,          proportion=2)
+        self.l2_2.AddSpacer(ba)
+        self.l2_2.Add(self.variables_box, proportion=1, flag=wx.EXPAND)
+        self.l2_2.AddSpacer(ba)
 
         l1.AddSpacer(ba)
-        l1.Add(l2_1,            proportion=100, flag=wx.EXPAND)
+        l1.Add(l2_1,            proportion=35, flag=wx.EXPAND)
         l1.AddSpacer(ba)
-        l1.Add(l2_2,            proportion=10, flag=wx.EXPAND)
+        l1.Add(self.l2_2,            proportion=10)
         l1.AddSpacer(ba)
 
         self.panel.SetSizer(l1)
@@ -252,6 +252,12 @@ class MainFrame(wx.Frame):
         image = image.Scale(30, 40, wx.IMAGE_QUALITY_HIGH)
         dydt_label_file_photo = wx.BitmapFromImage(image)
         dc.DrawBitmap(dydt_label_file_photo, 5, 0)
+
+    def bottom_box_resizer(self, evt):
+        self.variables_box.SetSize(int(np.ceil(self.GetSize().Width*0.3333)), self.l2_2.GetSize().Height)
+
+        '''self.variables_box.SetSize(int(np.ceil(self.GetSize().Width*0.3333)), 150)
+        #self.l3_2.SetDimension(self.l3_2.Position(), wx.Size(int(np.ceil(self.GetSize().Width*0.6666)), 150))'''
 
     def settings_button_pushed(self, event):
         settings_window = popup_windows.popup_window(self)
