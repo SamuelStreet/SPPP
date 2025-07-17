@@ -8,12 +8,6 @@ To Do:
   - Too many warnings setting to shut all warnings off needed
   - Need to make it so settings can be scrolled through so they are not quite so overwhelming (may need settings tabs or at least sections)
 
--Display
-  - Variable and Equation boxes should stretch
-  - Initial background image needs to match properly
-  - Buttons background needs changed
-  - Need to have a little dot where the plot is being loaded from
-
 -Functionality
   - Would be good to check over variables section, should be able to use any variable that is not a
     python reserved <= 10 characters, but had to modify variable names so would be good to check (Euler)
@@ -21,11 +15,20 @@ To Do:
   - Need to be able to click on the plot to pick a point
   - Need to make it so graphs and photos do not need to be moved to the same folder as the exe, makes it so links do not work as well
 
+- Feature
+  - should also save time based data as part of a nump array so that  be nice you could also get different time based 
+
+
 Low Priority
 - Would be good to generate a loading bar if plot it taking a while
 - no saftey when loading a json file - program may crash if broken json loaded 
   (low priority since it requires that user went into json file and then modified it)
 
+- Display
+  - would be nice if the plot scaled as the plot was moved
+
+- Settings
+  - would be nice if the legend could be turned on or off
 
 
 To work in vscode will need

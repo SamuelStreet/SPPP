@@ -32,7 +32,7 @@ class MainFrame(wx.Frame):
         self.SetIcon(icon)
         self.SetBackgroundColour("#282a30") # dark blue grey for the time being
         self.SetMinSize((600,400))
-        self.SetSize((700, 550))
+        self.SetSize((700, 535))
         font = wx.Font(10, wx.FONTFAMILY_DECORATIVE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         #(pixelSize, family, style(italic type), weight(boldness), underline)
         # more info at https://docs.wxpython.org/4.0.7/wx.Font.html
@@ -72,23 +72,26 @@ class MainFrame(wx.Frame):
         dydt_label.Bind(wx.EVT_ERASE_BACKGROUND, self.dydt_label_maker)
         dydt_label.SetBackgroundColour("#ffffff") # #ffffff = white
 
-        dxdt_textbox = wx.Panel(self.panel)
-        self.dxdt_textbox_text = wx.TextCtrl(dxdt_textbox, -1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size = (450, 40))
+        self.dxdt_textbox = wx.Panel(self.panel)
+        self.dxdt_textbox_text = wx.TextCtrl(self.dxdt_textbox, -1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size = (400, 40))
         self.dxdt_textbox_text.SetHint("(a)(b) or a*b for multiplication, a/b for division, ** or a^b for exponents")
-        dxdt_textbox.SetBackgroundColour("#ffffff") # #ffffff = white
-        dxdt_textbox.SetMaxSize((1000, 40))
+        self.dxdt_textbox.SetBackgroundColour("#ffffff") # #ffffff = white
+        self.dxdt_textbox.SetMaxSize(wx.Size(2000, 40))
+        self.dxdt_textbox.Bind(wx.EVT_SIZE, self.dxdt_text_box_resize)
 
-        dydt_textbox = wx.Panel(self.panel)
-        self.dydt_textbox_text = wx.TextCtrl(dydt_textbox, -1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size = (450, 40))
+        self.dydt_textbox = wx.Panel(self.panel)
+        self.dydt_textbox_text = wx.TextCtrl(self.dydt_textbox, -1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size = (400, 40))
         self.dydt_textbox_text.SetHint("ln or log for natural log, log10 = base 10, log2 = base 2, for trig radians used")
-        dydt_textbox.SetBackgroundColour("#ffffff") # #ffffff = white
-        dydt_textbox.SetMaxSize((1000, 40))
+        self.dydt_textbox.SetBackgroundColour("#ffffff") # #ffffff = white
+        self.dydt_textbox.SetMaxSize(wx.Size(2000, 40))
+        self.dydt_textbox.Bind(wx.EVT_SIZE, self.dydt_text_box_resize)
 
         self.variables_box = wx.Panel(self.panel, size = (220, 80))
         self.variables_box_text = wx.TextCtrl(parent=self.variables_box, id=-1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=self.variables_box.GetSize())
         self.variables_box_text.SetHint("comma separated variables here (ex. a = 5, b=7, ...)")
         self.variables_box.SetBackgroundColour("#ffffff") # #ffffff = white
-        self.variables_box.Bind(wx.EVT_SIZE, self.bottom_box_resizer) # this is to do stuf every time the screen is resized
+        self.variables_box.SetMaxSize(wx.Size(1000, 85))
+        self.variables_box.Bind(wx.EVT_SIZE, self.variable_text_box_resize) #This would activate evry time the window is re-sized (good NOTE for later)
 
         self.bh = 40 # button height
         self.bw = 40 # button width
@@ -120,6 +123,7 @@ class MainFrame(wx.Frame):
         settings_photo = wx.BitmapFromImage(image)
         settings_button=wx.BitmapButton(self.panel, -1, settings_photo, pos=(bw, bh), style=wx.NO_BORDER)
         settings_button.Bind(wx.EVT_BUTTON, self.settings_button_pushed)
+        settings_button.SetBackgroundColour("#282a30")
         ##
 
 
@@ -130,6 +134,7 @@ class MainFrame(wx.Frame):
         save_file_photo = wx.BitmapFromImage(image)
         save_file = wx.BitmapButton(self.panel, -1, save_file_photo, pos=(bw, bh), style=wx.NO_BORDER)
         save_file.Bind(wx.EVT_BUTTON, self.save_file_button_pushed)
+        save_file.SetBackgroundColour("#282a30")
         ##
 
         ##
@@ -139,7 +144,7 @@ class MainFrame(wx.Frame):
         open_file_photo = wx.BitmapFromImage(image)
         open_file = wx.BitmapButton(self.panel, -1, open_file_photo, pos=(bw, bh), style=wx.NO_BORDER)
         open_file.Bind(wx.EVT_BUTTON, self.open_file_button_pushed)
-
+        open_file.SetBackgroundColour("#282a30")
         ##
         help_photo = wx.Bitmap(self.cwd+"/Photos/Help Icon.png")
         image = wx.ImageFromBitmap(help_photo)
@@ -147,6 +152,7 @@ class MainFrame(wx.Frame):
         help_photo = wx.BitmapFromImage(image)
         help = wx.BitmapButton(self.panel, -1, help_photo, pos=(bw, bh), style=wx.NO_BORDER)
         help.Bind(wx.EVT_BUTTON, self.help_button_pushed)
+        help.SetBackgroundColour("#282a30")
         ##
 
         ##
@@ -156,6 +162,7 @@ class MainFrame(wx.Frame):
         load_photo = wx.BitmapFromImage(image)
         load = wx.BitmapButton(self.panel, -1, load_photo, pos=(bw, bh), style=wx.NO_BORDER)
         load.Bind(wx.EVT_BUTTON, self.load_button_pushed)
+        load.SetBackgroundColour("#282a30")
 
         ########## Layouts
         l1 = wx.BoxSizer(wx.VERTICAL)
@@ -167,10 +174,10 @@ class MainFrame(wx.Frame):
         l4_2 = wx.BoxSizer(wx.HORIZONTAL)
 
         l4_1.Add(dxdt_label,    proportion=1)
-        l4_1.Add(dxdt_textbox,  proportion=11, flag=wx.EXPAND)
+        l4_1.Add(self.dxdt_textbox,  proportion=11, flag=wx.EXPAND)
 
         l4_2.Add(dydt_label,    proportion=1)
-        l4_2.Add(dydt_textbox,  proportion=11, flag=wx.EXPAND)
+        l4_2.Add(self.dydt_textbox,  proportion=11, flag=wx.EXPAND)
 
         space_between_buttons = 5
         l3_1.Add(settings_button)
@@ -202,23 +209,22 @@ class MainFrame(wx.Frame):
         self.l2_2.AddSpacer(ba)
 
         l1.AddSpacer(ba)
-        l1.Add(l2_1,            proportion=35, flag=wx.EXPAND)
+        l1.Add(l2_1,            proportion=42, flag=wx.EXPAND)
         l1.AddSpacer(ba)
-        l1.Add(self.l2_2,            proportion=10)
-        l1.AddSpacer(ba)
+        l1.Add(self.l2_2,       proportion=10, flag=wx.EXPAND)
 
         self.panel.SetSizer(l1)
-        ############LAYOUT ENDS ##############
-
-        ###### Functions for Buttons #########
 
         self.Center() # makes it so that application appears in the middle of the screen
         self.Layout()
-        self.display.display.SetSize(self.display.GetSize())
+        self.display.display.SetSize(self.display.GetSize()) # window must be given a size to start or is made really small to start
+        self.display.Bind(wx.EVT_SIZE, self.display_resize)
         self.Show()
+        ############LAYOUT ENDS ##############
 
-    #NOTE: every function must be passed at least a eventnal since the buttons all send a eventnal
-    #from Phase_Plot_App import frame
+    ###### Functions for Buttons #########
+
+    #NOTE: every function must be passed at least a eventnal since the buttons all recieve an event
 
     def dxdt_label_maker(self, evt):
         # similar code found in a few spots, one of is https://www.youtube.com/watch?v=C3VX74g75Kc&t=1s
@@ -253,11 +259,18 @@ class MainFrame(wx.Frame):
         dydt_label_file_photo = wx.BitmapFromImage(image)
         dc.DrawBitmap(dydt_label_file_photo, 5, 0)
 
-    def bottom_box_resizer(self, evt):
-        self.variables_box.SetSize(int(np.ceil(self.GetSize().Width*0.3333)), self.l2_2.GetSize().Height)
+    def variable_text_box_resize(self, evt=None):
+        self.variables_box_text.SetSize(wx.Size(self.variables_box.GetSize()))
 
-        '''self.variables_box.SetSize(int(np.ceil(self.GetSize().Width*0.3333)), 150)
-        #self.l3_2.SetDimension(self.l3_2.Position(), wx.Size(int(np.ceil(self.GetSize().Width*0.6666)), 150))'''
+    def dxdt_text_box_resize(self, evt=None):
+        self.dxdt_textbox_text.SetSize(wx.Size(self.dxdt_textbox.GetSize()))
+
+    def dydt_text_box_resize(self, evt=None):
+        self.dydt_textbox_text.SetSize(wx.Size(self.dydt_textbox.GetSize()))
+
+    def display_resize(self, evt=None):
+        self.display.display.SetSize(wx.Size(self.display.GetSize()))
+
 
     def settings_button_pushed(self, event):
         settings_window = popup_windows.popup_window(self)

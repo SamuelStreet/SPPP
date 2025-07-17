@@ -119,12 +119,39 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
     ymin = settings["ymin"]
     ymax = settings["ymax"]
     
-    main_frame.display.display.SetSize(main_frame.display.GetSize())
+    if main_frame != None:
+        main_frame.display.display.SetSize(main_frame.display.GetSize())
+        fig.update_layout(
+            width = main_frame.display.display.GetSize().Width-20,
+            height = main_frame.display.display.GetSize().Height-20,
+        )
+    else: #This is used if making an image manually for initial plot 
+        #(if making initial image comment out everything below this else statement)
+        fig.update_layout(
+            width = 629-20,
+            height = 385-20,
 
-    fig.update_layout(
-        width = main_frame.display.display.GetSize().Width-20,
-        height = main_frame.display.display.GetSize().Height-20,
-    )
+        )
+        xpad = (xmax-xmin)/20
+        ypad = (ymax-ymin)/20
+        fig.update_layout(xaxis=dict(range=[xmin-xpad,xmax+xpad]))
+        fig.update_layout(yaxis=dict(range=[ymin-ypad,ymax+ypad]))
+        fig.update_layout(
+        title=dict(
+            text= settings["title"]
+        ),
+        xaxis=dict(
+            title=dict(
+                text=settings["x_axis_title"]
+            )
+        ),
+        yaxis=dict(
+            title=dict(
+                text=settings["y_axis_title"]
+            )
+        )
+        )
+        fig.write_html(settings["cwd"]+"/Graphs/Display_Plot_Clear.html")
 
     #### phase plot
     if(from_settings==False or (dxdt_text.strip() !='lambda x, y: ()' and dydt_text.strip() !='lambda x, y: ()')):
@@ -158,7 +185,7 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
                     fig.add_trace(
                     go.Scatter(
                         visible=True,
-                        marker = dict(size=12,symbol= "arrow-bar-up", angleref="previous"),
+                        marker = dict(size=15,symbol= "arrow-bar-up", angleref="previous"),
                         line=dict(color="#0763e9", width=1),
                         x=x_points_forwards,
                         y=y_points_forwards,
@@ -173,7 +200,7 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
                     fig.add_trace(
                     go.Scatter(
                         visible=True,
-                        marker = dict(size=12,symbol= "arrow-bar-up", angleref="previous"),
+                        marker = dict(size=15,symbol= "arrow-bar-up", angleref="previous"),
                         line=dict(color="#076309", width=1),
                         x=x_points_backwards,
                         y=y_points_backwards,
@@ -192,8 +219,17 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
             else:
                 variable_error_window = popup_windows.popup_window(main_frame)
                 variable_error_window.Error("Sorry, no numerical method added", cwd = settings["cwd"])
-                variable_error_window.Show()
-
+                variable_error_window.Show() 
+    if(num_of_start!=0):
+        for start in starting_points:
+            fig.add_trace(go.Scatter(
+                        x=[start[0]],
+                        y=[start[1]],
+                        marker=dict(color="black", size=5),
+                        mode="markers",
+                        name="",
+                        showlegend=False
+                    ))
     fig.update_layout(xaxis=dict(range=[xmin-xpad,xmax+xpad]))
     fig.update_layout(yaxis=dict(range=[ymin-ypad,ymax+ypad]))
     fig.update_layout(
@@ -218,22 +254,26 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
 
 ##TEST
 if __name__ == "__main__":
-    dxdt_text = 'lambda x,y: a'
-    dydt_text = 'lambda x,y: a'
+    dxdt_text = 'lambda x,y: 5'
+    dydt_text = 'lambda x,y: 5'
     settings = {
         "xmin": -5.0,
         "xmax": 5.0,
         "ymin": -5.0,
         "ymax": 5.0,
-        "arrow_scale": 1,
-        "starting_points": [(1,1)],
-        "h": 0.001,
-        "xdensity": 10,
-        "ydensity": 10,
-        "steps": 10000,
+        "arrow_scale": 0.5,
+        "starting_points": [[1,1],],
+        "h": 0.01,
+        "xdensity": 20,
+        "ydensity": 20,
+        "steps": 1000,
         "method": "Euler",
-        "cwd": "blablabla"
+        "stop_variable_override_warning": False,
+        "termination_warning": False,
+        "settings_file": "\settings.json",
+        "cwd": "C:/Users/Samuel/Downloads/Programming related/Python/PPP",
+        "x_axis_title": "x_axis title",
+        "y_axis_title": "y_axis title",
+        "title": "Graph Title"
     }
-    #f_and_v = 'ln = lambda x: log(x);         e = np.e;         π = np.pi;         pi = np.pi;a = 5; '
-    f_and_v = 'a = 5'
-    make_figure(dxdt_text=dxdt_text, dydt_text=dydt_text, settings=settings, stuff=f_and_v)
+    make_figure(main_frame=None, dxdt_text=dxdt_text, dydt_text=dydt_text, settings=settings, variables_text="")
