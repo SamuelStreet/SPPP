@@ -2,63 +2,86 @@ import plotly.graph_objects as go
 import numpy as np
 import popup_windows
 from numpy import sin, cos, tan, arcsin, arccos, arctan, sinh, cosh, tanh, log, log10, log2, e, pi
+from warnings import catch_warnings
 π = pi
 ln = lambda x: log(x)
-def get_points_for_forward_trace_Eurler(start, steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
+def get_points_for_forward_trace_Eurler(start, forward_steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
     x_points_forwards = [start[0]]
     y_points_forwards = [start[1]]
-    np.ceil(steps)
-    for i in range(steps):
+    for i in range(forward_steps):
         stop = False
         prev_x = x_points_forwards[-1]
         prev_y = y_points_forwards[-1]
         try: # adds lots of time to figuring out the graph
             next_x = prev_x + h*dxdt(prev_x, prev_y)
             next_y = prev_y + h*dydt(prev_x, prev_y)
-        except OverflowError as e:
+        except OverflowError as ex:
             print("")
-            termination_warning  = popup_windows.popup_window(main_frame)
-            termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going forwards in time.", cwd=settings["cwd"])
-            termination_warning.Show()
+            if(settings["stop_numerical_termination_warning"]==False):
+                termination_warning  = popup_windows.popup_window(main_frame)
+                termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going forwards in time.", cwd=settings["cwd"])
+                termination_warning.Show()
             return x_points_forwards, y_points_forwards
-            
+        except ZeroDivisionError as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, had to divide by zero somewhere when plotting forward curve(s). Program may have been able to proceed, but note there may be large numarical errors when making a curve in your plot.", cwd=settings["cwd"])
+            Zero_Error.Show()
+            return x_points_forwards, y_points_forwards
+        except Exception as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, somewhere when plotting your forward curve(s). I do not know what is wrong. feel free to read out at samuelcstreet@gmail.com and I can try and help you", cwd=settings["cwd"])
+            Zero_Error.Show()
+            return x_points_forwards, y_points_forwards
+        
         x_points_forwards.append(next_x)
         y_points_forwards.append(next_y)
         if(next_x>xmax+xpad or next_x<xmin-xpad):
             stop = True
             if(stop == True):
-                termination_warning  = popup_windows.popup_window(main_frame)
-                termination_warning.Warning("WARNING, Terminated on step " + str(i+1)+ "\nwhen going forwards in time.", cwd=settings["cwd"])
-                termination_warning.Show()
+                if(settings["stop_termination_warning"]==False):
+                    termination_warning  = popup_windows.popup_window(main_frame)
+                    termination_warning.Warning("WARNING, Terminated on step " + str(i+1)+ "\nwhen going forwards in time.", cwd=settings["cwd"])
+                    termination_warning.Show()
                 return x_points_forwards, y_points_forwards
                 # if it can be done without error then proceed 1 step farthure than the boundry of the chosen region
         if(next_y>ymax+ypad or next_y<ymin-ypad):
             stop = True
             if(stop == True):
-                termination_warning = popup_windows.popup_window(main_frame)
-                termination_warning.Warning("WARNING, Terminated on step " + str(i+1)+ "\nwhen going forwards in time.", cwd=settings["cwd"])
-                termination_warning.Show()
+                if(settings["stop_termination_warning"]==False):
+                    termination_warning = popup_windows.popup_window(main_frame)
+                    termination_warning.Warning("WARNING, Terminated on step " + str(i+1)+ "\nwhen going forwards in time.", cwd=settings["cwd"])
+                    termination_warning.Show()
                 return x_points_forwards, y_points_forwards
                 # if it can be done without error then proceed 1 step farthure than the boundry of the chosen region
     pass
     return x_points_forwards, y_points_forwards
 
-def get_points_for_backwards_trace_Eurler(start, steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
+def get_points_for_backwards_trace_Eurler(start, backward_steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
     x_points_backwards = [start[0]]
     y_points_backwards = [start[1]]
-    np.ceil(steps)
-    for i in range(steps):
+    for i in range(backward_steps):
         stop = False
         prev_x = x_points_backwards[-1]
         prev_y = y_points_backwards[-1]
         try: # adds lots of time to figuring out the graph
             next_x = prev_x - h*dxdt(prev_x, prev_y)
             next_y = prev_y - h*dydt(prev_x, prev_y)
-        except OverflowError as e:
+        except OverflowError as ex:
             print("")
-            termination_warning  = popup_windows.popup_window(main_frame)
-            termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going backwards in time.", cwd=settings["cwd"])
-            termination_warning.Show()
+            if(settings["stop_numerical_termination_warning"]==False):
+                termination_warning  = popup_windows.popup_window(main_frame)
+                termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going backwards in time.", cwd=settings["cwd"])
+                termination_warning.Show()
+            return x_points_backwards, y_points_backwards
+        except ZeroDivisionError as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, had to divide by zero somewhere when plotting curve(s) going backward in time. Program may have been able to proceed, but note there may be large numarical errors when making a curve in your plot.", cwd=settings["cwd"])
+            Zero_Error.Show()
+            return x_points_backwards, y_points_backwards
+        except Exception as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, somewhere when plotting curve(s) going backward in time. I do not know what is wrong. feel free to read out at samuelcstreet@gmail.com and I can try and help you", cwd=settings["cwd"])
+            Zero_Error.Show()
             return x_points_backwards, y_points_backwards
             
         x_points_backwards.append(next_x)
@@ -66,17 +89,19 @@ def get_points_for_backwards_trace_Eurler(start, steps, h, dxdt, dydt, main_fram
         if(next_x>xmax+xpad or next_x<xmin-xpad):
             stop = True
             if(stop == True):
-                termination_warning  = popup_windows.popup_window(main_frame)
-                termination_warning.Warning("WARNING, Terminated on step " + str(i+1)+"\nwhen going backwards in time.", cwd=settings["cwd"])
-                termination_warning.Show()
+                if(settings["stop_termination_warning"]==False):
+                    termination_warning  = popup_windows.popup_window(main_frame)
+                    termination_warning.Warning("WARNING, Terminated on step " + str(i+1)+"\nwhen going backwards in time.", cwd=settings["cwd"])
+                    termination_warning.Show()
                 return x_points_backwards, y_points_backwards
                 # if it can be done without error then proceed 1 step farthure than the boundry of the chosen region
         if(next_y>ymax+ypad or next_y<ymin-ypad):
             stop = True
             if(stop == True):
-                termination_warning = popup_windows.popup_window(main_frame)
-                termination_warning.Warning("WARNING, Terminated on step " + str(i+1)+"\nwhen going backwards in time.", cwd=settings["cwd"])
-                termination_warning.Show()
+                if(settings["stop_termination_warning"]==False):
+                    termination_warning = popup_windows.popup_window(main_frame)
+                    termination_warning.Warning("WARNING, Terminated on step " + str(i+1)+"\nwhen going backwards in time.", cwd=settings["cwd"])
+                    termination_warning.Show()
                 return x_points_backwards, y_points_backwards
                 # if it can be done without error then proceed 1 step farthure than the boundry of the chosen region
     return x_points_backwards, y_points_backwards
@@ -108,7 +133,8 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
     xdensity = settings["xdensity"]
     ydensity = settings["ydensity"]
     h = settings["h"]
-    steps = settings["steps"]
+    forward_steps = settings["forward_steps"]
+    backward_steps = settings["backward_steps"]
     method = settings["method"]
     arrow_scale = settings["arrow_scale"]
 
@@ -156,20 +182,40 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
     #### phase plot
     if(from_settings==False or (dxdt_text.strip() !='lambda x, y: ()' and dydt_text.strip() !='lambda x, y: ()')):
         if(xdensity !=0 and ydensity !=0):
-            xdif = (xmax-xmin)/xdensity
-            xbases = np.arange(xmin, xmax+xdif, xdif)
-            ydif = (ymax-ymin)/ydensity
-            ybases = np.arange(ymin, ymax+ydif, ydif)
-            for x_temp in (xbases):
-                for y_temp in (ybases):
-                    fig.add_trace(
-                        go.Scatter(
-                            visible = True,
-                            marker = dict(size=4,symbol= "arrow-bar-up", angleref="previous"),
-                            line=dict(color="#000000", width=1),
-                            x=[x_temp, x_temp + dxdt(x_temp, y_temp)*xdif*arrow_scale],
-                            y=[y_temp, y_temp + dydt(x_temp, y_temp)*xdif*arrow_scale],
-                            showlegend=False))
+            xdif = (xmax-xmin)/(xdensity+1)
+            xbases = np.arange(xmin+xdif, xmax, xdif)
+            ydif = (ymax-ymin)/(ydensity+1)
+            ybases = np.arange(ymin+ydif, ymax, ydif)
+            try:
+                with catch_warnings(record=True) as w:
+                    for x_temp in (xbases):
+                        for y_temp in (ybases):
+                            fig.add_trace(
+                                go.Scatter(
+                                    visible = True,
+                                    marker = dict(size=4,symbol= "arrow-bar-up", angleref="previous"),
+                                    line=dict(color="#000000", width=1),
+                                    
+                                    #NOTE: May get a dividing by zero warning here which will not effect the program, but of course dividing by zero may result in inacuracy of the phase plot
+                                    x=[x_temp, x_temp + dxdt(x_temp, y_temp)*xdif*arrow_scale],
+                                    y=[y_temp, y_temp + dydt(x_temp, y_temp)*xdif*arrow_scale],
+                                    showlegend=False))
+                    for warning in w:
+                        if(warning.message.args[0]=="divide by zero encountered in scalar divide"):
+                            Zero_Error = popup_windows.popup_window(main_frame)
+                            Zero_Error.Error("Error, had to divide by zero somewhere when making phase plot. Program may have been able to proceed, but note there may be large numarical errors when making the small arrows for the phase plot.", cwd=settings["cwd"])
+                            Zero_Error.Show()
+                        elif(warning):
+                            raise Exception
+
+            except ZeroDivisionError as ex:
+                Zero_Error = popup_windows.popup_window(main_frame)
+                Zero_Error.Error("Error, had to divide by zero somewhere when making phase plot. Program may have been able to proceed, but note there may be large numarical errors when making the small arrows for the phase plot.", cwd=settings["cwd"])
+                Zero_Error.Show()
+            except Exception as ex:
+                Unknown_Error = popup_windows.popup_window(main_frame)
+                Unknown_Error.Error("I do not know how this happened, if you are seeing this please email samuelcstreet@gmail.com with details about what you are trying to do with the program and he will try and assist.\n\nError Code: " + ex.__str__(), cwd=settings["cwd"])
+                Unknown_Error.Show()
 
     xpad = (xmax-xmin)/20
     ypad = (ymax-ymin)/20
@@ -180,7 +226,7 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
         if(num_of_start != 0):
             if(method == "Euler"):
                 for start in starting_points:
-                    x_points_forwards, y_points_forwards = get_points_for_forward_trace_Eurler(start, steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)
+                    x_points_forwards, y_points_forwards = get_points_for_forward_trace_Eurler(start, forward_steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)
                     
                     fig.add_trace(
                     go.Scatter(
@@ -195,7 +241,7 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
         if(num_of_start != 0):
             if(method == "Euler"):
                 for start in starting_points:
-                    x_points_backwards, y_points_backwards = get_points_for_backwards_trace_Eurler(start, steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)
+                    x_points_backwards, y_points_backwards = get_points_for_backwards_trace_Eurler(start, backward_steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)
 
                     fig.add_trace(
                     go.Scatter(
@@ -269,7 +315,7 @@ if __name__ == "__main__":
         "steps": 1000,
         "method": "Euler",
         "stop_variable_override_warning": False,
-        "termination_warning": False,
+        "stop_termination_warning": False,
         "settings_file": "\settings.json",
         "cwd": "C:/Users/Samuel/Downloads/Programming related/Python/PPP",
         "x_axis_title": "x_axis title",

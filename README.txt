@@ -2,12 +2,6 @@ Notes:
 - when using pyinstaller use -D to get a way faster program, slightly more work for user to accesss first time but loads way quicker
 
 To Do:
-- Settings
-  - currently the same number of steps are used for forwards and backwards time should be custome
-  - should not need to do forward and backward time at the same time
-  - Too many warnings setting to shut all warnings off needed
-  - Need to make it so settings can be scrolled through so they are not quite so overwhelming (may need settings tabs or at least sections)
-
 -Functionality
   - Would be good to check over variables section, should be able to use any variable that is not a
     python reserved <= 10 characters, but had to modify variable names so would be good to check (Euler)
@@ -16,20 +10,26 @@ To Do:
   - Need to make it so graphs and photos do not need to be moved to the same folder as the exe, makes it so links do not work as well
 
 - Feature
-  - should also save time based data as part of a nump array so that  be nice you could also get different time based 
+  - should also save time based data as part of a nump array so that  be nice you could also get different time based.
+  - would be nice if the user could specify a specific h value and the amount of time they would like to simulate.
+  - would be good to add Huen's method, but not required.
 
+- Display
+  - would be nice if the plot scaled as the plot was moved
+  - should not have to replot everything if only a small thing is changed such as backwards time being added or title being changed
+
+- Settings
+  - would be nice if the legend could be turned on or off
+  - should be more than 2 colors for plotted lines and there should be a setting for picking colors
+  - Need to test all of the settings and things to make sure the program is working properly
+
+- Warnings Update:
+  - warnings should all appear in a single popup at the end of processing and should be listed off
 
 Low Priority
 - Would be good to generate a loading bar if plot it taking a while
 - no saftey when loading a json file - program may crash if broken json loaded 
   (low priority since it requires that user went into json file and then modified it)
-
-- Display
-  - would be nice if the plot scaled as the plot was moved
-
-- Settings
-  - would be nice if the legend could be turned on or off
-
 
 To work in vscode will need
 - pip install wx 
