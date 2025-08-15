@@ -21,7 +21,7 @@ class Display_Window(wx.Panel):
 #This is the main class for the application, settings stored here when running
 class MainFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.1.2")
+        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.1.3")
         
         self.cwd = os.getcwd()
 
@@ -59,7 +59,11 @@ class MainFrame(wx.Frame):
             else:
                 with open(self.cwd+self.settings["settings_file"], "r") as json_file:
                     self.settings = json.load(json_file)
-
+            if(self.settings["stop_all_warnings"]==True):
+                #This and similar if statements are placed in other spots to avoid some possible inconsistencies.
+                self.stop_variable_override_warning_setting_box.SetValue("True")
+                self.stop_termination_warning_setting_box.SetValue("True")
+                self.stop_numerical_termination_warning_setting_box.SetValue("True")
 
         self.settings["cwd"] = self.cwd
 
@@ -116,6 +120,8 @@ class MainFrame(wx.Frame):
         settings_photo = wx.BitmapFromImage(image)
         settings_button.SetBitmap(settings_photo)
         '''
+
+
         ##
         settings_photo = wx.Bitmap(self.cwd+"/Photos/Settings Icon.png")
         image = wx.ImageFromBitmap(settings_photo)
@@ -368,7 +374,10 @@ class MainFrame(wx.Frame):
                     +"\t\tview https://realpython.com/lessons/reserved-keywords/\n"
                     +"\t\t(all one letter variables will work and any variable including greek will work))\n"
                     +"Settings:\n"
-                    +"\tThere are many settings to play with which include:\n"
+                    +"\tGraph_Visual_Settings:\n"
+                    +"\tx_axis_title:  : Controls the title of the x-axis\n"
+                    +"\ty_axis_title:  : Controls the title of the y-axis\n"
+                    +"\ttitle:         : Controls the title of the graph\n"
                     +"\txmin           : Sets the minimium value for the x axis \n"
                     +"\txmax           : Sets the maximium value for the x axis \n"
                     +"\tymin           : Sets the minimium value for the y axis \n"
@@ -380,19 +389,40 @@ class MainFrame(wx.Frame):
                         +"\t\t\t would like the plot to start from, for example [(1,1)] would mean the plot will \n"
                         +"\t\t\t start from the coordinates (1,1), [(1,1),(1,2)] would mean the plot will draw 2 \n"
                         +"\t\t\t separate lines, (from (1,1) and the other from (2,1))\n"
+                    +"\n"
+                    +"\tGraph_Background_Settings:\n"
                     +"\th              : This is the change value used in numarical integration\n"
-                    +"\txdensity       : This number coresponds to the number of arrows that will be used along\n"
-                        +"\t\t\t the x axis in the phase plot (larger means more arrows) \n"
-                    +"\tydensity       : This number coresponds to the number of arrows that will be used along\n"
-                        +"\t\t\t the y axis in the phase plot (larger means more arrows) \n"
-                    +"\tsteps          : Sets the number of iterations the numarical integration technique chosen\n"
-                        +"\t\t\t will use \n"
+                    +"\txdensity       : The number of arrows used along the x axis in the phase plot\n"
+                    +"\tydensity       : The number of arrows used along the y axis in the phase plot\n"
+                    +"\tspecify_time   : True or False, if true then the forward steps and backwards steps will\n"
+                        +"\t\t\tbe dissabled and changed based on the forward_time and backward_time given.\n"
+                    +"\tforward_steps  : Sets the number of iterations of the numarical integration technique\n"
+                        +"\t\t\t chosen will use when going forward in time\n"
+                    +"\tbackward_steps : Same as forward_steps but for going backwards in time\n"
+                    +"\tforward_time   : If you would prefer you can give an amount of time you would like to go\n"
+                        +"\t\t\tforward in time and then the step will be calculated automatically,\n"
+                        +"\t\t\tWARNING specify_time must be set to True in order for this feature to work.\n"
+                    +"\tbackward_time  : Same as forward_time, but for going backward in time\n"
                     +"\tmethod         : Choose the numerical method that you would like to use. Currently can only\n"
                         +"\t\t\t select Euler, more will be added with updates\n"
-                    +"\tstop_WARNING   : Choose to stop seeing certain warnings by writing True in these boxes\n"
+                    +"\n"
+                    +"\tWarning_Settings:\n"
+                    +"\tstop_all_warnings: If set to true the all warning popups will be shut off\n"
+                    +"\tstop_variable_override_warning: Stops warning from being shown if you decide to overide a\n"
+                        +"\t\t\tvariable that is preset, for example e=5 or π=10\n"
+                    +"\tstop_termination_warning: This is triggered most times a plot is built, it just signals that\n"
+                        +"\t\t\tthe plot stopped generating since it was leaving the viewing area, this stop is placed\n"
+                        +"\t\t\tin to prevent numerical errors. It should be safe to turn this warning off it is more\n"
+                        +"\t\t\tof an FYI.\n"
+                    +"\tstop_numerical_termination_warning: Stop getting warnings when a plot stops plotting due to\n"
+                        +"\t\t\tnumerical issues.\n"
                     +"\tsettings_file  : You may select a new settings file or svae multiple settings files if \n"
                         +"\t\t\t you would like, but do not delete the origional settings file (if you do it will \n"
                         +"\t\t\t just be recreated later)\n"
+                    +"\n"
+                    +"\tFiles_Settings:\n"
+                    +"\tsettings_file: stores the location of the settings file being used, an absolute path will work\n"
+                    +"\ton Windows."
                     +"\tSettings Buttons:\n"
                     +"\t\tApply: Applies settings, but does not save them\n"
                     +"\t\tSave: Applies and saves settings in the indicated file\n"
@@ -407,7 +437,13 @@ class MainFrame(wx.Frame):
                         +"\tsettings_file section in settings will be overwritten with the saved file even if it\n"
                         +"\thas been modified in a different session when using this program"
                     +"\n\nNote: \n"
-                    +"\tThis plotter program will stop plotting soon after a max or min value is reached \n", self.settings["cwd"])
+                        +"\tThis plotter program will stop plotting soon after a max or min value is reached \n"
+                    +"\n\nFEEDBACK + BUG REPORT: \n"
+                        +"\tIf you have feedback on this program I would be happy to hear it and would also be\n"
+                        +"\tinterested in knowing what you are using the program for if you don't mind sharing,\n"
+                        +"\tfeel free to reach out at samuelcstreet@gmail.com\n\n"
+                        +"\tIf you happen to find a bug I would be happy to know about it so I can fix it, feel\n"
+                        +"\tfree to let me know at samuelcstreet@gmail.com\n", self.settings["cwd"])
 
     def load_button_pushed(self, event=None, from_settings = False):
         #For this function all variables have been made longer than 10 characters long so that the user input does not inpact the program

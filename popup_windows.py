@@ -21,7 +21,7 @@ class popup_window(wx.Frame):
         self.SetSize(size)
         font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         textbox_sizer = wx.BoxSizer(wx.VERTICAL) 
-        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-40, 1000), pos=(10,10))
+        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-40, 1600), pos=(10,10))
         textbox.SetFont(font)
         textbox_sizer.Add(textbox)
         self.panel.SetSizer(textbox_sizer)
@@ -34,7 +34,9 @@ class popup_window(wx.Frame):
         self.SetMinSize(size)
         self.SetMaxSize(size)
         self.panel = wx.Panel(self)
-        textbox=wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-35), pos=(10,10))
+        textbox = wx.TextCtrl(parent=self.panel, id=-1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
+        textbox.SetLabelText(text)
+        textbox.SetEditable(False)
         font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         textbox.SetFont(font)
 
@@ -45,7 +47,9 @@ class popup_window(wx.Frame):
         self.SetMinSize(size)
         self.SetMaxSize(size)
         self.panel = wx.Panel(self)
-        textbox=wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
+        textbox=wx.TextCtrl(parent=self.panel, id=-1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
+        textbox.SetLabelText(text)
+        textbox.SetEditable(False)
         font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         textbox.SetFont(font)
 
@@ -56,11 +60,13 @@ class popup_window(wx.Frame):
         self.SetMinSize(size)
         self.SetMaxSize(size)
         self.panel = wx.Panel(self)
-        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
+        textbox = wx.TextCtrl(parent=self.panel, id=-1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
+        textbox.SetLabelText(text)
+        textbox.SetEditable(False)
         font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         textbox.SetFont(font)
 
-    def Update_Self_for_Settings(self, settings, load, size = (400, 590)):
+    def Update_Self_for_Settings(self, settings, load, size = (400, 400)):
         self.load = load
         self.settings = settings
         icon = wx.Icon(settings["cwd"]+"/Photos/Settings Icon.png")
@@ -73,32 +79,58 @@ class popup_window(wx.Frame):
         slw = 170 #setting label box width
         slh = 20 #setting label box height
         
+        #Graph_Visual_Settings
+        self.l3_Graph_Visual_Settings = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_title = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_x_axis_title = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_y_axis_title = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_xmin = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_xmax = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_ymin = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_ymax = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_arrow_scale = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_starting_points = wx.BoxSizer(wx.HORIZONTAL)
+
+        #Graph_Background_Settings
+        self.l3_Graph_Background_Settings = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_Graph_Background_Settings_blank = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_h = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_xdensity = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_ydensity = wx.BoxSizer(wx.HORIZONTAL)
-        self.l3_steps = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_specify_time = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_forward_steps = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_backward_steps = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_forward_time = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_backward_time = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_method = wx.BoxSizer(wx.HORIZONTAL)
+
+        #Warning_Settings
+        self.l3_Warning_Settings = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_Warning_Settings_blank = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_stop_all_warnings = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_stop_variable_override_warning = wx.BoxSizer(wx.HORIZONTAL)
-        self.l3_termination_warning = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_stop_termination_warning = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_stop_numerical_termination_warning = wx.BoxSizer(wx.HORIZONTAL)
+
+        #Files_Settings
+        self.l3_Files_Settings = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_Files_Settings_blank = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_settings_file = wx.BoxSizer(wx.HORIZONTAL)
-        self.l3_title=wx.BoxSizer(wx.HORIZONTAL)
-        self.l3_x_axis_title=wx.BoxSizer(wx.HORIZONTAL)
-        self.l3_y_axis_title=wx.BoxSizer(wx.HORIZONTAL)
+        
         # self.l3_cwd = wx.BoxSizer(wx.HORIZONTAL)
         # cwd should not be editable by the user
 
+        #This is a panel
+        self.setting_scroller_panel = wx.lib.scrolledpanel.ScrolledPanel(self.panel,-1,size=(400,400), style=wx.SIMPLE_BORDER)
+        self.setting_scroller_panel.SetupScrolling(scroll_x=False, scroll_y=True)
+        self.setting_scroller_panel.SetBackgroundColour('#FFFFFF')
+
         def display_settings(setting):
             setting_string = "" \
-            "self."+setting+"_panel_1 = wx.Panel(self.panel)\n" \
+            "self."+setting+"_panel_1 = wx.Panel(self.setting_scroller_panel)\n" \
             "wx.StaticText(parent=self."+setting+"_panel_1, id=-1, label=\""+setting+": \", style=wx.ALIGN_LEFT, size=(slw, slh), pos=(10,5))\n" \
             "#\n" \
-            "self."+setting+"_panel_2 = wx.Panel(self.panel)\n" \
+            "self."+setting+"_panel_2 = wx.Panel(self.setting_scroller_panel)\n" \
             "self."+setting+"_setting_box = wx.TextCtrl(self."+setting+"_panel_2, -1, style=wx.ALIGN_LEFT, size = (sw, sh), pos=(0,5))\n" \
             "self."+setting+"_setting_box.SetValue(str(self.settings[\""+setting+"\"]))\n" \
             "#\n" \
@@ -107,9 +139,31 @@ class popup_window(wx.Frame):
 
             return(setting_string)
 
+        def display_setting_head(setting):
+            setting_string = "" \
+            "self."+setting+"_panel_1 = wx.Panel(self.setting_scroller_panel)\n" \
+            "wx.StaticText(parent=self."+setting+"_panel_1, id=-1, label=\""+setting+": \", style=wx.ALIGN_LEFT, size=(slw, slh), pos=(10,5))\n" \
+            "#\n" \
+            "self.l3_"+setting+".Add(self."+setting+"_panel_1, proportion=6)"
+            return(setting_string)
+        
+        def display_setting_blank(setting):
+            setting_string = "" \
+            "self."+setting+"_blank_panel_1 = wx.Panel(self.setting_scroller_panel)\n" \
+            "wx.StaticText(parent=self."+setting+"_blank_panel_1, id=-1, label=\" \", style=wx.ALIGN_LEFT, size=(slw, slh), pos=(10,5))\n" \
+            "#\n" \
+            "self.l3_"+setting+"_blank.Add(self."+setting+"_blank_panel_1, proportion=6)"
+            return(setting_string)
+
         for key in self.settings.keys():
-            if(key != "cwd"): # cwd should not be edited by the user
+            if(key != "cwd" and key != "Graph_Visual_Settings" and key != "Graph_Background_Settings" and key != "Warning_Settings" and key != "Files_Settings"): # cwd should not be edited by the user
                 setting_display_string = display_settings(key)
+                exec(setting_display_string)
+            elif(key == "Graph_Visual_Settings" or key == "Graph_Background_Settings" or key == "Warning_Settings" or key == "Files_Settings"):
+                if(key!="Graph_Visual_Settings"):
+                    setting_display_string = display_setting_blank(key)
+                    exec(setting_display_string)
+                setting_display_string = display_setting_head(key)
                 exec(setting_display_string)
     
     def Settings(self):
@@ -133,32 +187,57 @@ class popup_window(wx.Frame):
 
         for key in self.settings.keys():
             if key != "cwd": # CWD should not be edited by user
+                if(key == "Graph_Background_Settings" or key == "Warning_Settings" or key == "Files_Settings"):
+                    exec('self.l2_2.Add(self.l3_'+key+'_blank, proportion=1, flag=wx.EXPAND)')
                 exec('self.l2_2.Add(self.l3_'+key+', proportion=1, flag=wx.EXPAND)')
         
+        self.setting_scroller_panel.SetSizer(self.l2_2)
+
         self.l1.Add(self.l2_1, proportion=1, flag=wx.EXPAND)
-        self.l1.Add(self.l2_2, proportion=15, flag=wx.EXPAND)
+        self.l1.Add(self.setting_scroller_panel, proportion=15, flag=wx.EXPAND)
 
         self.panel.SetSizer(self.l1)
         self.Layout()
 
-    def apply_settings_button_pushed(self, sig=None):        
+    def apply_settings_button_pushed(self, sig=None):      
+        self.settings["Graph_Visual_Settings"]= ""
+        self.settings["title"] = self.title_setting_box.GetValue()
+        self.settings["x_axis_title"] = self.x_axis_title_setting_box.GetValue()
+        self.settings["y_axis_title"] = self.y_axis_title_setting_box.GetValue()
         self.settings["xmin"] = float(self.xmin_setting_box.GetValue())
         self.settings["xmax"] = float(self.xmax_setting_box.GetValue())
         self.settings["ymin"] = float(self.ymin_setting_box.GetValue())
         self.settings["ymax"] = float(self.ymax_setting_box.GetValue())
         self.settings["arrow_scale"] = float(self.arrow_scale_setting_box.GetValue())
         self.settings["starting_points"] = eval(self.starting_points_setting_box.GetValue())
+
+        self.settings["Graph_Background_Settings"]= ""
         self.settings["h"] = float(self.h_setting_box.GetValue())
         self.settings["xdensity"] = float(self.xdensity_setting_box.GetValue())
         self.settings["ydensity"] = float(self.ydensity_setting_box.GetValue())
-        self.settings["steps"] = int(self.steps_setting_box.GetValue())
+        self.settings["specify_time"] = bool(self.specify_time_setting_box.GetValue())
+        self.settings["forward_steps"] = int(self.forward_steps_setting_box.GetValue())
+        self.settings["backward_steps"] = int(self.backward_steps_setting_box.GetValue())
+        self.settings["forward_time"] = int(self.forward_time_setting_box.GetValue())
+        self.settings["backward_time"] = int(self.backward_time_setting_box.GetValue())
         self.settings["method"] = self.method_setting_box.GetValue()
-        self.settings["stop_variable_override_warning"] = bool(self.stop_variable_override_warning_setting_box.GetValue())
-        self.settings["termination_warning"] = bool(self.termination_warning_setting_box.GetValue())
+
+        self.settings["Warning_Settings"]= ""
+        self.settings["stop_all_warnings"] = bool(self.stop_all_warnings_setting_box.GetValue())
+        if(self.settings["stop_all_warnings"]==True):
+            self.settings["stop_variable_override_warning"] = True
+            self.settings["stop_termination_warning"] = True
+            self.settings["stop_numerical_termination_warning"] = True
+            self.stop_variable_override_warning_setting_box.SetValue("True")
+            self.stop_termination_warning_setting_box.SetValue("True")
+            self.stop_numerical_termination_warning_setting_box.SetValue("True")
+        else:
+            self.settings["stop_variable_override_warning"] = bool(self.stop_variable_override_warning_setting_box.GetValue())
+            self.settings["stop_termination_warning"] = bool(self.stop_termination_warning_setting_box.GetValue())
+            self.settings["stop_numerical_termination_warning"] = bool(self.stop_numerical_termination_warning_setting_box.GetValue())
+
+        self.settings["Files_Settings"]= ""
         self.settings["settings_file"] = self.settings_file_setting_box.GetValue()
-        self.settings["title"] = self.title_setting_box.GetValue()
-        self.settings["x_axis_title"] = self.x_axis_title_setting_box.GetValue()
-        self.settings["y_axis_title"] = self.y_axis_title_setting_box.GetValue()
         
         if(self.settings["settings_file"][0]!="/"):
             self.settings["settings_file"] = "/"+self.settings["settings_file"]
@@ -218,23 +297,42 @@ class popup_window(wx.Frame):
         else:
             with open(self.settings["cwd"]+self.settings["settings_file"], "r") as json_file:
                 self.settings = json.load(json_file)
+
+            # Graph_Visual:
+            self.title_setting_box.SetValue(str(self.settings["title"]))
+            self.x_axis_title_setting_box.SetValue(str(self.settings["x_axis_title"]))
+            self.x_axis_title_setting_box.SetValue(str(self.settings["y_axis_title"]))
             self.xmin_setting_box.SetValue(str(self.settings["xmin"]))
             self.xmax_setting_box.SetValue(str(self.settings["xmax"]))
             self.ymin_setting_box.SetValue(str(self.settings["ymin"]))
             self.ymax_setting_box.SetValue(str(self.settings["ymax"]))
+
+            # Graph_Background:
             self.arrow_scale_setting_box.SetValue(str(self.settings["arrow_scale"]))
             self.starting_points_setting_box.SetValue(str(self.settings["starting_points"]))
             self.h_setting_box.SetValue(str(self.settings["h"]))
             self.xdensity_setting_box.SetValue(str(self.settings["xdensity"]))
             self.ydensity_setting_box.SetValue(str(self.settings["ydensity"]))
-            self.steps_setting_box.SetValue(str(self.settings["steps"]))
+            self.specify_time_setting_box.SetValue(str(self.settings["specify_time"]))
+            self.forward_steps_setting_box.SetValue(int(self.settings["forward_steps"]))
+            self.backward_steps_setting_box.SetValue(int(self.settings["backward_steps"]))
+            self.forward_time_setting_box.SetValue(int(self.settings["forward_time"]))
+            self.backward_time_setting_box.SetValue(int(self.settings["backward_time"]))
             self.method_setting_box.SetValue(str(self.settings["method"]))
-            self.stop_variable_override_warning_setting_box.SetValue(str(self.settings["stop_variable_override_warning"]))
-            self.termination_warning_setting_box.SetValue(str(self.settings["termination_warning"]))
+
+            #Warnings:
+            self.stop_all_warnings_setting_box.SetValue(str(self.settings["stop_all_warnings"]))
+            if(self.settings["stop_all_warnings"]==True):
+                self.stop_variable_override_warning_setting_box.SetValue("True")
+                self.stop_termination_warning_setting_box.SetValue("True")
+                self.stop_numerical_termination_warning_setting_box.SetValue("True")
+            else:
+                self.stop_variable_override_warning_setting_box.SetValue(str(self.settings["stop_variable_override_warning"]))
+                self.stop_termination_warning_setting_box.SetValue(str(self.settings["stop_termination_warning"]))
+                self.stop_numerical_termination_warning_setting_box.SetValue(str(self.settings["stop_numerical_termination_warning"]))
+
+            #Files:
             self.settings_file_setting_box.SetValue(str(self.settings["settings_file"]))
-            self.title_setting_box.SetValue(str(self.settings["title"]))
-            self.x_axis_title_setting_box.SetValue(str(self.settings["x_axis_title"]))
-            self.x_axis_title_setting_box.SetValue(str(self.settings["y_axis_title"]))
             # self.cwd_setting_box.SetValue(str(self.settings["cwd"]))
             # cwd should not be edited
             self.load(from_settings=True)
@@ -245,44 +343,68 @@ class popup_window(wx.Frame):
         
         # have to set settings individually or else pointer will just move, could also have used for loop or other method,
         # but this is what I went with
-        
+
+        self.settings["Graph_Visual_Settings"]= default_class_instance.settings["Graph_Visual_Settings:"]
+        self.settings["title"] = default_class_instance.settings["title"]
+        self.settings["x_axis_title"] = default_class_instance.settings["x_axis_title"]
+        self.settings["y_axis_title"] = default_class_instance.settings["y_axis_title"]
         self.settings["xmin"] = default_class_instance.settings["xmin"]
         self.settings["xmax"] = default_class_instance.settings["xmax"]
         self.settings["ymin"] = default_class_instance.settings["ymin"]
         self.settings["ymax"] = default_class_instance.settings["ymax"]
         self.settings["arrow_scale"] = default_class_instance.settings["arrow_scale"]
         self.settings["starting_points"] = default_class_instance.settings["starting_points"]
+
+        self.settings["Graph_Background_Settings"]= default_class_instance.settings["Graph_Background_Settings"]
         self.settings["h"] = default_class_instance.settings["h"]
         self.settings["xdensity"] = default_class_instance.settings["xdensity"]
         self.settings["ydensity"] = default_class_instance.settings["ydensity"]
-        self.settings["steps"] = default_class_instance.settings["steps"]
+        self.settings["forward_steps"] = default_class_instance.settings["forward_steps"]
+        self.settings["backward_steps"] = default_class_instance.settings["backward_steps"]
         self.settings["method"] = default_class_instance.settings["method"]
+
+        self.settings["Warning_Settings"]= default_class_instance.settings["Warning_Settings"]
+        self.settings["stop_all_warnings"] = default_class_instance.settings["stop_all_warnings"]
         self.settings["stop_variable_override_warning"] = default_class_instance.settings["stop_variable_override_warning"]
-        self.settings["termination_warning"] = default_class_instance.settings["termination_warning"]
+        self.settings["stop_termination_warning"] = default_class_instance.settings["stop_termination_warning"]
+        self.settings["stop_numerical_termination_warning"] = default_class_instance.settings["stop_numerical_termination_warning"]
+
+        self.settings["Files_Settings"]= default_class_instance.settings["Files_Settings"]
         self.settings["settings_file"] = default_class_instance.settings["settings_file"]
-        self.settings["title"] = default_class_instance.settings["title"]
-        self.settings["x_axis_title"] = default_class_instance.settings["x_axis_title"]
-        self.settings["y_axis_title"] = default_class_instance.settings["y_axis_title"]
         #self.settings["cwd"] = default_class_instance.settings["cwd"]
         #cwd should not be edited
 
+        # Graph_Visual:
+        self.title_setting_box.SetValue(str(self.settings["title"]))
+        self.x_axis_title_setting_box.SetValue(str(self.settings["x_axis_title"]))
+        self.x_axis_title_setting_box.SetValue(str(self.settings["y_axis_title"]))
         self.xmin_setting_box.SetValue(str(self.settings["xmin"]))
         self.xmax_setting_box.SetValue(str(self.settings["xmax"]))
         self.ymin_setting_box.SetValue(str(self.settings["ymin"]))
         self.ymax_setting_box.SetValue(str(self.settings["ymax"]))
+
+        # Graph_Background:
         self.arrow_scale_setting_box.SetValue(str(self.settings["arrow_scale"]))
         self.starting_points_setting_box.SetValue(str(self.settings["starting_points"]))
         self.h_setting_box.SetValue(str(self.settings["h"]))
         self.xdensity_setting_box.SetValue(str(self.settings["xdensity"]))
         self.ydensity_setting_box.SetValue(str(self.settings["ydensity"]))
-        self.steps_setting_box.SetValue(str(self.settings["steps"]))
+        self.specify_time_setting_box.SetValue(str(self.settings["specify_time"]))
+        self.forward_steps_setting_box.SetValue(int(self.settings["forward_steps"]))
+        self.backward_steps_setting_box.SetValue(int(self.settings["backward_steps"]))
+        self.forward_time_setting_box.SetValue(int(self.settings["forward_time"]))
+        self.backward_time_setting_box.SetValue(int(self.settings["backward_time"]))
         self.method_setting_box.SetValue(str(self.settings["method"]))
+
+        #Warnings:
+        self.stop_all_warnings_setting_box.SetValue(str(self.settings["stop_all_warnings"]))
         self.stop_variable_override_warning_setting_box.SetValue(str(self.settings["stop_variable_override_warning"]))
-        self.termination_warning_setting_box.SetValue(str(self.settings["termination_warning"]))
+        self.stop_termination_warning_setting_box.SetValue(str(self.settings["stop_termination_warning"]))
+        self.stop_numerical_termination_warning_setting_box.SetValue(str(self.settings["stop_numerical_termination_warning"]))
+
+        #Files:
         self.settings_file_setting_box.SetValue(str(self.settings["settings_file"]))
-        self.title_setting_box.SetValue(str(self.settings["title"]))
-        self.x_axis_title_setting_box.SetValue(str(self.settings["x_axis_title"]))
-        self.x_axis_title_setting_box.SetValue(str(self.settings["y_axis_title"]))
+        
         #self.cwd_setting_box.SetValue(str(self.settings["cwd"]))
         #cwd should not be edited
         self.apply_settings_button_pushed()
