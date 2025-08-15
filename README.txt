@@ -51,9 +51,11 @@ To compile porject can use:
 Windows
 pyinstaller -D --icon="C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos/PPP Logo.png" --noconsole --add-binary "c:\Users\Samuel\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\WebView2Loader.dll;.\wx" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Graphs;Graphs" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos;Photos" "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Phase_Plot_App_Launcher.py"
 
-LINUX
+LINUX Debian12
 /home/samuelstreet/Downloads/PPP_python_environtment/bin/pyinstaller -D --icon="/home/samuelstreet/Downloads/PPP Github Space/PPP/Photos/PPP Logo.png" --noconsole --add-data "/home/samuelstreet/Downloads/PPP Github Space/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/PPP Github Space/PPP/Photos:Photos" "/home/samuelstreet/Downloads/PPP Github Space/PPP/Phase_Plot_App_Launcher.py"
 
+LINUX Ubuntu 24.04.2 LTS
+pyinstaller -D --icon="/home/Downloads/SPPP_code/PPP/Photos/PPP Logo.png" --noconsole --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Graphs:Graphs" --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Photos:Photos" "/home/samuelcstreet/Downloads/SPPP_code/PPP/Phase_Plot_App_Launcher.py"
 Go into internals once compiled grab Graphs and Photos then place them in parent directory
 
 
@@ -104,3 +106,9 @@ sudo ldconfig
 Then follow https://wxpython.org/blog/2017-08-17-builds-for-linux-with-pip/index.html
 
 and it will work (saved wheel file so it will work from the .whl file to make things easier)
+
+
+
+LINUX Ubuntu 24.04.2 (should work for other  ubuntu distrobutions)
+run:
+pip install -U     -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-24.04.2     wxPython
