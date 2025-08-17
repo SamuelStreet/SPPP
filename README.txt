@@ -11,7 +11,7 @@ Ubuntu24.04.2
 1) Download+Unzip
 2) sudo add-apt-repository "deb http://gb.archive.ubuntu.com/ubuntu jammy main"; sudo apt-get update; sudo apt-get install libwebkit2gtk-4.0-dev -y;
 3) Expand Window a little
-4) Use application
+4) Use
 
 Other: afraid you will have to comile the project using the steps below, sorry.
 
