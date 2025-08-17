@@ -1,3 +1,22 @@
+Installation instructions:
+Windows:
+1) Download+Unzip
+2) Use
+
+Debian12:
+1) Download+Unzip
+2) Use
+
+Ubuntu24.04.2
+1) Download+Unzip
+2) sudo add-apt-repository "deb http://gb.archive.ubuntu.com/ubuntu jammy main"; sudo apt-get update; sudo apt-get install libwebkit2gtk-4.0-dev -y;
+3) Expand Window a little
+4) Use application
+
+
+If working on project do the following:
+
+
 Notes:
 - when using pyinstaller use -D to get a way faster program, slightly more work for user to accesss first time but loads way quicker
 
@@ -32,18 +51,41 @@ Low Priority
   (low priority since it requires that user went into json file and then modified it)
 
 To work in vscode will need
-- pip install wx 
-- pip install wx.html2 (For linux the above to are done together using a slightly more complex method described below)
-- pip install numpy
-- pip install plotly
+1)
+Windows:
+Install python + pip
+In command
+python -m venv SPPP_Environment/location/you/want/it
+path\of\SPPP_Environment\Scripts\activate
 
-(Should be in python to start)
-- shutil
-- json 
-- os
+DEBIAN/Ubuntu:
+Install python + pip
+sudo apt install python3-venv
+python3 -m venv SPPP_Environment (makes a virtual environment for storing python packages this is used to store python packages)
+source directory/of/SPPP_Environment/bin/activate (will make it so that, when compiling SPPP, only packages loaded in SPPP_Environment will be used so less space is taken up)
 
-Need to make a virtual environment when done otherwise pyinstaller includes 
-every library installed system python environment which can be quite a few and end file will be bigger
+2)
+Windows:
+pip install wxpython numpy plotly pyinstaller
+
+Debian:
+pip install numpy plotly pyinstaller
+sudo apt-get update;
+sudo apt-get install python-dev-is-python3 libgtk-3-dev snapd  libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio freeglut3-dev libwebkit2gtk-4.0-dev libjpeg62 libpng-dev libtiff-dev libsdl2-2.0-0 libnotify-bin libsm6 -y
+sudo snap install snapd -y;
+sudo snap install gstreamer --edge;
+sudo ldconfig;
+(was told in instructions to get same version as gtk, this is not the same version, but it could be downloaded)
+Then follow https://wxpython.org/blog/2017-08-17-builds-for-linux-with-pip/index.html
+and it will work (saved wheel file so it will work from the .whl file to make things easier)
+
+
+Ubuntu:
+pip install numpy plotly pyinstaller
+pip install -U     -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-24.04.2     wxPython
+
+3)
+If using Windows make sure vs code changes directory to venv directory
 
 
 To compile porject can use:
@@ -55,60 +97,9 @@ LINUX Debian12
 /home/samuelstreet/Downloads/PPP_python_environtment/bin/pyinstaller -D --icon="/home/samuelstreet/Downloads/PPP Github Space/PPP/Photos/PPP Logo.png" --noconsole --add-data "/home/samuelstreet/Downloads/PPP Github Space/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/PPP Github Space/PPP/Photos:Photos" "/home/samuelstreet/Downloads/PPP Github Space/PPP/Phase_Plot_App_Launcher.py"
 
 LINUX Ubuntu 24.04.2 LTS
-pyinstaller -D --icon="/home/Downloads/SPPP_code/PPP/Photos/PPP Logo.png" --noconsole --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Graphs:Graphs" --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Photos:Photos" "/home/samuelcstreet/Downloads/SPPP_code/PPP/Phase_Plot_App_Launcher.py"
+1) pyinstaller -D --icon="/home/Downloads/SPPP_code/PPP/Photos/PPP Logo.png" --noconsole --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Graphs:Graphs" --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Photos:Photos" "/home/samuelcstreet/Downloads/SPPP_code/PPP/Phase_Plot_App_Launcher.py"
 Go into internals once compiled grab Graphs and Photos then place them in parent directory
 
-
-
-
-
-
-
-
-
-
-
-
-To install wxPython in Linux (Debian specific, but same instuctions for other distros, packages might just have different names)
-(It will be just as agognizingly painful as it looks \)
-
-Building wxPython on Debian12
-
-sudo apt update
-
-sudo apt install python-dev-is-python3
-
-sudo apt install libgtk-3-dev
-
-sudo apt install snapd -y
-sudo snap install snapd
-sudo snap install gstreamer --edge
-
-apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio -y
-
-sudo apt-get install freeglut3-dev
-
-sudo apt install libwebkit2gtk-4.0-dev   (was told in instructions to get same version as gtk, this is not the same version, but it could be downloaded)
-
-apt-get install libjpeg62
-
-sudo apt-get install libpng-dev
-
-sudo apt-get install libtiff-dev
-
-sudo apt-get install libsdl2-2.0-0
-
-sudo apt install libnotify-bin
-
-sudo apt-get install libsm6
-sudo ldconfig
-
-Then follow https://wxpython.org/blog/2017-08-17-builds-for-linux-with-pip/index.html
-
-and it will work (saved wheel file so it will work from the .whl file to make things easier)
-
-
-
-LINUX Ubuntu 24.04.2 (should work for other  ubuntu distrobutions)
-run:
-pip install -U     -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-24.04.2     wxPython
+2) after application is made with pyinstaller copy and past the file using:
+cp --dereference -r old/file/path new/file/path
+to get source of all symbolic links
