@@ -13,6 +13,8 @@ Ubuntu24.04.2
 3) Expand Window a little
 4) Use application
 
+Other: afraid you will have to comile the project using the steps below, sorry.
+
 
 If working on project do the following:
 
