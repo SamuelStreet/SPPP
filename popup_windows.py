@@ -21,7 +21,7 @@ class popup_window(wx.Frame):
         self.SetSize(size)
         font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         textbox_sizer = wx.BoxSizer(wx.VERTICAL) 
-        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-40, 1600), pos=(10,10))
+        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-40, 2200), pos=(10,10))
         textbox.SetFont(font)
         textbox_sizer.Add(textbox)
         self.panel.SetSizer(textbox_sizer)
@@ -66,7 +66,7 @@ class popup_window(wx.Frame):
         font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         textbox.SetFont(font)
 
-    def Update_Self_for_Settings(self, settings, load, size = (400, 400)):
+    def Update_Self_for_Settings(self, settings, load, size = (500, 500)):
         self.load = load
         self.settings = settings
         icon = wx.Icon(settings["cwd"]+"/Photos/Settings Icon.png")
@@ -76,7 +76,7 @@ class popup_window(wx.Frame):
 
         sw = 200 #setting box width
         sh = 20 #setting box height
-        slw = 170 #setting label box width
+        slw = 300 #setting label box width
         slh = 20 #setting label box height
         
         #Graph_Visual_Settings
@@ -90,6 +90,7 @@ class popup_window(wx.Frame):
         self.l3_ymax = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_arrow_scale = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_starting_points = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_show_legend =wx.BoxSizer(wx.HORIZONTAL)
 
         #Graph_Background_Settings
         self.l3_Graph_Background_Settings = wx.BoxSizer(wx.HORIZONTAL)
@@ -111,6 +112,14 @@ class popup_window(wx.Frame):
         self.l3_stop_variable_override_warning = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_stop_termination_warning = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_stop_numerical_termination_warning = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_stop_improper_power_phase_plot_warning = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_stop_improper_power_plotted_lines_warning = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_stop_invalid_value_in_function_in_phase_plot_warning =wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_stop_invalid_value_in_function_in_plotted_lines_warning =wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_stop_overflow_in_phase_plot_warning =wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_stop_overflow_in_plotted_lines_warning =wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_stop_underflow_in_phase_plot_warning =wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_stop_underflow_in_plotted_lines_warning =wx.BoxSizer(wx.HORIZONTAL)
 
         #Files_Settings
         self.l3_Files_Settings = wx.BoxSizer(wx.HORIZONTAL)
@@ -121,7 +130,7 @@ class popup_window(wx.Frame):
         # cwd should not be editable by the user
 
         #This is a panel
-        self.setting_scroller_panel = wx.lib.scrolledpanel.ScrolledPanel(self.panel,-1,size=(400,400), style=wx.SIMPLE_BORDER)
+        self.setting_scroller_panel = wx.lib.scrolledpanel.ScrolledPanel(self.panel,-1,size=(440,400), style=wx.SIMPLE_BORDER|wx.EXPAND)
         self.setting_scroller_panel.SetupScrolling(scroll_x=False, scroll_y=True)
         self.setting_scroller_panel.SetBackgroundColour('#FFFFFF')
 
@@ -131,11 +140,11 @@ class popup_window(wx.Frame):
             "wx.StaticText(parent=self."+setting+"_panel_1, id=-1, label=\""+setting+": \", style=wx.ALIGN_LEFT, size=(slw, slh), pos=(10,5))\n" \
             "#\n" \
             "self."+setting+"_panel_2 = wx.Panel(self.setting_scroller_panel)\n" \
-            "self."+setting+"_setting_box = wx.TextCtrl(self."+setting+"_panel_2, -1, style=wx.ALIGN_LEFT, size = (sw, sh), pos=(0,5))\n" \
+            "self."+setting+"_setting_box = wx.TextCtrl(self."+setting+"_panel_2, -1, style=wx.ALIGN_LEFT|wx.EXPAND, size = (sw, sh), pos=(0,5))\n" \
             "self."+setting+"_setting_box.SetValue(str(self.settings[\""+setting+"\"]))\n" \
             "#\n" \
-            "self.l3_"+setting+".Add(self."+setting+"_panel_1, proportion=6)\n" \
-            "self.l3_"+setting+".Add(self."+setting+"_panel_2, proportion=5)\n"
+            "self.l3_"+setting+".Add(self."+setting+"_panel_1, proportion=3)\n" \
+            "self.l3_"+setting+".Add(self."+setting+"_panel_2, proportion=2)\n"
 
             return(setting_string)
 
@@ -210,6 +219,8 @@ class popup_window(wx.Frame):
         self.settings["ymax"] = float(self.ymax_setting_box.GetValue())
         self.settings["arrow_scale"] = float(self.arrow_scale_setting_box.GetValue())
         self.settings["starting_points"] = eval(self.starting_points_setting_box.GetValue())
+        self.settings["show_legend"] = eval(self.show_legend_setting_box.GetValue())
+
 
         self.settings["Graph_Background_Settings"]= ""
         self.settings["h"] = float(self.h_setting_box.GetValue())
@@ -228,13 +239,37 @@ class popup_window(wx.Frame):
             self.settings["stop_variable_override_warning"] = True
             self.settings["stop_termination_warning"] = True
             self.settings["stop_numerical_termination_warning"] = True
+            self.settings["stop_improper_power_phase_plot_warning"] = True
+            self.settings["stop_improper_power_plotted_lines_warning"] = True
+            self.settings["stop_invalid_value_in_function_in_phase_plot_warning"] = True
+            self.settings["stop_invalid_value_in_function_in_plotted_lines_warning"] = True
+            self.settings["stop_overflow_in_phase_plot_warning"] = True
+            self.settings["stop_overflow_in_plotted_lines_warning"] = True
+            self.settings["stop_underflow_in_phase_plot_warning"] = True
+            self.settings["stop_underflow_in_plotted_lines_warning"] = True
             self.stop_variable_override_warning_setting_box.SetValue("True")
             self.stop_termination_warning_setting_box.SetValue("True")
             self.stop_numerical_termination_warning_setting_box.SetValue("True")
+            self.stop_improper_power_phase_plot_warning_setting_box.SetValue("True")
+            self.stop_improper_power_plotted_lines_warning_setting_box.SetValue("True")
+            self.stop_invalid_value_in_function_in_phase_plot_warning_setting_box.SetValue("True")
+            self.stop_invalid_value_in_function_in_plotted_lines_warning_setting_box.SetValue("True")
+            self.stop_overflow_in_phase_plot_warning_setting_box.SetValue("True")
+            self.stop_overflow_in_plotted_lines_warning_setting_box.SetValue("True")
+            self.stop_underflow_in_phase_plot_warning_setting_box.SetValue("True")
+            self.stop_underflow_in_plotted_lines_warning_setting_box.SetValue("True")
         else:
             self.settings["stop_variable_override_warning"] = bool(self.stop_variable_override_warning_setting_box.GetValue())
             self.settings["stop_termination_warning"] = bool(self.stop_termination_warning_setting_box.GetValue())
             self.settings["stop_numerical_termination_warning"] = bool(self.stop_numerical_termination_warning_setting_box.GetValue())
+            self.settings["stop_improper_power_phase_plot_warning"] = bool(self.stop_improper_power_phase_plot_warning_setting_box.GetValue())
+            self.settings["stop_improper_power_plotted_lines_warning"] = bool(self.stop_improper_power_plotted_lines_warning_setting_box.GetValue())
+            self.settings["stop_invalid_value_in_function_in_phase_plot_warning"] = bool(self.stop_invalid_value_in_function_in_phase_plot_warning_setting_box.GetValue())
+            self.settings["stop_invalid_value_in_function_in_plotted_lines_warning"] = bool(self.stop_invalid_value_in_function_in_plotted_lines_warning_setting_box.GetValue())
+            self.settings["stop_overflow_in_phase_plot_warning"] = bool(self.stop_overflow_in_phase_plot_warning_setting_box.GetValue())
+            self.settings["stop_overflow_in_plotted_lines_warning"] = bool(self.stop_overflow_in_plotted_lines_warning_setting_box.GetValue())
+            self.settings["stop_underflow_in_phase_plot_warning"] = bool(self.stop_underflow_in_phase_plot_warning_setting_box.GetValue())
+            self.settings["stop_underflow_in_plotted_lines_warning"] = bool(self.stop_underflow_in_plotted_lines_warning_setting_box.GetValue())
 
         self.settings["Files_Settings"]= ""
         self.settings["settings_file"] = self.settings_file_setting_box.GetValue()
@@ -306,10 +341,11 @@ class popup_window(wx.Frame):
             self.xmax_setting_box.SetValue(str(self.settings["xmax"]))
             self.ymin_setting_box.SetValue(str(self.settings["ymin"]))
             self.ymax_setting_box.SetValue(str(self.settings["ymax"]))
-
-            # Graph_Background:
             self.arrow_scale_setting_box.SetValue(str(self.settings["arrow_scale"]))
             self.starting_points_setting_box.SetValue(str(self.settings["starting_points"]))
+            self.show_legend_setting_box.SetValue(str(self.settings["show_legend"]))
+
+            # Graph_Background:
             self.h_setting_box.SetValue(str(self.settings["h"]))
             self.xdensity_setting_box.SetValue(str(self.settings["xdensity"]))
             self.ydensity_setting_box.SetValue(str(self.settings["ydensity"]))
@@ -326,10 +362,26 @@ class popup_window(wx.Frame):
                 self.stop_variable_override_warning_setting_box.SetValue("True")
                 self.stop_termination_warning_setting_box.SetValue("True")
                 self.stop_numerical_termination_warning_setting_box.SetValue("True")
+                self.stop_improper_power_phase_plot_warning_setting_box.SetValue("True")
+                self.stop_improper_power_plotted_lines_warning_setting_box.SetValue("True")
+                self.stop_invalid_value_in_function_in_phase_plot_warning_setting_box.SetValue("True")
+                self.stop_invalid_value_in_function_in_plotted_lines_warning_setting_box.SetValue("True")
+                self.stop_overflow_in_phase_plot_warning_setting_box.SetValue("True")
+                self.stop_overflow_in_plotted_lines_warning_setting_box.SetValue("True")
+                self.stop_underflow_in_phase_plot_warning_setting_box.SetValue("True")
+                self.stop_underflow_in_plotted_lines_warning_setting_box.SetValue("True")
             else:
                 self.stop_variable_override_warning_setting_box.SetValue(str(self.settings["stop_variable_override_warning"]))
                 self.stop_termination_warning_setting_box.SetValue(str(self.settings["stop_termination_warning"]))
                 self.stop_numerical_termination_warning_setting_box.SetValue(str(self.settings["stop_numerical_termination_warning"]))
+                self.stop_improper_power_phase_plot_warning_setting_box.SetValue(str(self.settings["stop_improper_power_phase_plot_warning"]))
+                self.stop_improper_power_plotted_lines_warning_setting_box.SetValue(str(self.settings["stop_improper_power_plotted_lines_warning"]))
+                self.stop_invalid_value_in_function_in_phase_plot_warning_setting_box.SetValue(str(self.settings["stop_invalid_value_in_function_in_phase_plot_warning"]))
+                self.stop_invalid_value_in_function_in_plotted_lines_warning_setting_box.SetValue(str(self.settings["stop_invalid_value_in_function_in_plotted_lines_warning"]))
+                self.stop_overflow_in_phase_plot_warning_setting_box.SetValue(str(self.settings["stop_overflow_in_phase_plot_warning"]))
+                self.stop_overflow_in_plotted_lines_warning_setting_box.SetValue(str(self.settings["stop_overflow_in_plotted_lines_warning"]))
+                self.stop_underflow_in_phase_plot_warning_setting_box.SetValue(str(self.settings["stop_underflow_in_phase_plot_warning"]))
+                self.stop_underflow_in_plotted_lines_warning_setting_box.SetValue(str(self.settings["stop_underflow_in_plotted_lines_warning"]))
 
             #Files:
             self.settings_file_setting_box.SetValue(str(self.settings["settings_file"]))
@@ -354,6 +406,7 @@ class popup_window(wx.Frame):
         self.settings["ymax"] = default_class_instance.settings["ymax"]
         self.settings["arrow_scale"] = default_class_instance.settings["arrow_scale"]
         self.settings["starting_points"] = default_class_instance.settings["starting_points"]
+        self.settings["show_legend"] = default_class_instance.settings["show_legend"]
 
         self.settings["Graph_Background_Settings"]= default_class_instance.settings["Graph_Background_Settings"]
         self.settings["h"] = default_class_instance.settings["h"]
@@ -368,6 +421,14 @@ class popup_window(wx.Frame):
         self.settings["stop_variable_override_warning"] = default_class_instance.settings["stop_variable_override_warning"]
         self.settings["stop_termination_warning"] = default_class_instance.settings["stop_termination_warning"]
         self.settings["stop_numerical_termination_warning"] = default_class_instance.settings["stop_numerical_termination_warning"]
+        self.settings["stop_improper_power_phase_plot_warning"] = default_class_instance.settings["stop_improper_power_phase_plot_warning"]
+        self.settings["stop_improper_power_plotted_lines_warning"] = default_class_instance.settings["stop_improper_power_plotted_lines_warning"]
+        self.settings["stop_invalid_value_in_function_in_phase_plot_warning"] = default_class_instance.settings["stop_invalid_value_in_function_in_phase_plot_warning"]
+        self.settings["stop_invalid_value_in_function_in_plotted_lines_warning"] = default_class_instance.settings["stop_invalid_value_in_function_in_plotted_lines_warning"]
+        self.settings["stop_overflow_in_phase_plot_warning"] = default_class_instance.settings["stop_overflow_in_phase_plot_warning"]
+        self.settings["stop_overflow_in_plotted_lines_warning"] = default_class_instance.settings["stop_overflow_in_plotted_lines_warning"]
+        self.settings["stop_underflow_in_phase_plot_warning"] = default_class_instance.settings["stop_underflow_in_phase_plot_warning"]
+        self.settings["stop_underflow_in_plotted_lines_warning"] = default_class_instance.settings["stop_underflow_in_plotted_lines_warning"]
 
         self.settings["Files_Settings"]= default_class_instance.settings["Files_Settings"]
         self.settings["settings_file"] = default_class_instance.settings["settings_file"]
@@ -386,6 +447,7 @@ class popup_window(wx.Frame):
         # Graph_Background:
         self.arrow_scale_setting_box.SetValue(str(self.settings["arrow_scale"]))
         self.starting_points_setting_box.SetValue(str(self.settings["starting_points"]))
+        self.show_legend_setting_box.SetValue(str(self.settings["show_legend"]))
         self.h_setting_box.SetValue(str(self.settings["h"]))
         self.xdensity_setting_box.SetValue(str(self.settings["xdensity"]))
         self.ydensity_setting_box.SetValue(str(self.settings["ydensity"]))
@@ -401,6 +463,14 @@ class popup_window(wx.Frame):
         self.stop_variable_override_warning_setting_box.SetValue(str(self.settings["stop_variable_override_warning"]))
         self.stop_termination_warning_setting_box.SetValue(str(self.settings["stop_termination_warning"]))
         self.stop_numerical_termination_warning_setting_box.SetValue(str(self.settings["stop_numerical_termination_warning"]))
+        self.stop_improper_power_phase_plot_warning_setting_box.SetValue(str(self.settings["stop_improper_power_phase_plot_warning"]))
+        self.stop_improper_power_plotted_lines_warning_setting_box.SetValue(str(self.settings["stop_improper_power_plotted_lines_warning"]))
+        self.stop_invalid_value_in_function_in_phase_plot_warning_setting_box.SetValue(str(self.settings["stop_invalid_value_in_function_in_phase_plot_warning"]))
+        self.stop_invalid_value_in_function_in_plotted_lines_warning_setting_box.SetValue(str(self.settings["stop_invalid_value_in_function_in_plotted_lines_warning"]))
+        self.stop_overflow_in_phase_plot_warning_setting_box.SetValue(str(self.settings["stop_overflow_in_phase_plot_warning"]))
+        self.stop_overflow_in_plotted_lines_warning_setting_box.SetValue(str(self.settings["stop_overflow_in_plotted_lines_warning"]))
+        self.stop_underflow_in_phase_plot_warning_setting_box.SetValue(str(self.settings["stop_underflow_in_phase_plot_warning"]))
+        self.stop_underflow_in_plotted_lines_warning_setting_box.SetValue(str(self.settings["stop_underflow_in_plotted_lines_warning"]))
 
         #Files:
         self.settings_file_setting_box.SetValue(str(self.settings["settings_file"]))

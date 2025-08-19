@@ -20,9 +20,10 @@ If working on project then note the following:
 
 To Do:
 -Functionality
-  - Would be good to check over variables section, should be able to use any variable that is not a
-    python reserved <= 10 characters, but had to modify variable names so would be good to check (Euler)
+  - still going through phase plot
+  - adding functionality for uniformly sized arrows on the request of Dr. Tyson
   - Rung Kutta Needs added
+  - Be good to add Huen method
   - Need to be able to click on the plot to pick a point
   - Need to make it so graphs and photos do not need to be moved to the same folder as the exe, makes it so links do not work as well
 
@@ -36,12 +37,21 @@ To Do:
   - should not have to replot everything if only a small thing is changed such as backwards time being added or title being changed
 
 - Settings
-  - would be nice if the legend could be turned on or off
   - should be more than 2 colors for plotted lines and there should be a setting for picking colors
   - Need to test all of the settings and things to make sure the program is working properly
 
 - Warnings Update:
   - warnings should all appear in a single popup at the end of processing and should be listed off
+
+- Functionality
+  - Would be good to check over variables section, checked over, but lots needed addressed,
+    same with Euler section
+
+- DimensionalA
+  - for sure should be able to use 1D and get a nice plot
+
+- DimensionalB
+  - should also be able to use 3D, but the might be for later
 
 Low Priority
 - Would be good to generate a loading bar if plot it taking a while

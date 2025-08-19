@@ -64,6 +64,14 @@ class MainFrame(wx.Frame):
                 self.stop_variable_override_warning_setting_box.SetValue("True")
                 self.stop_termination_warning_setting_box.SetValue("True")
                 self.stop_numerical_termination_warning_setting_box.SetValue("True")
+                self.stop_improper_power_phase_plot_warning_setting_box.SetValue("True")
+                self.stop_improper_power_plotted_lines_warning_setting_box.SetValue("True")
+                self.stop_invalid_value_in_function_in_phase_plot_warning_setting_box.SetValue("True")
+                self.stop_invalid_value_in_function_in_plotted_lines_warning_setting_box.SetValue("True")
+                self.stop_overflow_in_phase_plot_warning_setting_box.SetValue("True")
+                self.stop_overflow_in_plotted_lines_warning_setting_box.SetValue("True")
+                self.stop_underflow_in_phase_plot_warning_setting_box.SetValue("True")
+                self.stop_underflow_in_plotted_lines_warning_setting_box.SetValue("True")
 
         self.settings["cwd"] = self.cwd
 
@@ -384,11 +392,13 @@ class MainFrame(wx.Frame):
                     +"\tymax           : Sets the maximium value for the y axis \n"
                     +"\tarrow_scale    : Sets the scale of the arrows used in the phase plot:\n"
                         +"\t\t\t 1 means arrows are the actual size, <1 means arrows will appear smaller than they \n"
-                        +"\t\t\t really are, >1 means arrows appear bigger\n"
+                        +"\t\t\t really are, >1 means arrows appear bigger. If you set to 0 then the arrows will\n"
+                        +"\t\t\t be made to be the same size"
                     +"\tstarting_points: This should be a list of tuple(s) which contain the starting points you\n"
                         +"\t\t\t would like the plot to start from, for example [(1,1)] would mean the plot will \n"
                         +"\t\t\t start from the coordinates (1,1), [(1,1),(1,2)] would mean the plot will draw 2 \n"
                         +"\t\t\t separate lines, (from (1,1) and the other from (2,1))\n"
+                    +"\show_legend: True if you want a legend, False if you do not"
                     +"\n"
                     +"\tGraph_Background_Settings:\n"
                     +"\th              : This is the change value used in numarical integration\n"
@@ -416,6 +426,36 @@ class MainFrame(wx.Frame):
                         +"\t\t\tof an FYI.\n"
                     +"\tstop_numerical_termination_warning: Stop getting warnings when a plot stops plotting due to\n"
                         +"\t\t\tnumerical issues.\n"
+                    +"\tstop_improper_power_phase_plot_warning: Stop getting warnings when making the phase plot when\n"
+                        +"\t\t\tthere has been an inproper power usage, for example (-5)^0.5, since you cannot take\n"
+                        +"\t\t\tthe square root of a negative number."
+                    +"\tstop_improper_power_plotted_lines_warning: Stop getting warnings when making plots from the\n"
+                        +"\t\t\tinitial conditions given there has been an inproper power usage, for example (-5)^0.5,\n"
+                        +"\t\t\tsince you cannot take the square root of a negative."
+                    +"\tstop_invalid_value_in_function_in_phase_plot_warning: Stop getting warning when making the\n"
+                        +"\t\t\tphase plot and an invalid value has been attempted to be used in a function (ex \n"
+                        +"\t\t\tarccos(2) or cos(inf)). This warning is fairly typical if plotting in a range a \n"
+                        +"\t\t\tfunction is undefined\n"                    
+                    +"\tstop_invalid_value_in_function_in_plotted_lines_warning: Stop getting warning when making a\n"
+                        +"\t\t\tplot from initial point(s) and an invalid value has been attempted to be used in a\n"
+                        +"\t\t\tfunction (ex arccos(2) or cos(inf)). This warning is fairly typical if plotting in a\n"
+                        +"\t\t\trange a function is undefined\n"                     
+                    +"\tstop_overflow_in_phase_plot_warning: Stop getting warning when making the phase plot and an\n"
+                        +"\t\t\toverflow error occurs, this is an error where there is a number which is too big or a\n"
+                        +"\t\t\treally big number is added to a really small number and so the computer must round \n"
+                        +"\t\t\t(ex if the biggest number the computer can store is 10, but you have 9+3 then the \n"
+                        +"\t\t\tcomputer would store 10).\n"                    
+                    +"\tstop_overflow_in_plotted_lines_warning: Stop getting warning when making a plot from initial\n"
+                        +"\t\t\tpoint(s) and an overflow error occurs, this is an error where there is a number which\n"
+                        +"\t\t\tis too big or a really big number is added to a really small number and so the\n"
+                        +"\t\t\tcomputer must round (ex if the biggest number the computer can store is 10, but you \n"
+                        +"\t\t\thave 9+3 then the computer would store 10).\n"
+                    +"\tstop_underflow_in_phase_plot_warning: Stop getting warning when making the phase plot and you\n"
+                        +"\t\t\tget an underflow warning (ex smallest number you can store is 0.1, but you preform \n"
+                        +"\t\t\t0.1*0.1=0.01 which the computer then rounds to 0)\n"                    
+                    +"\tstop_underflow_in_plotted_lines_warning: Stop getting warning when making a plot from initial\n"
+                        +"\t\t\tpoint(s) and you get an underflow warning (ex smallest number you can store is 0.1,\n"
+                        +"\t\t\tbut you preform 0.1*0.1=0.01 which the computer then rounds to 0)\n"      
                     +"\tsettings_file  : You may select a new settings file or svae multiple settings files if \n"
                         +"\t\t\t you would like, but do not delete the origional settings file (if you do it will \n"
                         +"\t\t\t just be recreated later)\n"
@@ -485,18 +525,20 @@ class MainFrame(wx.Frame):
                     # if variable is a variable name in this program then the program will fail, need to make error pop up
                 except:
                     variable_error_window = popup_windows.popup_window(self)
-                    variable_error_window.Error("ERROR, please check over your variables", self.settings["cwd"])
+                    variable_error_window.Error("ERROR, please check over your variables, especially "+str(v1111111111), cwd=self.settings["cwd"])
                     variable_error_window.Show()
                 for w1111111111 in special_vars:
-                    if(w1111111111 == name4444444):
-                        variable_override_warning = popup_windows.popup_window(self)
-                        variable_override_warning.Warning("WARNING: VALUE IN VARIABLES " + w1111111111 + " WILL BE THE VALUE DEFINED BY THE USER", cwd=self.settings["cwd"])
-                        variable_override_warning.Show()
+                    if(self.settings["stop_variable_override_warning"]==False):
+                        if(w1111111111 == name4444444):
+                            variable_override_warning = popup_windows.popup_window(self)
+                            variable_override_warning.Warning("WARNING: VALUE IN VARIABLES " + w1111111111 + " WILL BE THE VALUE DEFINED BY THE USER", cwd=self.settings["cwd"])
+                            variable_override_warning.Show()
                 for w1111111111 in special_funcs:
-                    if(w1111111111 == name4444444):
-                        variable_override_warning = popup_windows.popup_window(self)
-                        variable_override_warning.Warning("WARNING: VALUE IN VARIABLES " + w1111111111 + " WILL BE THE VALUE DEFINED BY THE USER", cwd=self.settings["cwd"])
-                        variable_override_warning.Show()
+                    if(self.settings["stop_variable_override_warning"]==False):
+                        if(w1111111111 == name4444444):
+                            variable_override_warning = popup_windows.popup_window(self)
+                            variable_override_warning.Warning("WARNING: VALUE IN VARIABLES " + w1111111111 + " WILL BE THE VALUE DEFINED BY THE USER", cwd=self.settings["cwd"])
+                            variable_override_warning.Show()
             for name4444444 in var_names99:
                 var_text888 = name4444444 + " = " + str(eval(name4444444))
                 print(var_text888)
@@ -504,8 +546,11 @@ class MainFrame(wx.Frame):
                 
         else:
             print("NONE")
-        ####PROCESSING DXDT
-        for i1111111111 in range(len(dxdt_text99)-1):
+        #NOTE: Efficiency-could make counter -2 as no op at end (will not update now in case I am missing something -- need efficiency update)
+        ####PROCESSING DXDT 
+        counter=len(dxdt_text99)-1 #cannot put this in a for loop range is only evaluated one time
+        i1111111111=0
+        while i1111111111 < counter:
             point166666=i1111111111
             point266666=i1111111111+2
             if(point266666 == len(dxdt_text99)):
@@ -514,14 +559,18 @@ class MainFrame(wx.Frame):
                 text4444444 = dxdt_text99[point166666:point266666]
             if(text4444444 == ")("):
                 sub14444444 = dxdt_text99[:point166666+1]
-                sub24444444 = dxdt_text99[point266666:]
+                sub24444444 = dxdt_text99[point266666-1:]
                 dxdt_text99 = sub14444444+"*"+sub24444444
             elif(text4444444[0]=="^"):
                 sub14444444 = dxdt_text99[:point166666] # here I use the fact that the very last value cannot be an operation
                 sub24444444 = dxdt_text99[point166666+1:]
                 dxdt_text99 = sub14444444+"**"+sub24444444
+            i1111111111+=1
+            counter=len(dxdt_text99)-1
         ####PROCESSING DYDT
-        for i1111111111 in range(len(dydt_text99)-1):
+        i1111111111=0
+        counter=len(dydt_text99)-1 #cannot put this in a for loop range is only evaluated one time
+        while i1111111111 < counter:
             point166666=i1111111111
             point266666=i1111111111+2
             if(point266666 == len(dydt_text99)):
@@ -530,12 +579,14 @@ class MainFrame(wx.Frame):
                 text4444444 = dydt_text99[point166666:point266666]
             if(text4444444 == ")("):
                 sub14444444 = dydt_text99[:point166666+1]
-                sub24444444 = dydt_text99[point266666:]
+                sub24444444 = dydt_text99[point266666-1:]
                 dydt_text99 = sub14444444+"*"+sub24444444
             elif(text4444444[0]=="^"):
                 sub14444444 = dydt_text99[:point166666] # here I use the fact that the very last value cannot be an operation
                 sub24444444 = dydt_text99[point166666+1:]
                 dydt_text99 = sub14444444+"**"+sub24444444
+            i1111111111+=1
+            counter=len(dydt_text99)-1
         
         #var_text stors code to access all functions and variables from numpy and also the custom variables
 
