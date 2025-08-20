@@ -3,6 +3,7 @@ import wx.lib.scrolledpanel
 import os
 import json
 from Default_Settings import Default
+from Photos import Warning_Icon, Save_Icon, PPP_Logo, Load_Icon, Info_Icon, Help_Icon, File_Icon, Error_Icon, dy--dt, dx--dt.png
 
 class popup_window(wx.Frame):
     def __init__(self,parent):
