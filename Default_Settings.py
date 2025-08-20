@@ -20,7 +20,7 @@ class Default:
         "backward_steps": 1000,
         "forward_time": 10,
         "backward_time": 10,
-        "method": "Euler",
+        "method": "Runge Kutta",
         "Warning_Settings": "",
         "stop_all_warnings": False,
         "stop_variable_override_warning": False,

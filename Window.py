@@ -21,7 +21,7 @@ class Display_Window(wx.Panel):
 #This is the main class for the application, settings stored here when running
 class MainFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.1.4")
+        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.1.5")
         
         self.cwd = os.getcwd()
 
@@ -52,13 +52,17 @@ class MainFrame(wx.Frame):
                 self.settings = json.load(json_file)
             if not os.path.exists(self.cwd+self.settings["settings_file"]):
                 variable_override_warning = popup_windows.popup_window(self)
-                variable_override_warning.Warning("WARNING: settings file specified "+ self.settings["settings_file"][1:] + " is missing so I have reverted to default settings", cwd=self.settings["cwd"])
+                variable_override_warning.Error("ERROR: settings file specified "+ self.settings["settings_file"][1:] + " is missing so I have reverted to default settings", cwd=self.settings["cwd"])
                 variable_override_warning.Show()
                 default_class_instance = Default()
                 self.settings = default_class_instance.settings
             else:
                 with open(self.cwd+self.settings["settings_file"], "r") as json_file:
                     self.settings = json.load(json_file)
+            
+            ##NOTE: HERE NEEDS TO BE SOMETHING THAT AUTOMATICALLY UPDATES OLD
+            # SETTINGS FILES TO INCLUDE NEW SETTINGS
+            
             if(self.settings["stop_all_warnings"]==True):
                 #This and similar if statements are placed in other spots to avoid some possible inconsistencies.
                 self.stop_variable_override_warning_setting_box.SetValue("True")
@@ -413,8 +417,9 @@ class MainFrame(wx.Frame):
                         +"\t\t\tforward in time and then the step will be calculated automatically,\n"
                         +"\t\t\tWARNING specify_time must be set to True in order for this feature to work.\n"
                     +"\tbackward_time  : Same as forward_time, but for going backward in time\n"
-                    +"\tmethod         : Choose the numerical method that you would like to use. Currently can only\n"
-                        +"\t\t\t select Euler, more will be added with updates\n"
+                    +"\tmethod         : Choose the numerical method that you would like to use. Currently can\n"
+                        +"\t\t\t choose between Euler (euler or e) and Runge Kutta (runge kutta, kutta, r, k)\n"
+                        +"\t\t\t Huen is not yet implemented but will soon be on the way\n"
                     +"\n"
                     +"\tWarning_Settings:\n"
                     +"\tstop_all_warnings: If set to true the all warning popups will be shut off\n"

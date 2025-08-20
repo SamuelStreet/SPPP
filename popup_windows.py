@@ -226,7 +226,7 @@ class popup_window(wx.Frame):
         self.settings["h"] = float(self.h_setting_box.GetValue())
         self.settings["xdensity"] = float(self.xdensity_setting_box.GetValue())
         self.settings["ydensity"] = float(self.ydensity_setting_box.GetValue())
-        self.settings["specify_time"] = bool(self.specify_time_setting_box.GetValue())
+        self.settings["specify_time"] = True if (self.specify_time_setting_box.GetValue() == "True") else False
         self.settings["forward_steps"] = int(self.forward_steps_setting_box.GetValue())
         self.settings["backward_steps"] = int(self.backward_steps_setting_box.GetValue())
         self.settings["forward_time"] = int(self.forward_time_setting_box.GetValue())
@@ -234,7 +234,7 @@ class popup_window(wx.Frame):
         self.settings["method"] = self.method_setting_box.GetValue()
 
         self.settings["Warning_Settings"]= ""
-        self.settings["stop_all_warnings"] = bool(self.stop_all_warnings_setting_box.GetValue())
+        self.settings["stop_all_warnings"] = True if (self.stop_all_warnings_setting_box.GetValue() == "True") else False
         if(self.settings["stop_all_warnings"]==True):
             self.settings["stop_variable_override_warning"] = True
             self.settings["stop_termination_warning"] = True
@@ -259,23 +259,25 @@ class popup_window(wx.Frame):
             self.stop_underflow_in_phase_plot_warning_setting_box.SetValue("True")
             self.stop_underflow_in_plotted_lines_warning_setting_box.SetValue("True")
         else:
-            self.settings["stop_variable_override_warning"] = bool(self.stop_variable_override_warning_setting_box.GetValue())
-            self.settings["stop_termination_warning"] = bool(self.stop_termination_warning_setting_box.GetValue())
-            self.settings["stop_numerical_termination_warning"] = bool(self.stop_numerical_termination_warning_setting_box.GetValue())
-            self.settings["stop_improper_power_phase_plot_warning"] = bool(self.stop_improper_power_phase_plot_warning_setting_box.GetValue())
-            self.settings["stop_improper_power_plotted_lines_warning"] = bool(self.stop_improper_power_plotted_lines_warning_setting_box.GetValue())
-            self.settings["stop_invalid_value_in_function_in_phase_plot_warning"] = bool(self.stop_invalid_value_in_function_in_phase_plot_warning_setting_box.GetValue())
-            self.settings["stop_invalid_value_in_function_in_plotted_lines_warning"] = bool(self.stop_invalid_value_in_function_in_plotted_lines_warning_setting_box.GetValue())
-            self.settings["stop_overflow_in_phase_plot_warning"] = bool(self.stop_overflow_in_phase_plot_warning_setting_box.GetValue())
-            self.settings["stop_overflow_in_plotted_lines_warning"] = bool(self.stop_overflow_in_plotted_lines_warning_setting_box.GetValue())
-            self.settings["stop_underflow_in_phase_plot_warning"] = bool(self.stop_underflow_in_phase_plot_warning_setting_box.GetValue())
-            self.settings["stop_underflow_in_plotted_lines_warning"] = bool(self.stop_underflow_in_plotted_lines_warning_setting_box.GetValue())
+            self.settings["stop_variable_override_warning"] = True if (self.stop_variable_override_warning_setting_box.GetValue()  == "True") else False
+            self.settings["stop_termination_warning"] = True if (self.stop_termination_warning_setting_box.GetValue()  == "True") else False
+            self.settings["stop_numerical_termination_warning"] = True if (self.stop_numerical_termination_warning_setting_box.GetValue()  == "True") else False
+            self.settings["stop_improper_power_phase_plot_warning"] = True if (self.stop_improper_power_phase_plot_warning_setting_box.GetValue()  == "True") else False
+            self.settings["stop_improper_power_plotted_lines_warning"] = True if (self.stop_improper_power_plotted_lines_warning_setting_box.GetValue()  == "True") else False
+            self.settings["stop_invalid_value_in_function_in_phase_plot_warning"] = True if (self.stop_invalid_value_in_function_in_phase_plot_warning_setting_box.GetValue()  == "True") else False
+            self.settings["stop_invalid_value_in_function_in_plotted_lines_warning"] = True if (self.stop_invalid_value_in_function_in_plotted_lines_warning_setting_box.GetValue()  == "True") else False
+            self.settings["stop_overflow_in_phase_plot_warning"] = True if (self.stop_overflow_in_phase_plot_warning_setting_box.GetValue()  == "True") else False
+            self.settings["stop_overflow_in_plotted_lines_warning"] = True if (self.stop_overflow_in_plotted_lines_warning_setting_box.GetValue()  == "True") else False
+            self.settings["stop_underflow_in_phase_plot_warning"] = True if (self.stop_underflow_in_phase_plot_warning_setting_box.GetValue()  == "True") else False
+            self.settings["stop_underflow_in_plotted_lines_warning"] = True if (self.stop_underflow_in_plotted_lines_warning_setting_box.GetValue()  == "True") else False
 
         self.settings["Files_Settings"]= ""
         self.settings["settings_file"] = self.settings_file_setting_box.GetValue()
         
-        if(self.settings["settings_file"][0]!="/"):
+        if(self.settings["settings_file"][0]!="/" and self.settings["settings_file"][0:1]!="\\"):
             self.settings["settings_file"] = "/"+self.settings["settings_file"]
+        elif(self.settings["settings_file"][0:1]=="\\"):#windows allows \\ and / in path names, Linux allows /, this prevents user errors
+            self.settings["settings_file"] = "/"+self.settings["settings_file"][1:]
         # self.settings["cwd"] = self.cwd_setting_box.GetValue()
         # cwd should not be edited
         self.load(from_settings=True)
@@ -286,23 +288,26 @@ class popup_window(wx.Frame):
             cwd = self.settings["cwd"]
             variable_override_warning = popup_window(self).Error("Error: settings_file is unspecified so unfortunatly I don't know where to get settings", cwd=cwd)
             variable_override_warning.Show()
-        elif(self.settings["settings_file"][0]!="/"):
+        elif(self.settings["settings_file"][0]!="/" and self.settings["settings_file"][0:1]!="\\"):
             self.settings["settings_file"] = "/"+self.settings["settings_file"]
-        elif not os.path.exists(self.settings["cwd"]+"/".join(self.settings["settings_file"].split("/")[:-1])):
+        elif(self.settings["settings_file"][0:1]=="\\"):#windows allows \\ and / in path names, Linux allows /, this prevents user errors
+            self.settings["settings_file"] = "/"+self.settings["settings_file"][1:]
+        if not os.path.exists(self.settings["cwd"]+"/".join(self.settings["settings_file"].split("/")[:-1])):
             # "/".join(self.settings["settings_file"].split("/")[:-1]) 
             # self.settings["settings_file"] = custome settings file
             # .split("/") = makes list sperarating all different directories in custome settings file
             # [:-1] take all but the actual file name
             # "/".join put everything back together again with "/" between every item in the list
             cwd = self.settings["cwd"]
-            variable_override_warning = popup_window(self).Error("Error: settings file specified "+ self.settings["settings_file"][1:] + " is missing so I don't know where to go", cwd=cwd)
-            variable_override_warning.Show()
+            settings_error = popup_window(self).Error("Error: settings file specified "+ self.settings["settings_file"] + " is missing so I don't know where to go", cwd=cwd)
+            settings_error.Show()
         else:
             try:
                 with open(self.settings["cwd"]+self.settings["settings_file"], "w") as f:
                     f.write(json.dumps(self.settings))
             except:
-                pass #Warning here: make sure file system for specified file exists
+                settings_error = popup_window(self).Error("Error: settings not save propperly", cwd=cwd)
+                settings_error.Show()
 
             if not os.path.exists(self.settings["cwd"]+'/settings.json'):
                 default_class_instance = Default()
@@ -319,8 +324,10 @@ class popup_window(wx.Frame):
                     f.write(json.dumps(temp_settings))
 
     def reset_settings_button_pushed(self, sig=None):
-        if(self.settings["settings_file"][0]!="/"):
-            self.settings["settings_file"] = "/"+self.settings["cwd"]
+        if(self.settings["settings_file"][0]!="/" and self.settings["settings_file"][0:1]!="\\"):
+            self.settings["settings_file"] = "/"+self.settings["settings_file"]
+        elif(self.settings["settings_file"][0:1]=="\\"):#windows allows \\ and / in path names, Linux allows /, this prevents user errors
+            self.settings["settings_file"] = "/"+self.settings["settings_file"][1:]
         if(self.settings["settings_file"]==""):
             cwd = self.settings["cwd"]
             variable_override_warning = popup_window(self).Error("Error: settings_file is unspecified so unfortunatly I don't know where to get settings", cwd=cwd)

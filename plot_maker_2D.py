@@ -5,8 +5,15 @@ from numpy import sin, cos, tan, arcsin, arccos, arctan, sinh, cosh, tanh, log, 
 from warnings import catch_warnings
 π = pi
 ln = lambda x: log(x)
+def add_initial_points(trace, points, selector, settings):
+    pass
+
 def check_warnings_plotted_lines(main_frame, settings, w):
     # dx/dt = (cos(3**x^y))(x)+log(x) and dydt=(y) is a good test system 
+    # NOTE for some reason when getting things from a warning the first indexed location in a string does not
+    # seem to count: for example if the warning is  warn = "abc" then warn[:1] = "a" instead of the expected
+    # "ab", the code below and in the other warning area takes this into account.  
+
     for warning in w:
         if(warning.message.args[0][:23]=="invalid escape sequence"):
             pass # this warning can be caused by certian file locations being used
@@ -38,6 +45,33 @@ def check_warnings_plotted_lines(main_frame, settings, w):
             Unknown_Error = popup_windows.popup_window(main_frame)
             Unknown_Error.Warning("Warning, "+warning.message.args[0]+"\nNOTE: I have not seen this message during testing. Please email samuelcstreet@gmail.com with details about what you are trying to do and I will add a new warning setting to shut this warning off if you would like, otherwise this message cannot be silenced", cwd=settings["cwd"])
             Unknown_Error.Show()
+def passed_boundary(next_x, next_y, xmin, ymin, xmax, ymax, xpad, ypad, main_frame, i, w, forwards, settings):
+    if forwards==True:
+        dir_string = "forwards"
+    else:
+        dir_string = "backwards"
+
+    if(next_x>xmax+xpad or next_x<xmin-xpad):
+        stop = True
+        if(stop == True):
+            if(settings["stop_termination_warning"]==False):
+                termination_warning  = popup_windows.popup_window(main_frame)
+                termination_warning.Warning("WARNING, Terminated on step " + str(i+1)+"\nwhen going "+dir_string+" in time.", cwd=settings["cwd"])
+                termination_warning.Show()
+            check_warnings_plotted_lines(main_frame, settings, w)
+            return True
+            # if it can be done without error then proceed 1 step farthure than the boundry of the chosen region
+    elif(next_y>ymax+ypad or next_y<ymin-ypad):
+        stop = True
+        if(stop == True):
+            if(settings["stop_termination_warning"]==False):
+                termination_warning = popup_windows.popup_window(main_frame)
+                termination_warning.Warning("WARNING, Terminated on step " + str(i+1)+"\nwhen going "+dir_string+" in time.", cwd=settings["cwd"])
+                termination_warning.Show()
+            check_warnings_plotted_lines(main_frame, settings, w)
+            return True
+    else:
+        return False
 
 def get_points_for_forward_trace_Eurler(start, forward_steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
     x_points_forwards = [start[0]]
@@ -65,7 +99,7 @@ def get_points_for_forward_trace_Eurler(start, forward_steps, h, dxdt, dydt, mai
                 return x_points_forwards, y_points_forwards
             except Exception as ex:
                 Zero_Error = popup_windows.popup_window(main_frame)
-                Zero_Error.Error("Error, somewhere when plotting your forward curve(s). I do not know what is wrong. feel free to read out at samuelcstreet@gmail.com and I can try and help you", cwd=settings["cwd"])
+                Zero_Error.Error("Error, somewhere when plotting your forward curve(s). I do not know what is wrong. feel free to reach out at samuelcstreet@gmail.com and I can try and help you", cwd=settings["cwd"])
                 Zero_Error.Show()
                 return x_points_forwards, y_points_forwards
         
@@ -94,7 +128,7 @@ def get_points_for_forward_trace_Eurler(start, forward_steps, h, dxdt, dydt, mai
     check_warnings_plotted_lines(main_frame, settings, w)
     return x_points_forwards, y_points_forwards
 
-def get_points_for_backwards_trace_Eurler(start, backward_steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
+def get_points_for_backward_trace_Eurler(start, backward_steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
     x_points_backwards = [start[0]]
     y_points_backwards = [start[1]]
     with catch_warnings(record=True) as w:
@@ -120,7 +154,7 @@ def get_points_for_backwards_trace_Eurler(start, backward_steps, h, dxdt, dydt, 
                 return x_points_backwards, y_points_backwards
             except Exception as ex:
                 Zero_Error = popup_windows.popup_window(main_frame)
-                Zero_Error.Error("Error, somewhere when plotting curve(s) going backward in time. I do not know what is wrong. feel free to read out at samuelcstreet@gmail.com and I can try and help you", cwd=settings["cwd"])
+                Zero_Error.Error("Error, somewhere when plotting curve(s) going backward in time. I do not know what is wrong. feel free to reach out at samuelcstreet@gmail.com and I can try and help you", cwd=settings["cwd"])
                 Zero_Error.Show()
                 return x_points_backwards, y_points_backwards
                 
@@ -148,6 +182,100 @@ def get_points_for_backwards_trace_Eurler(start, backward_steps, h, dxdt, dydt, 
                     # if it can be done without error then proceed 1 step farthure than the boundry of the chosen region
     check_warnings_plotted_lines(main_frame, settings, w)
     return x_points_backwards, y_points_backwards
+
+def get_points_for_forward_Runge_Kutta(start, forward_steps, h, fbar, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
+    # follows method here as it works for multiple dimensions
+    # https://www.myphysicslab.com/explain/runge-kutta-en.html
+    x_points_forwards=[0.0 for i in range(forward_steps+1)] # +1 since need a spot for the origional location
+    y_points_forwards=[0.0 for i in range(forward_steps+1)]
+    x_points_forwards[0]=start[0]
+    y_points_forwards[0]=start[1]
+    hh = h/2    #hh = half h
+    hd6 = h/6   #h divided by 6
+
+    x_bar = np.array(start)
+    with catch_warnings(record=True) as w:
+        try:
+            for i in range(forward_steps):
+                #below easily extends to 3/4 dimentions, just need to update the imput for fbar in each line
+                an = np.array([fbar[j](x_bar[0], x_bar[1]) for j in range(len(fbar))])
+                bn = np.array([fbar[j](x_bar[0]+hh*an[0], x_bar[1]+hh*an[1]) for j in range(len(fbar))])
+                cn = np.array([fbar[j](x_bar[0]+hh*bn[0], x_bar[1]+hh*bn[1]) for j in range(len(fbar))])
+                dn = np.array([fbar[j](x_bar[0]+h*cn[0], x_bar[1]+h*cn[1]) for j in range(len(fbar))])
+                x_bar = np.array([x_bar[j]+hd6*(an[j]+2*bn[j]+2*cn[j]+dn[j]) for j in range(len(x_bar))])
+                x_points_forwards[i+1]=x_bar[0]
+                y_points_forwards[i+1]=x_bar[1]
+                if(passed_boundary(x_points_forwards[i+1], y_points_forwards[i+1], xmin, ymin, xmax, ymax, xpad, ypad, main_frame, i, w, forwards=True, settings=settings)==True):
+                    return x_points_forwards, y_points_forwards
+        except OverflowError as ex:
+            print("")
+            if(settings["stop_numerical_termination_warning"]==False):
+                termination_warning  = popup_windows.popup_window(main_frame)
+                termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going forwards in time.", cwd=settings["cwd"])
+                termination_warning.Show()
+            check_warnings_plotted_lines(main_frame, settings, w)
+            return x_points_forwards, y_points_forwards
+        except ZeroDivisionError as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, had to divide by zero somewhere when plotting curve(s) going forward in time. Program may have been able to proceed, but note there may be large numarical errors when making a curve in your plot.", cwd=settings["cwd"])
+            Zero_Error.Show()
+            return x_points_forwards, y_points_forwards
+        except Exception as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, somewhere when plotting curve(s) going forward in time. I do not know what is wrong. feel free to reach out at samuelcstreet@gmail.com and I can try and help you", cwd=settings["cwd"])
+            Zero_Error.Show()
+            return x_points_forwards, y_points_forwards
+    check_warnings_plotted_lines(main_frame, settings, w)
+    return x_points_forwards, y_points_forwards
+
+def get_points_for_backward_Runge_Kutta(start, backward_steps, h, fbar, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
+    x_points_backwards=[0.0 for i in range(backward_steps+1)] # +1 since need a spot for the origional location
+    y_points_backwards=[0.0 for i in range(backward_steps+1)]
+    x_points_backwards[0]=start[0]
+    y_points_backwards[0]=start[1]
+    hh = h/2    #hh = half h
+    hd6 = h/6   #h divided by 6
+
+    x_bar = np.array(start)
+    
+    with catch_warnings(record=True) as w:
+        try:
+            for i in range(backward_steps):
+                #below easily extends to 3/4 dimentions, just need to update the imput for fbar in each line
+                an = np.array([-fbar[j](x_bar[0], x_bar[1]) for j in range(len(fbar))])
+                bn = np.array([-fbar[j](x_bar[0]+hh*an[0], x_bar[1]+hh*an[1]) for j in range(len(fbar))])
+                cn = np.array([-fbar[j](x_bar[0]+hh*bn[0], x_bar[1]+hh*bn[1]) for j in range(len(fbar))])
+                dn = np.array([-fbar[j](x_bar[0]+h*cn[0], x_bar[1]+h*cn[1]) for j in range(len(fbar))])
+                x_bar = np.array([x_bar[j]+hd6*(an[j]+2*bn[j]+2*cn[j]+dn[j]) for j in range(len(x_bar))])
+                x_points_backwards[i+1]=x_bar[0]
+                y_points_backwards[i+1]=x_bar[1]
+                if(passed_boundary(x_points_backwards[i+1], y_points_backwards[i+1], xmin, ymin, xmax, ymax, xpad, ypad, main_frame, i, w, forwards=False, settings=settings)==True):
+                    return x_points_backwards, y_points_backwards
+        except OverflowError as ex:
+            print("")
+            if(settings["stop_numerical_termination_warning"]==False):
+                termination_warning  = popup_windows.popup_window(main_frame)
+                termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going backwards in time.", cwd=settings["cwd"])
+                termination_warning.Show()
+            check_warnings_plotted_lines(main_frame, settings, w)
+            return x_points_backwards, y_points_backwards
+        except ZeroDivisionError as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, had to divide by zero somewhere when plotting curve(s) going backward in time. Program may have been able to proceed, but note there may be large numarical errors when making a curve in your plot.", cwd=settings["cwd"])
+            Zero_Error.Show()
+            return x_points_backwards, y_points_backwards
+        except Exception as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, somewhere when plotting curve(s) going backward in time. I do not know what is wrong. feel free to reach out at samuelcstreet@gmail.com and I can try and help you.", cwd=settings["cwd"])
+            Zero_Error.Show()
+            return x_points_backwards, y_points_backwards
+    check_warnings_plotted_lines(main_frame, settings, w)
+    return x_points_backwards, y_points_backwards
+
+def get_points_for_forward_Heun(start, forward_steps, h, fbar, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
+    pass
+def get_points_for_backward_Heun(start, forward_steps, h, fbar, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
+    pass
 
 #File for making the phase plot
 def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from_settings=False):    
@@ -229,20 +357,45 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
             xbases = np.arange(xmin+xdif, xmax, xdif)
             ydif = (ymax-ymin)/(ydensity+1)
             ybases = np.arange(ymin+ydif, ymax, ydif)
+            arrow_length = min((xmax-xmin)/(xdensity+1), (ymax-ymin)/(ydensity+1)) #might not be needed
             try:
                 with catch_warnings(record=True) as w:
                     for x_temp in (xbases):
                         for y_temp in (ybases):
-                            fig.add_trace(
-                                go.Scatter(
-                                    visible = True,
-                                    marker = dict(size=4,symbol= "arrow-bar-up", angleref="previous"),
-                                    line=dict(color="#000000", width=1),
-                                    
-                                    #NOTE: May get a dividing by zero warning here which will not effect the program, but of course dividing by zero may result in inacuracy of the phase plot
-                                    x=[x_temp, x_temp + dxdt(x_temp, y_temp)*xdif*arrow_scale],
-                                    y=[y_temp, y_temp + dydt(x_temp, y_temp)*xdif*arrow_scale],
-                                    showlegend=False))
+                            if(arrow_scale==0): #not great for efficiency could be 100*100 if statements
+                                x_orig=[x_temp, x_temp + dxdt(x_temp, y_temp)*xdif]
+                                y_orig=[y_temp, y_temp + dydt(x_temp, y_temp)*xdif]
+                                if(x_orig[0]==np.float64(np.nan) or x_orig[1]==np.float64(np.nan) or y_orig[0]==np.float64(np.nan) or y_orig[1]==np.float64(np.nan) or x_orig[0]==np.float64(np.inf) or x_orig[1]==np.float64(np.inf) or y_orig[0]==np.float64(np.inf) or y_orig[1]==np.float64(np.inf) or x_orig[0]==np.float64(-np.inf) or x_orig[1]==np.float64(-np.inf) or y_orig[0]==np.float64(-np.inf) or y_orig[1]==np.float64(-np.inf)):
+                                    continue # NOTE: Efficiency, does not yet work, but if properly implemented would save potentially quite a few operations.
+                                v=[x_orig[1]-x_orig[0], y_orig[1]-y_orig[0]]
+                                L=(v[0]**2+v[1]**2)**0.5
+                                v=[arrow_length*(v[0]/L), arrow_length*(v[1]/L)]
+                                
+                                fig.add_trace(
+                                    go.Scatter(
+                                        visible = True,
+                                        marker = dict(size=4,symbol= "arrow-bar-up", angleref="previous"),
+                                        line=dict(color="#000000", width=1),
+                                        
+                                        #NOTE: May get a dividing by zero warning here which will not effect the program, but of course dividing by zero may result in inacuracy of the phase plot
+                                        x=[x_temp, x_temp + v[0]],
+                                        y=[y_temp, y_temp + v[1]],
+                                        showlegend=False))
+                            elif(arrow_scale!=0):
+                                fig.add_trace(
+                                    go.Scatter(
+                                        visible = True,
+                                        marker = dict(size=4,symbol= "arrow-bar-up", angleref="previous"),
+                                        line=dict(color="#000000", width=1),
+                                        
+                                        #NOTE: May get a dividing by zero warning here which will not effect the program, but of course dividing by zero may result in inacuracy of the phase plot
+                                        x=[x_temp, x_temp + dxdt(x_temp, y_temp)*xdif*arrow_scale],
+                                        y=[y_temp, y_temp + dydt(x_temp, y_temp)*xdif*arrow_scale],
+                                        showlegend=False))
+                            else:
+                                Unknown_Error = popup_windows.popup_window(main_frame)
+                                Unknown_Error.Error("Error: Please check your arrow scale.", cwd=settings["cwd"])
+                                Unknown_Error.Show()
                     for warning in w:
                         if(warning.message.args[0][:23]=="invalid escape sequence"):
                             pass # this warning can be caused by certian file locations being used
@@ -290,68 +443,76 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
         ### plot line ### Need to upgrade from Eulur
         num_of_start = len(starting_points)
         if(num_of_start != 0):
-            if(method == "Euler"):
-                for start in starting_points:
+            for start in starting_points:
+                if(method.lower() == "euler" or method.lower() == "e"): #NOTE: efficiency: Some inefficiency here as method is checked multiple times
                     x_points_forwards, y_points_forwards = get_points_for_forward_trace_Eurler(start, forward_steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)
-                    if(settings["show_legend"]==True):
-                        fig.add_trace(
+                    x_points_backwards, y_points_backwards = get_points_for_backward_trace_Eurler(start, backward_steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)
+                elif(method.lower() == "kutta" or method.lower() == "runge kutta" or method.lower() == "runge-kutta" or method.lower() == "rk" or method.lower() == "r" or method.lower() == "k"): 
+                    #fbar = derivatives = [dx/dt, dy/dt, dz/dt] or however many exist
+                    x_points_forwards, y_points_forwards = get_points_for_forward_Runge_Kutta(start, forward_steps, h, [dxdt, dydt], main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)
+                    x_points_backwards, y_points_backwards = get_points_for_backward_Runge_Kutta(start, backward_steps, h, [dxdt, dydt], main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)
+                elif(method.lower() == "Heun" or method.lower() == "h"):
+                    x_points_forwards, y_points_forwards = get_points_for_forward_Heun(start, forward_steps, h, [dxdt, dydt], main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)
+                    x_points_backwards, y_points_backwards = get_points_for_backward_Heun(start, backward_steps, h, [dxdt, dydt], main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)                
+                    variable_error_window = popup_windows.popup_window(main_frame)
+                    variable_error_window.Info("Sorry, Heun's method is coming soon, but not yet implemented", cwd = settings["cwd"])
+                    variable_error_window.Show()
+                elif(method != ""):
+                    variable_error_window = popup_windows.popup_window(main_frame)
+                    variable_error_window.Info("Sorry, this numarical method has not yet been added; however, if you email: samuelcstreet@gmail.com he would be happy to add it", cwd = settings["cwd"])
+                    variable_error_window.Show()
+                    break
+                else:
+                    variable_error_window = popup_windows.popup_window(main_frame)
+                    variable_error_window.Error("Sorry, no numerical method added", cwd = settings["cwd"])
+                    variable_error_window.Show()
+                    break
+                
+                if(settings["show_legend"]==True):
+                    fig.add_trace(
+                    go.Scatter(
+                        visible=True,
+                        marker = dict(size=3,symbol= "arrow-bar-up", angleref="previous"),
+                        line=dict(color="#0763e9", width=2),
+                        x=x_points_forwards,
+                        y=y_points_forwards,
+                        name = str(start) + " time forwards"))
+                    
+                    fig.add_trace(
                         go.Scatter(
                             visible=True,
-                            marker = dict(size=15,symbol= "arrow-bar-up", angleref="previous"),
-                            line=dict(color="#0763e9", width=1),
-                            x=x_points_forwards,
-                            y=y_points_forwards,
-                            name = str(start) + " time forwards"))
-                    else:
-                        fig.add_trace(
-                        go.Scatter(
-                            visible=True,
-                            marker = dict(size=15,symbol= "arrow-bar-up", angleref="previous"),
-                            line=dict(color="#0763e9", width=1),
-                            x=x_points_forwards,
-                            y=y_points_forwards,
-                            name = str(start) + " time forwards",
-                            showlegend=False))
-        num_of_start = len(starting_points)
-        if(num_of_start != 0):
-            if(method == "Euler"):
-                for start in starting_points:
-                    x_points_backwards, y_points_backwards = get_points_for_backwards_trace_Eurler(start, backward_steps, h, dxdt, dydt, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)
-
-                    if(settings["show_legend"]==True):
-                        fig.add_trace(
-                        go.Scatter(
-                            visible=True,
-                            marker = dict(size=15,symbol= "arrow-bar-up", angleref="previous"),
-                            line=dict(color="#076309", width=1),
+                            marker = dict(size=3,symbol= "arrow-bar-up", angleref="previous"),
+                            line=dict(color="#076309", width=2),
                             x=x_points_backwards,
                             y=y_points_backwards,
                             name = str(start) + " time backwards"))
-                    else:
-                        fig.add_trace(
+                else:
+                    fig.add_trace(
+                    go.Scatter(
+                        visible=True,
+                        marker = dict(size=3,symbol= "arrow-bar-up", angleref="previous"),
+                        line=dict(color="#0763e9", width=2),
+                        x=x_points_forwards,
+                        y=y_points_forwards,
+                        name = str(start) + " time forwards",
+                        showlegend=False))
+                    
+                    fig.add_trace(
                         go.Scatter(
                             visible=True,
-                            marker = dict(size=15,symbol= "arrow-bar-up", angleref="previous"),
-                            line=dict(color="#076309", width=1),
+                            marker = dict(size=3,symbol= "arrow-bar-up", angleref="previous"),
+                            line=dict(color="#076309", width=2),
                             x=x_points_backwards,
                             y=y_points_backwards,
                             name = str(start) + " time backwards",
-                            showlegend=False))
+                            showlegend=False))                        
                         
-                fig.update_layout(legend=dict(
-                    yanchor="top",
-                    y=1,
-                    xanchor="right",
-                    x=1
-                ))
-            elif(method != ""):
-                variable_error_window = popup_windows.popup_window(main_frame)
-                variable_error_window.Info("Sorry, this numarical method has not yet been added; however, if you email: samuelcstreet@gmail.com he would be happy to add it", cwd = settings["cwd"])
-                variable_error_window.Show()
-            else:
-                variable_error_window = popup_windows.popup_window(main_frame)
-                variable_error_window.Error("Sorry, no numerical method added", cwd = settings["cwd"])
-                variable_error_window.Show() 
+            fig.update_layout(legend=dict(
+                yanchor="top",
+                y=1,
+                xanchor="right",
+                x=1
+            )) 
     if(num_of_start!=0):
         for start in starting_points:
             fig.add_trace(go.Scatter(
