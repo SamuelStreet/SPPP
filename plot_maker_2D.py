@@ -3,6 +3,8 @@ import numpy as np
 import popup_windows
 from numpy import sin, cos, tan, arcsin, arccos, arctan, sinh, cosh, tanh, log, log10, log2, e, pi
 from warnings import catch_warnings
+import os
+
 π = pi
 ln = lambda x: log(x)
 def add_initial_points(trace, points, selector, settings):
@@ -348,7 +350,10 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
             )
         )
         )
-        fig.write_html(settings["cwd"]+"/Graphs/Display_Plot_Clear.html")
+        if os.path.exists(settings["cwd"]+"/Graphs"):
+            fig.write_html(settings["cwd"]+"/Graphs/Display_Plot_Clear.html")
+        else:
+            fig.write_html(settings["cwd"]+"/_internal/Graphs/Display_Plot_Clear.html")
 
     #### phase plot
     if(from_settings==False or (dxdt_text.strip() !='lambda x, y: ()' and dydt_text.strip() !='lambda x, y: ()')):
@@ -541,7 +546,10 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
     )
     )
 
-    fig.write_html(settings["cwd"]+"/Graphs/Display_Plot.html")
+    if os.path.exists(settings["cwd"]+"/Graphs"):
+        fig.write_html(settings["cwd"]+"/Graphs/Display_Plot.html")
+    else:
+        fig.write_html(settings["cwd"]+"/_internal/Graphs/Display_Plot.html")
     #fig.show()
 
 

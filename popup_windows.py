@@ -3,7 +3,6 @@ import wx.lib.scrolledpanel
 import os
 import json
 from Default_Settings import Default
-from Photos import Warning_Icon, Save_Icon, PPP_Logo, Load_Icon, Info_Icon, Help_Icon, File_Icon, Error_Icon, dy--dt, dx--dt.png
 
 class popup_window(wx.Frame):
     def __init__(self,parent):
@@ -12,7 +11,10 @@ class popup_window(wx.Frame):
         self.SetSize((460, 200))
 
     def Help(self, text, cwd):
-        icon = wx.Icon(cwd+"/Photos/Help Icon.png")
+        if os.path.exists(cwd+"/Photos/Help_Icon.png"):
+            icon = wx.Icon(cwd+"/Photos/Help_Icon.png")
+        else:
+            icon = wx.Icon(cwd+"/_internal/Photos/Help_Icon.png")
         self.SetIcon(icon)
         size = (1150, 500)
         self.panel = wx.lib.scrolledpanel.ScrolledPanel(self, -1, pos=(0,0), size=size, style=wx.SIMPLE_BORDER)
@@ -29,7 +31,10 @@ class popup_window(wx.Frame):
         self.Show()
 
     def Info(self, text, size = (400, 250), cwd=""):
-        icon = wx.Icon(cwd+"/Photos/Info Icon.png")
+        if os.path.exists(cwd+"/Photos/Info_Icon.png"):
+            icon = wx.Icon(cwd+"/Photos/Info_Icon.png")
+        else:
+            icon = wx.Icon(cwd+"/_internal/Photos/Info_Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
@@ -42,7 +47,10 @@ class popup_window(wx.Frame):
         textbox.SetFont(font)
 
     def Warning(self, text, size = (400, 250), cwd=""):
-        icon = wx.Icon(cwd+"/Photos/Warning Icon.png")
+        if os.path.exists(cwd+"/Photos/Warning_Icon.png"):
+            icon = wx.Icon(cwd+"/Photos/Warning_Icon.png")
+        else:
+            icon = wx.Icon(cwd+"/_internal/Photos/Warning_Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
@@ -55,7 +63,10 @@ class popup_window(wx.Frame):
         textbox.SetFont(font)
 
     def Error(self, text, size = (400, 250), cwd=""):
-        icon = wx.Icon(cwd+"/Photos/Error Icon.png")
+        if os.path.exists(cwd+"/Photos/Error_Icon.png"):
+            icon = wx.Icon(cwd+"/Photos/Error_Icon.png")
+        else:
+            icon = wx.Icon(cwd+"/_internal/Photos/Error_Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)
@@ -70,7 +81,10 @@ class popup_window(wx.Frame):
     def Update_Self_for_Settings(self, settings, load, size = (500, 500)):
         self.load = load
         self.settings = settings
-        icon = wx.Icon(settings["cwd"]+"/Photos/Settings Icon.png")
+        if os.path.exists(settings["cwd"]+"/Photos/Settings_Icon.png"):
+            icon = wx.Icon(settings["cwd"]+"/Photos/Settings_Icon.png")
+        else:
+            icon = wx.Icon(settings["cwd"]+"/_internal/Photos/Settings_Icon.png")
         self.SetIcon(icon)
         self.SetSize(size); self.SetMinSize(size); self.SetMaxSize(size)
         self.panel = wx.Panel(self)
@@ -491,7 +505,10 @@ class popup_window(wx.Frame):
 
 
     def File(self, text="", size = (250, 150), cwd=""):
-        icon = wx.Icon(cwd+"/Photos/File Icon.png")
+        if os.path.exists(cwd+"/Photos/File_Icon.png"):
+            icon = wx.Icon(cwd+"/Photos/File_Icon.png")
+        else:
+            icon = wx.Icon(cwd+"/_internal/Photos/File_Icon.png")
         self.SetIcon(icon)
         self.SetSize(size)
         self.SetMinSize(size)

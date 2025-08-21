@@ -24,11 +24,11 @@ class MainFrame(wx.Frame):
         wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.1.5")
         
         self.cwd = os.getcwd()
-
-        if not os.path.exists(self.cwd+'/Photos'):
-            os.makedirs(self.cwd+'/Photos')
         
-        icon = wx.Icon(self.cwd+'/Photos/PPP Logo.png')
+        if os.path.exists(self.cwd+"/Photos/PPP_Logo.png"):
+            icon = wx.Icon(self.cwd+"/Photos/PPP_Logo.png")
+        else:
+            icon = wx.Icon(self.cwd+"/_internal/Photos/PPP_Logo.png")
         self.SetIcon(icon)
         self.SetBackgroundColour("#282a30") # dark blue grey for the time being
         self.SetMinSize((600,400))
@@ -114,7 +114,10 @@ class MainFrame(wx.Frame):
         bh = 40 # button height
         bw = 40 # button width
         global filepath
-        filepath = "file:///"+self.cwd+"/Graphs/Display_Plot_Clear.html"
+        if os.path.exists(self.cwd+"/Graphs"):
+            filepath = "file:///"+self.cwd+"/Graphs/Display_Plot_Clear.html"
+        else:
+            filepath = "file:///"+self.cwd+"/_internal/Graphs/Display_Plot_Clear.html"
         self.display = Display_Window(self.panel)
         self.display.SetBackgroundColour("#ffffff")
 
@@ -126,7 +129,7 @@ class MainFrame(wx.Frame):
         settings_button.SetMaxSize((bw, bh))
         settings_button.SetBackgroundColour("#ffffff")
 
-        settings_photo = wx.Bitmap(self.cwd+"/Photos/Settings Icon.png")
+        settings_photo = wx.Bitmap(self.cwd+"/Photos/Settings_Icon.png")
         image = wx.ImageFromBitmap(settings_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         settings_photo = wx.BitmapFromImage(image)
@@ -135,7 +138,10 @@ class MainFrame(wx.Frame):
 
 
         ##
-        settings_photo = wx.Bitmap(self.cwd+"/Photos/Settings Icon.png")
+        if os.path.exists(self.cwd+"/Photos/Settings_Icon.png"):
+            settings_photo = wx.Bitmap(self.cwd+"/Photos/Settings_Icon.png")
+        else:
+            settings_photo = wx.Bitmap(self.cwd+"/_internal/Photos/Settings_Icon.png")
         image = wx.ImageFromBitmap(settings_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         settings_photo = wx.BitmapFromImage(image)
@@ -146,7 +152,10 @@ class MainFrame(wx.Frame):
 
 
         ##
-        save_file_photo = wx.Bitmap(self.cwd+"/Photos/Save Icon.png")
+        if os.path.exists(self.cwd+"/Photos/Save_Icon.png"):
+            save_file_photo = wx.Bitmap(self.cwd+"/Photos/Save_Icon.png")
+        else:
+            save_file_photo = wx.Bitmap(self.cwd+"/_internal/Photos/Save_Icon.png")
         image = wx.ImageFromBitmap(save_file_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         save_file_photo = wx.BitmapFromImage(image)
@@ -156,7 +165,10 @@ class MainFrame(wx.Frame):
         ##
 
         ##
-        open_file_photo = wx.Bitmap(self.cwd+"/Photos/File Icon.png")
+        if os.path.exists(self.cwd+"/Photos/File_Icon.png"):
+            open_file_photo = wx.Bitmap(self.cwd+"/Photos/File_Icon.png")
+        else:
+            open_file_photo = wx.Bitmap(self.cwd+"/_internal/Photos/File_Icon.png")
         image = wx.ImageFromBitmap(open_file_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         open_file_photo = wx.BitmapFromImage(image)
@@ -164,7 +176,10 @@ class MainFrame(wx.Frame):
         open_file.Bind(wx.EVT_BUTTON, self.open_file_button_pushed)
         open_file.SetBackgroundColour("#282a30")
         ##
-        help_photo = wx.Bitmap(self.cwd+"/Photos/Help Icon.png")
+        if os.path.exists(self.cwd+"/Photos/Help_Icon.png"):
+            help_photo = wx.Bitmap(self.cwd+"/Photos/Help_Icon.png")
+        else:
+            help_photo = wx.Bitmap(self.cwd+"/_internal/Photos/Help_Icon.png")
         image = wx.ImageFromBitmap(help_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         help_photo = wx.BitmapFromImage(image)
@@ -174,7 +189,10 @@ class MainFrame(wx.Frame):
         ##
 
         ##
-        load_photo = wx.Bitmap(self.cwd+"/Photos/Load Icon.png")
+        if os.path.exists(self.cwd+"/Photos/Load_Icon.png"):
+            load_photo = wx.Bitmap(self.cwd+"/Photos/Load_Icon.png")
+        else:
+            load_photo = wx.Bitmap(self.cwd+"/_internal/Photos/Load_Icon.png")
         image = wx.ImageFromBitmap(load_photo)
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         load_photo = wx.BitmapFromImage(image)
@@ -255,11 +273,14 @@ class MainFrame(wx.Frame):
             dc.SetClippingRect(rect)
         dc.Clear()
 
-        dydt_label_file_photo = wx.Bitmap(self.cwd+"/Photos/dx--dt.png")
-        image = wx.ImageFromBitmap(dydt_label_file_photo)
+        if os.path.exists(self.cwd+"/Photos/dx__dt.png"):
+            dxdt_label_file_photo = wx.Bitmap(self.cwd+"/Photos/dx__dt.png")
+        else:
+            dxdt_label_file_photo = wx.Bitmap(self.cwd+"/_internal/Photos/dx__dt.png")
+        image = wx.ImageFromBitmap(dxdt_label_file_photo)
         image = image.Scale(30, 40, wx.IMAGE_QUALITY_HIGH)
-        dydt_label_file_photo = wx.BitmapFromImage(image)
-        dc.DrawBitmap(dydt_label_file_photo, 5, 0)
+        dxdt_label_file_photo = wx.BitmapFromImage(image)
+        dc.DrawBitmap(dxdt_label_file_photo, 5, 0)
     
     
     def dydt_label_maker(self, evt):
@@ -271,7 +292,10 @@ class MainFrame(wx.Frame):
             dc.SetClippingRect(rect)
         dc.Clear()
 
-        dydt_label_file_photo = wx.Bitmap(self.cwd+"/Photos/dy--dt.png")
+        if os.path.exists(self.cwd+"/Photos/dy__dt.png"):
+            dydt_label_file_photo = wx.Bitmap(self.cwd+"/Photos/dy__dt.png")
+        else:
+            dydt_label_file_photo = wx.Bitmap(self.cwd+"/_internal/Photos/dy__dt.png")
         image = wx.ImageFromBitmap(dydt_label_file_photo)
         image = image.Scale(30, 40, wx.IMAGE_QUALITY_HIGH)
         dydt_label_file_photo = wx.BitmapFromImage(image)
@@ -313,7 +337,10 @@ class MainFrame(wx.Frame):
             with open(save_location+'/settings.json', "w") as f:
                 f.write(json.dumps(self.settings))
 
-            shutil.copyfile(self.settings["cwd"]+"/Graphs/Display_Plot.html", save_location+'/Display_Plot.html')
+            if os.path.exists(self.cwd+"/Graphs"):
+                shutil.copyfile(self.settings["cwd"]+"/Graphs/Display_Plot.html", save_location+'/Display_Plot.html')
+            else:
+                shutil.copyfile(self.settings["cwd"]+"/_internal/Graphs/Display_Plot.html", save_location+'/Display_Plot.html')
 
             with open(save_location+'/Equations.txt', "w") as f:
                 f.write(self.dxdt_textbox_text.GetValue()+",")
@@ -607,8 +634,10 @@ class MainFrame(wx.Frame):
     
     def reset_display(self):
         global filepath
-        filepath = "file:///"+self.settings["cwd"]+"/Graphs/Display_Plot.html"
-        
+        if os.path.exists(self.cwd+"/Graphs"):
+            filepath = "file:///"+self.settings["cwd"]+"/Graphs/Display_Plot.html"
+        else:
+            filepath = "file:///"+self.settings["cwd"]+"/_internal/Graphs/Display_Plot.html"
         #self.display.ClearBackground()
         self.display.display.LoadURL(filepath)
 

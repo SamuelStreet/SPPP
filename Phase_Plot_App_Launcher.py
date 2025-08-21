@@ -1,5 +1,7 @@
 import wx
 import Window
+import Photos
+import Graphs
 
 if __name__ == "__main__":
     global app
@@ -18,6 +20,7 @@ if __name__ == "__main__":
 # https://stackoverflow.com/a/21378718/18535692 for aid with making verticle scroll bars
 # https://discuss.python.org/t/runtime-warnings-in-python/52172/5 for catching warnings
 # https://www.geeksforgeeks.org/python/one-liner-for-python-if-elif-else-statements/ one line if statements
+# https://stackoverflow.com/a/82846/18535692 -- how to check if a path exists.
 #### https://www.myphysicslab.com/explain/runge-kutta-en.html Runge-Kutta multivariable (All >= 1D) explination
 #### https://math.libretexts.org/Bookshelves/Calculus/Calculus_(OpenStax)/14%3A_Differentiation_of_Functions_of_Several_Variables/14.05%3A_The_Chain_Rule_for_Multivariable_Functions --- For Chain rule in multiple dimentions
 # stack overflow in general - many questions
