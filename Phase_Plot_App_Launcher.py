@@ -21,6 +21,7 @@ if __name__ == "__main__":
 # https://stackoverflow.com/a/82846/18535692 -- how to check if a path exists.
 #### https://www.myphysicslab.com/explain/runge-kutta-en.html Runge-Kutta multivariable (All >= 1D) explination
 #### https://math.libretexts.org/Bookshelves/Calculus/Calculus_(OpenStax)/14%3A_Differentiation_of_Functions_of_Several_Variables/14.05%3A_The_Chain_Rule_for_Multivariable_Functions --- For Chain rule in multiple dimentions
+#### chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://www.math.ntnu.no/emner/TMA4130/2021h/lectures/IntroductionNuMeODE.pdf -- Heun's method (there is also an explination for Eulers method there)
 # stack overflow in general - many questions
 # wxPython documentation - of course
 # many wxPython comment groups

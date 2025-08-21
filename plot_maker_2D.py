@@ -275,9 +275,84 @@ def get_points_for_backward_Runge_Kutta(start, backward_steps, h, fbar, main_fra
     return x_points_backwards, y_points_backwards
 
 def get_points_for_forward_Heun(start, forward_steps, h, fbar, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
-    pass
-def get_points_for_backward_Heun(start, forward_steps, h, fbar, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
-    pass
+    x_points_forwards=[0.0 for i in range(forward_steps+1)] # +1 since need a spot for the origional location
+    y_points_forwards=[0.0 for i in range(forward_steps+1)]
+    x_points_forwards[0]=start[0]
+    y_points_forwards[0]=start[1]
+    hh = h/2    #hh = half h
+
+    x_bar = np.array(start)
+    with catch_warnings(record=True) as w:
+        try:
+            for i in range(forward_steps):
+                #below easily extends to 3/4 dimentions, just need to update the imput for fbar in each line
+                an = np.array([fbar[j](x_bar[0], x_bar[1]) for j in range(len(fbar))])
+                bn = np.array([fbar[j](x_bar[0]+h*an[0], x_bar[1]+h*an[1]) for j in range(len(fbar))])
+                x_bar = np.array([x_bar[j]+hh*(an[j]+bn[j]) for j in range(len(x_bar))])
+                x_points_forwards[i+1]=x_bar[0]
+                y_points_forwards[i+1]=x_bar[1]
+                if(passed_boundary(x_points_forwards[i+1], y_points_forwards[i+1], xmin, ymin, xmax, ymax, xpad, ypad, main_frame, i, w, forwards=True, settings=settings)==True):
+                    return x_points_forwards, y_points_forwards
+        except OverflowError as ex:
+            print("")
+            if(settings["stop_numerical_termination_warning"]==False):
+                termination_warning  = popup_windows.popup_window(main_frame)
+                termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going forwards in time.", cwd=settings["cwd"])
+                termination_warning.Show()
+            check_warnings_plotted_lines(main_frame, settings, w)
+            return x_points_forwards, y_points_forwards
+        except ZeroDivisionError as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, had to divide by zero somewhere when plotting curve(s) going forward in time. Program may have been able to proceed, but note there may be large numarical errors when making a curve in your plot.", cwd=settings["cwd"])
+            Zero_Error.Show()
+            return x_points_forwards, y_points_forwards
+        except Exception as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, somewhere when plotting curve(s) going forward in time. I do not know what is wrong. feel free to reach out at samuelcstreet@gmail.com and I can try and help you", cwd=settings["cwd"])
+            Zero_Error.Show()
+            return x_points_forwards, y_points_forwards
+    check_warnings_plotted_lines(main_frame, settings, w)
+    return x_points_forwards, y_points_forwards
+def get_points_for_backward_Heun(start, backward_steps, h, fbar, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
+    x_points_backwards=[0.0 for i in range(backward_steps+1)] # +1 since need a spot for the origional location
+    y_points_backwards=[0.0 for i in range(backward_steps+1)]
+    x_points_backwards[0]=start[0]
+    y_points_backwards[0]=start[1]
+    hh = h/2    #hh = half h
+
+    x_bar = np.array(start)
+    
+    with catch_warnings(record=True) as w:
+        try:
+            for i in range(backward_steps):
+                #below easily extends to 3/4 dimentions, just need to update the imput for fbar in each line
+                an = np.array([-fbar[j](x_bar[0], x_bar[1]) for j in range(len(fbar))])
+                bn = np.array([-fbar[j](x_bar[0]+h*an[0], x_bar[1]+h*an[1]) for j in range(len(fbar))])
+                x_bar = np.array([x_bar[j]+hh*(an[j]+bn[j]) for j in range(len(x_bar))])
+                x_points_backwards[i+1]=x_bar[0]
+                y_points_backwards[i+1]=x_bar[1]
+                if(passed_boundary(x_points_backwards[i+1], y_points_backwards[i+1], xmin, ymin, xmax, ymax, xpad, ypad, main_frame, i, w, forwards=False, settings=settings)==True):
+                    return x_points_backwards, y_points_backwards
+        except OverflowError as ex:
+            print("")
+            if(settings["stop_numerical_termination_warning"]==False):
+                termination_warning  = popup_windows.popup_window(main_frame)
+                termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going backwards in time.", cwd=settings["cwd"])
+                termination_warning.Show()
+            check_warnings_plotted_lines(main_frame, settings, w)
+            return x_points_backwards, y_points_backwards
+        except ZeroDivisionError as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, had to divide by zero somewhere when plotting curve(s) going backward in time. Program may have been able to proceed, but note there may be large numarical errors when making a curve in your plot.", cwd=settings["cwd"])
+            Zero_Error.Show()
+            return x_points_backwards, y_points_backwards
+        except Exception as ex:
+            Zero_Error = popup_windows.popup_window(main_frame)
+            Zero_Error.Error("Error, somewhere when plotting curve(s) going backward in time. I do not know what is wrong. feel free to reach out at samuelcstreet@gmail.com and I can try and help you.", cwd=settings["cwd"])
+            Zero_Error.Show()
+            return x_points_backwards, y_points_backwards
+    check_warnings_plotted_lines(main_frame, settings, w)
+    return x_points_backwards, y_points_backwards
 
 #File for making the phase plot
 def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from_settings=False):    
@@ -459,12 +534,9 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
                 elif(method.lower() == "Heun" or method.lower() == "h"):
                     x_points_forwards, y_points_forwards = get_points_for_forward_Heun(start, forward_steps, h, [dxdt, dydt], main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)
                     x_points_backwards, y_points_backwards = get_points_for_backward_Heun(start, backward_steps, h, [dxdt, dydt], main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings)                
-                    variable_error_window = popup_windows.popup_window(main_frame)
-                    variable_error_window.Info("Sorry, Heun's method is coming soon, but not yet implemented", cwd = settings["cwd"])
-                    variable_error_window.Show()
                 elif(method != ""):
                     variable_error_window = popup_windows.popup_window(main_frame)
-                    variable_error_window.Info("Sorry, this numarical method has not yet been added; however, if you email: samuelcstreet@gmail.com he would be happy to add it", cwd = settings["cwd"])
+                    variable_error_window.Info("Sorry, unfortunatly " + method + " has not yet been added; however, if you email: samuelcstreet@gmail.com he would be happy to add it", cwd = settings["cwd"])
                     variable_error_window.Show()
                     break
                 else:
