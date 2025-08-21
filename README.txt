@@ -23,7 +23,6 @@ To Do:
   - phase plot arrows seem to be scalle based on xdensity and ydensity even when scale is set, this should not be.
   - Be good to add Huen method
   - Need to be able to click on the plot to pick a point
-  - Need to make it so graphs and photos do not need to be moved to the same folder as the exe, makes it so links do not work as well
 
 - Feature
   - should also save time based data as part of a nump array so that  be nice you could also get different time based.
