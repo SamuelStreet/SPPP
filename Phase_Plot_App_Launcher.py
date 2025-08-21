@@ -1,7 +1,5 @@
 import wx
 import Window
-import Photos
-import Graphs
 
 if __name__ == "__main__":
     global app
