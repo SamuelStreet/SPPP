@@ -20,14 +20,12 @@ If working on project then note the following:
 
 To Do:
 -Functionality
-  - phase plot arrows seem to be scalled based on xdensity and ydensity even when scale is set, this should not be.
-  - Be good to add Huen method
-  - Time forward and time backwards are not implemented, need to implement
   - Need to be able to click on the plot to pick a point
+  - Time forward and time backwards are not implemented, need to implement
   - need t implemented
 
 - Feature
-  - should also save time based data as part of a nump array so that  be nice you could also get different time based.
+  - should also save time based data as part of a numpy array so that  be nice you could also get different time based.
   - would be nice if the user could specify a specific h value and the amount of time they would like to simulate.
   - would be good to add Huen's method, but not required.
   - would be nice to add settings so plot does not reset, that way could plot using multiple different methods and have them all displayed at the same time. 
@@ -43,9 +41,11 @@ To Do:
 - Warnings Update:
   - warnings should all appear in a single popup at the end of processing and should be listed off
 
-- Functionality
-  - Would be good to check over variables section, checked over, but lots needed addressed,
-    same with Euler section
+- Possible Errors:
+  - a while ago I had an issue where the arrows seemed to be scaled based on the xdensity and ydensity, but this no longer seems to be the case,
+    either this was inadvertently fixed or is an uncommon error.
+  - Would be good to check over variables section along with the sections responsible for producing the
+    phase plots just to have checked them over. They seem to be working, but good to check.
 
 - DimensionalA
   - for sure should be able to use 1D and get a nice plot
@@ -63,6 +63,8 @@ To work in vscode will need
 Windows:
 Install python + pip
 In command
+"C:/Users/Samuel/Downloads/Programming related/Python/SPPP_TESTING_ENVIRONMENT"
+"C:/Users/Samuel/Downloads/Programming related/Python/SPPP_ENVIRONMENT"
 python -m venv SPPP_Environment/location/you/want/it
 path\of\SPPP_Environment\Scripts\activate
 
@@ -101,7 +103,7 @@ If using Windows make sure vs code changes directory to venv directory
 (when using pyinstaller use -D to get a way faster program, slightly more work for user to accesss first time but loads way quicker)
 
 Windows
-pyinstaller -D --name "SPPP V0.1.6" --specpath "C:\Users\Samuel\Downloads\SPPP_V0.1.6" --icon="C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos/PPP_Logo.ico" --noconsole --add-binary "c:\Users\Samuel\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\WebView2Loader.dll;.\wx" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Graphs;Graphs" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos;Photos" "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Phase_Plot_App_Launcher.py"
+pyinstaller -D --name "SPPP V0.1.7" --specpath "C:\Users\Samuel\Downloads\SPPP_V0.1.7" --icon="C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos/PPP_Logo.ico" --noconsole --add-binary "c:\Users\Samuel\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\WebView2Loader.dll;.\wx" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Graphs;Graphs" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos;Photos" "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Phase_Plot_App_Launcher.py"
 
 
 FOR ALL LINUX -- Should find a way to add --strip to make files smaller

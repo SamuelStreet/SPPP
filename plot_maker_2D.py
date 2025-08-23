@@ -190,6 +190,11 @@ def get_points_for_forward_Runge_Kutta(start, forward_steps, h, fbar, main_frame
     # https://www.myphysicslab.com/explain/runge-kutta-en.html
     x_points_forwards=[0.0 for i in range(forward_steps+1)] # +1 since need a spot for the origional location
     y_points_forwards=[0.0 for i in range(forward_steps+1)]
+    def fill_remainder(i): # to prevent random line going back to origin
+        for j in range(i, forward_steps,1): 
+            x_points_forwards[j+1] = x_points_forwards[i+1]
+            y_points_forwards[j+1] = y_points_forwards[i+1]
+    
     x_points_forwards[0]=start[0]
     y_points_forwards[0]=start[1]
     hh = h/2    #hh = half h
@@ -208,6 +213,7 @@ def get_points_for_forward_Runge_Kutta(start, forward_steps, h, fbar, main_frame
                 x_points_forwards[i+1]=x_bar[0]
                 y_points_forwards[i+1]=x_bar[1]
                 if(passed_boundary(x_points_forwards[i+1], y_points_forwards[i+1], xmin, ymin, xmax, ymax, xpad, ypad, main_frame, i, w, forwards=True, settings=settings)==True):
+                    fill_remainder(i)
                     return x_points_forwards, y_points_forwards
         except OverflowError as ex:
             print("")
@@ -216,16 +222,19 @@ def get_points_for_forward_Runge_Kutta(start, forward_steps, h, fbar, main_frame
                 termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going forwards in time.", cwd=settings["cwd"])
                 termination_warning.Show()
             check_warnings_plotted_lines(main_frame, settings, w)
+            fill_remainder(i)
             return x_points_forwards, y_points_forwards
         except ZeroDivisionError as ex:
             Zero_Error = popup_windows.popup_window(main_frame)
             Zero_Error.Error("Error, had to divide by zero somewhere when plotting curve(s) going forward in time. Program may have been able to proceed, but note there may be large numarical errors when making a curve in your plot.", cwd=settings["cwd"])
             Zero_Error.Show()
+            fill_remainder(i)
             return x_points_forwards, y_points_forwards
         except Exception as ex:
             Zero_Error = popup_windows.popup_window(main_frame)
             Zero_Error.Error("Error, somewhere when plotting curve(s) going forward in time. I do not know what is wrong. feel free to reach out at samuelcstreet@gmail.com and I can try and help you", cwd=settings["cwd"])
             Zero_Error.Show()
+            fill_remainder(i)
             return x_points_forwards, y_points_forwards
     check_warnings_plotted_lines(main_frame, settings, w)
     return x_points_forwards, y_points_forwards
@@ -233,6 +242,10 @@ def get_points_for_forward_Runge_Kutta(start, forward_steps, h, fbar, main_frame
 def get_points_for_backward_Runge_Kutta(start, backward_steps, h, fbar, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
     x_points_backwards=[0.0 for i in range(backward_steps+1)] # +1 since need a spot for the origional location
     y_points_backwards=[0.0 for i in range(backward_steps+1)]
+    def fill_remainder(i): # to prevent random line going back to origin
+        for j in range(i, backward_steps,1): 
+            x_points_backwards[j+1] = x_points_backwards[i+1]
+            y_points_backwards[j+1] = y_points_backwards[i+1]
     x_points_backwards[0]=start[0]
     y_points_backwards[0]=start[1]
     hh = h/2    #hh = half h
@@ -252,6 +265,7 @@ def get_points_for_backward_Runge_Kutta(start, backward_steps, h, fbar, main_fra
                 x_points_backwards[i+1]=x_bar[0]
                 y_points_backwards[i+1]=x_bar[1]
                 if(passed_boundary(x_points_backwards[i+1], y_points_backwards[i+1], xmin, ymin, xmax, ymax, xpad, ypad, main_frame, i, w, forwards=False, settings=settings)==True):
+                    fill_remainder(i)
                     return x_points_backwards, y_points_backwards
         except OverflowError as ex:
             print("")
@@ -260,16 +274,19 @@ def get_points_for_backward_Runge_Kutta(start, backward_steps, h, fbar, main_fra
                 termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going backwards in time.", cwd=settings["cwd"])
                 termination_warning.Show()
             check_warnings_plotted_lines(main_frame, settings, w)
+            fill_remainder(i)
             return x_points_backwards, y_points_backwards
         except ZeroDivisionError as ex:
             Zero_Error = popup_windows.popup_window(main_frame)
             Zero_Error.Error("Error, had to divide by zero somewhere when plotting curve(s) going backward in time. Program may have been able to proceed, but note there may be large numarical errors when making a curve in your plot.", cwd=settings["cwd"])
             Zero_Error.Show()
+            fill_remainder(i)
             return x_points_backwards, y_points_backwards
         except Exception as ex:
             Zero_Error = popup_windows.popup_window(main_frame)
             Zero_Error.Error("Error, somewhere when plotting curve(s) going backward in time. I do not know what is wrong. feel free to reach out at samuelcstreet@gmail.com and I can try and help you.", cwd=settings["cwd"])
             Zero_Error.Show()
+            fill_remainder(i)
             return x_points_backwards, y_points_backwards
     check_warnings_plotted_lines(main_frame, settings, w)
     return x_points_backwards, y_points_backwards
@@ -277,6 +294,10 @@ def get_points_for_backward_Runge_Kutta(start, backward_steps, h, fbar, main_fra
 def get_points_for_forward_Heun(start, forward_steps, h, fbar, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
     x_points_forwards=[0.0 for i in range(forward_steps+1)] # +1 since need a spot for the origional location
     y_points_forwards=[0.0 for i in range(forward_steps+1)]
+    def fill_remainder(i): # to prevent random line going back to origin
+        for j in range(i, forward_steps,1): 
+            x_points_forwards[j+1] = x_points_forwards[i+1]
+            y_points_forwards[j+1] = y_points_forwards[i+1]
     x_points_forwards[0]=start[0]
     y_points_forwards[0]=start[1]
     hh = h/2    #hh = half h
@@ -292,6 +313,7 @@ def get_points_for_forward_Heun(start, forward_steps, h, fbar, main_frame, xmin,
                 x_points_forwards[i+1]=x_bar[0]
                 y_points_forwards[i+1]=x_bar[1]
                 if(passed_boundary(x_points_forwards[i+1], y_points_forwards[i+1], xmin, ymin, xmax, ymax, xpad, ypad, main_frame, i, w, forwards=True, settings=settings)==True):
+                    fill_remainder(i)
                     return x_points_forwards, y_points_forwards
         except OverflowError as ex:
             print("")
@@ -300,22 +322,29 @@ def get_points_for_forward_Heun(start, forward_steps, h, fbar, main_frame, xmin,
                 termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going forwards in time.", cwd=settings["cwd"])
                 termination_warning.Show()
             check_warnings_plotted_lines(main_frame, settings, w)
+            fill_remainder(i)
             return x_points_forwards, y_points_forwards
         except ZeroDivisionError as ex:
             Zero_Error = popup_windows.popup_window(main_frame)
             Zero_Error.Error("Error, had to divide by zero somewhere when plotting curve(s) going forward in time. Program may have been able to proceed, but note there may be large numarical errors when making a curve in your plot.", cwd=settings["cwd"])
             Zero_Error.Show()
+            fill_remainder(i)
             return x_points_forwards, y_points_forwards
         except Exception as ex:
             Zero_Error = popup_windows.popup_window(main_frame)
             Zero_Error.Error("Error, somewhere when plotting curve(s) going forward in time. I do not know what is wrong. feel free to reach out at samuelcstreet@gmail.com and I can try and help you", cwd=settings["cwd"])
             Zero_Error.Show()
+            fill_remainder(i)
             return x_points_forwards, y_points_forwards
     check_warnings_plotted_lines(main_frame, settings, w)
     return x_points_forwards, y_points_forwards
 def get_points_for_backward_Heun(start, backward_steps, h, fbar, main_frame, xmin, xmax, ymin, ymax, xpad, ypad, settings):
     x_points_backwards=[0.0 for i in range(backward_steps+1)] # +1 since need a spot for the origional location
     y_points_backwards=[0.0 for i in range(backward_steps+1)]
+    def fill_remainder(i): # to prevent random line going back to origin
+        for j in range(i, backward_steps,1): 
+            x_points_backwards[j+1] = x_points_backwards[i+1]
+            y_points_backwards[j+1] = y_points_backwards[i+1]
     x_points_backwards[0]=start[0]
     y_points_backwards[0]=start[1]
     hh = h/2    #hh = half h
@@ -332,6 +361,7 @@ def get_points_for_backward_Heun(start, backward_steps, h, fbar, main_frame, xmi
                 x_points_backwards[i+1]=x_bar[0]
                 y_points_backwards[i+1]=x_bar[1]
                 if(passed_boundary(x_points_backwards[i+1], y_points_backwards[i+1], xmin, ymin, xmax, ymax, xpad, ypad, main_frame, i, w, forwards=False, settings=settings)==True):
+                    fill_remainder(i)
                     return x_points_backwards, y_points_backwards
         except OverflowError as ex:
             print("")
@@ -340,16 +370,19 @@ def get_points_for_backward_Heun(start, backward_steps, h, fbar, main_frame, xmi
                 termination_warning.Warning("WARNING, process haulted due to numerical error\nwhen going backwards in time.", cwd=settings["cwd"])
                 termination_warning.Show()
             check_warnings_plotted_lines(main_frame, settings, w)
+            fill_remainder(i)
             return x_points_backwards, y_points_backwards
         except ZeroDivisionError as ex:
             Zero_Error = popup_windows.popup_window(main_frame)
             Zero_Error.Error("Error, had to divide by zero somewhere when plotting curve(s) going backward in time. Program may have been able to proceed, but note there may be large numarical errors when making a curve in your plot.", cwd=settings["cwd"])
             Zero_Error.Show()
+            fill_remainder(i)
             return x_points_backwards, y_points_backwards
         except Exception as ex:
             Zero_Error = popup_windows.popup_window(main_frame)
             Zero_Error.Error("Error, somewhere when plotting curve(s) going backward in time. I do not know what is wrong. feel free to reach out at samuelcstreet@gmail.com and I can try and help you.", cwd=settings["cwd"])
             Zero_Error.Show()
+            fill_remainder(i)
             return x_points_backwards, y_points_backwards
     check_warnings_plotted_lines(main_frame, settings, w)
     return x_points_backwards, y_points_backwards

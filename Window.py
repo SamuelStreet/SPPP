@@ -628,6 +628,7 @@ class MainFrame(wx.Frame):
 
         variables_text.strip() # takes extra white space off the ends
 
+        #self.fig = ...
         make_figure(self,dxdt_text=dxdt_text99, dydt_text=dydt_text99, settings=self.settings, variables_text = variables_text, from_settings=from_settings)
 
         self.reset_display()
@@ -638,8 +639,14 @@ class MainFrame(wx.Frame):
             filepath = "file:///"+self.settings["cwd"]+"/Graphs/Display_Plot.html"
         else:
             filepath = "file:///"+self.settings["cwd"]+"/_internal/Graphs/Display_Plot.html"
-        #self.display.ClearBackground()
         self.display.display.LoadURL(filepath)
+        #self.display.display.LoadURL(self.fig.write_html())
+        
+
+        #from dash import Dash, dcc, html
+
+        #app = Dash()
+        #self.display.display.LoadURL(html.Div())
 
 
         
