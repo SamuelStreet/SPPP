@@ -387,7 +387,6 @@ def get_points_for_backward_Heun(start, backward_steps, h, fbar, main_frame, xmi
     check_warnings_plotted_lines(main_frame, settings, w)
     return x_points_backwards, y_points_backwards
 
-#File for making the phase plot
 def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from_settings=False):    
     try:
         exec(variables_text.strip())
@@ -414,8 +413,12 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
     xdensity = settings["xdensity"]
     ydensity = settings["ydensity"]
     h = settings["h"]
-    forward_steps = settings["forward_steps"]
-    backward_steps = settings["backward_steps"]
+    if(settings["use_time"]==False):
+        forward_steps = settings["forward_steps"]
+        backward_steps = settings["backward_steps"]
+    else:
+        forward_steps = settings["forward_steps"]
+        backward_steps = settings["backward_steps"]
     method = settings["method"]
     arrow_scale = settings["arrow_scale"]
 
@@ -548,12 +551,11 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
                 Unknown_Error = popup_windows.popup_window(main_frame)
                 Unknown_Error.Error("I do not know how this happened, if you are seeing this please email samuelcstreet@gmail.com with details about what you are trying to do with the program and he will try and assist.\n\nError Code: " + ex.__str__(), cwd=settings["cwd"])
                 Unknown_Error.Show()
-
+            
     xpad = (xmax-xmin)/20
     ypad = (ymax-ymin)/20
 
     if(from_settings==False or (dxdt_text.strip() !='lambda x, y: ()' and dydt_text.strip() !='lambda x, y: ()')):
-        ### plot line ### Need to upgrade from Eulur
         num_of_start = len(starting_points)
         if(num_of_start != 0):
             for start in starting_points:
@@ -623,6 +625,8 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
                 xanchor="right",
                 x=1
             )) 
+    else:
+        num_of_start=0
     if(num_of_start!=0):
         for start in starting_points:
             fig.add_trace(go.Scatter(

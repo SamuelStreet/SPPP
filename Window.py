@@ -21,7 +21,7 @@ class Display_Window(wx.Panel):
 #This is the main class for the application, settings stored here when running
 class MainFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.1.7")
+        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.1.8")
         
         self.cwd = os.getcwd()
         
@@ -48,20 +48,25 @@ class MainFrame(wx.Frame):
             with open(self.cwd+'/settings.json', "w") as f:
                 f.write(json.dumps(default_class_instance.settings))
         else:
+            default_class_instance = Default() 
             with open(self.cwd+'/settings.json', "r") as json_file:
                 self.settings = json.load(json_file)
             if not os.path.exists(self.cwd+self.settings["settings_file"]):
                 variable_override_warning = popup_windows.popup_window(self)
                 variable_override_warning.Error("ERROR: settings file specified "+ self.settings["settings_file"][1:] + " is missing so I have reverted to default settings", cwd=self.settings["cwd"])
                 variable_override_warning.Show()
-                default_class_instance = Default()
                 self.settings = default_class_instance.settings
             else:
                 with open(self.cwd+self.settings["settings_file"], "r") as json_file:
-                    self.settings = json.load(json_file)
-            
-            ##NOTE: HERE NEEDS TO BE SOMETHING THAT AUTOMATICALLY UPDATES OLD
-            # SETTINGS FILES TO INCLUDE NEW SETTINGS
+                    temp_settings = json.load(json_file)
+                    self.settings = {}
+                for key in default_class_instance.settings.keys(): 
+                    # this makes it so someone does not have to manually adjust old settings to work with new versions of the program
+                    if key in temp_settings.keys():
+                        self.settings[key] = temp_settings[key]
+                    else:
+                        self.settings[key] = default_class_instance.settings[key]
+
             
             if(self.settings["stop_all_warnings"]==True):
                 #This and similar if statements are placed in other spots to avoid some possible inconsistencies.
@@ -315,10 +320,13 @@ class MainFrame(wx.Frame):
 
 
     def settings_button_pushed(self, event):
-        settings_window = popup_windows.popup_window(self)
-        settings_window.Update_Self_for_Settings(settings=self.settings, load = self.load_button_pushed) #fills out information needed for Settings Window
-        settings_window.Settings() #Makes settings window and then returns new setting (which are used) in settings_window.settings
-        settings_window.Show()
+        if(hasattr(MainFrame, "settings_window")):
+            self.settings_window.Show()
+        else:
+            self.settings_window = popup_windows.popup_window(self)
+            self.settings_window.Update_Self_for_Settings(settings=self.settings, load = self.load_button_pushed) #fills out information needed for Settings Window
+            self.settings_window.Settings() #Makes settings window and then returns new setting (which are used) in settings_window.settings
+            self.settings_window.Show()
 
     def save_file_button_pushed(self, event):
         ##### this is from https://www.blog.pythonlibrary.org/2010/06/26/the-dialogs-of-wxpython-part-1-of-2/
@@ -402,7 +410,8 @@ class MainFrame(wx.Frame):
         window = popup_windows.popup_window(self)
         window.Help("HELP:\n"
                     +"\tTo use this program enter the ODEs you would like to model in the dx/dt and dy/dt boxes\n"
-                    +"\tand then press the play button (►).\n"
+                    +"\tand then press the play button (►). (WARNING, PRESSING THE (►) BUTTON DOES NOT SAVE\n"
+                    +"\tSETTING IF A SETTINGS WINDOW IS OPEN AND A SETTING HAS BEEN CHANGED)\n"
                     +"\t\tThe following functions may be used:\n"
                     +"\t\t\tsin, cos, tan, arcsin, arccos, arctan, sinh, cosh, tanh, log = ln, log10, log2\n"
                     +"\tIndicate any variables you would like to use in the variables box by typing them out\n"
@@ -424,25 +433,25 @@ class MainFrame(wx.Frame):
                     +"\tarrow_scale    : Sets the scale of the arrows used in the phase plot:\n"
                         +"\t\t\t 1 means arrows are the actual size, <1 means arrows will appear smaller than they \n"
                         +"\t\t\t really are, >1 means arrows appear bigger. If you set to 0 then the arrows will\n"
-                        +"\t\t\t be made to be the same size"
+                        +"\t\t\t be made to be the same size\n"
                     +"\tstarting_points: This should be a list of tuple(s) which contain the starting points you\n"
                         +"\t\t\t would like the plot to start from, for example [(1,1)] would mean the plot will \n"
                         +"\t\t\t start from the coordinates (1,1), [(1,1),(1,2)] would mean the plot will draw 2 \n"
                         +"\t\t\t separate lines, (from (1,1) and the other from (2,1))\n"
-                    +"\show_legend: True if you want a legend, False if you do not"
+                    +"\tshow_legend: True if you want a legend, False if you do not"
                     +"\n"
                     +"\tGraph_Background_Settings:\n"
                     +"\th              : This is the change value used in numarical integration\n"
                     +"\txdensity       : The number of arrows used along the x axis in the phase plot\n"
                     +"\tydensity       : The number of arrows used along the y axis in the phase plot\n"
-                    +"\tspecify_time   : True or False, if true then the forward steps and backwards steps will\n"
+                    +"\tuse_time   : True or False, if true then the forward steps and backwards steps will\n"
                         +"\t\t\tbe dissabled and changed based on the forward_time and backward_time given.\n"
                     +"\tforward_steps  : Sets the number of iterations of the numarical integration technique\n"
                         +"\t\t\t chosen will use when going forward in time\n"
                     +"\tbackward_steps : Same as forward_steps but for going backwards in time\n"
                     +"\tforward_time   : If you would prefer you can give an amount of time you would like to go\n"
-                        +"\t\t\tforward in time and then the step will be calculated automatically,\n"
-                        +"\t\t\tWARNING specify_time must be set to True in order for this feature to work.\n"
+                        +"\t\t\tforward in time and then the forward_steps will be calculated automatically,\n"
+                        +"\t\t\tWARNING use_time must be set to True in order for this feature to work.\n"
                     +"\tbackward_time  : Same as forward_time, but for going backward in time\n"
                     +"\tmethod         : Choose the numerical method that you would like to use. Currently can\n"
                         +"\t\t\t choose between Euler (euler or e) and Runge Kutta (runge kutta, kutta, r, k)\n"
@@ -460,10 +469,10 @@ class MainFrame(wx.Frame):
                         +"\t\t\tnumerical issues.\n"
                     +"\tstop_improper_power_phase_plot_warning: Stop getting warnings when making the phase plot when\n"
                         +"\t\t\tthere has been an inproper power usage, for example (-5)^0.5, since you cannot take\n"
-                        +"\t\t\tthe square root of a negative number."
+                        +"\t\t\tthe square root of a negative number.\n"
                     +"\tstop_improper_power_plotted_lines_warning: Stop getting warnings when making plots from the\n"
                         +"\t\t\tinitial conditions given there has been an inproper power usage, for example (-5)^0.5,\n"
-                        +"\t\t\tsince you cannot take the square root of a negative."
+                        +"\t\t\tsince you cannot take the square root of a negative.\n"
                     +"\tstop_invalid_value_in_function_in_phase_plot_warning: Stop getting warning when making the\n"
                         +"\t\t\tphase plot and an invalid value has been attempted to be used in a function (ex \n"
                         +"\t\t\tarccos(2) or cos(inf)). This warning is fairly typical if plotting in a range a \n"
@@ -496,8 +505,9 @@ class MainFrame(wx.Frame):
                     +"\tsettings_file: stores the location of the settings file being used, an absolute path will work\n"
                     +"\ton Windows."
                     +"\tSettings Buttons:\n"
-                    +"\t\tApply: Applies settings, but does not save them\n"
+                    +"\t\tApply: Applies settings, but does not save them if the porgram is closed\n"
                     +"\t\tSave: Applies and saves settings in the indicated file\n"
+                        +"\t\t\t\t\tWARNING: THIS BUTTON WILL NOT WORK UNLESS dx/dt AND dy/dt ARE SPECIFIED.\n"
                     +"\t\tReset: Resets all settings to the indicated file\n"
                     +"\t\tDefault: Resets all setting to default values if needed\n"
                     +"Save Button:\n"
@@ -511,9 +521,10 @@ class MainFrame(wx.Frame):
                     +"\n\nNote: \n"
                         +"\tThis plotter program will stop plotting soon after a max or min value is reached \n"
                     +"\n\nFEEDBACK + BUG REPORT: \n"
-                        +"\tIf you have feedback on this program I would be happy to hear it and would also be\n"
-                        +"\tinterested in knowing what you are using the program for if you don't mind sharing,\n"
-                        +"\tfeel free to reach out at samuelcstreet@gmail.com\n\n"
+                        +"\tThis appication is a work in progress. If you have feedback on this program I would\n"
+                        +"\tbe happy to hear it and would also be interested in knowing what you are using the\n"
+                        +"\tprogram for if you don't mind sharing, feel free to reach out at samuelcstreet@gmail.com\n"
+                        +"\n"
                         +"\tIf you happen to find a bug I would be happy to know about it so I can fix it, feel\n"
                         +"\tfree to let me know at samuelcstreet@gmail.com\n", self.settings["cwd"])
 
@@ -640,7 +651,9 @@ class MainFrame(wx.Frame):
         else:
             filepath = "file:///"+self.settings["cwd"]+"/_internal/Graphs/Display_Plot.html"
         self.display.display.LoadURL(filepath)
-        #self.display.display.LoadURL(self.fig.write_html())
+        
+        # self.display.display.LoadURL("http://127.0.0.1:8050")
+        # self.display.display.LoadURL(self.fig.write_html())
         
 
         #from dash import Dash, dcc, html

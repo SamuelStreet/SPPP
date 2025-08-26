@@ -15,7 +15,7 @@ class Default:
         "h": 0.01,
         "xdensity": 20,
         "ydensity": 20,
-        "specify_time": False,
+        "use_time": False,
         "forward_steps": 1000,
         "backward_steps": 1000,
         "forward_time": 10,

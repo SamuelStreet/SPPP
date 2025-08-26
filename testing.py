@@ -109,4 +109,4 @@ def get_click(graph_figure, clickData):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=8051)

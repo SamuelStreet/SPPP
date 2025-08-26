@@ -17,8 +17,31 @@ class popup_window(wx.Frame):
             icon = wx.Icon(cwd+"/_internal/Photos/Help_Icon.png")
         self.SetIcon(icon)
         size = (1150, 500)
+
+        '''#Alternate method of displaying help, may need to implement this method to prevent 
+        #slow scrolling 
+        self.panel = wx.Panel(self)
+        self.l1 = wx.BoxSizer(wx.VERTICAL)
+        self.l2 = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.help_scroller_panel = wx.lib.scrolledpanel.ScrolledPanel(self.panel,-1,size=size, style=wx.SIMPLE_BORDER|wx.EXPAND)
+        self.help_scroller_panel.SetupScrolling(scroll_x=False, scroll_y=True)
+        self.help_scroller_panel.SetBackgroundColour('#FFFFFF')
+
+        self.help_text_panel = wx.Panel(self.help_scroller_panel)
+        font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        help_textbox = wx.StaticText(parent=self.help_text_panel, id=-1, label = text, style=wx.ALIGN_LEFT, size=(size[0]-40, 2200), pos=(10,10))
+        help_textbox.SetFont(font)
+        self.l2.Add(self.help_text_panel, proportion=1)
+
+        self.help_scroller_panel.SetSizer(self.l2)
+        self.l1.Add(self.help_scroller_panel, proportion=1, flag=wx.EXPAND)
+
+        self.panel.SetSizer(self.l1)
+        self.Layout()'''
+
         self.panel = wx.lib.scrolledpanel.ScrolledPanel(self, -1, pos=(0,0), size=size, style=wx.SIMPLE_BORDER)
-        self.panel.SetupScrolling()
+        self.panel.SetupScrolling(scroll_x=False, scroll_y=True)
         # self.panel.SetScrollPos(wx.VERTICAL, wx.EVT_SCROLL,True)
         # need to add something that changes the position of the scrollbar on scrolling
         self.SetSize(size)
@@ -113,7 +136,7 @@ class popup_window(wx.Frame):
         self.l3_h = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_xdensity = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_ydensity = wx.BoxSizer(wx.HORIZONTAL)
-        self.l3_specify_time = wx.BoxSizer(wx.HORIZONTAL)
+        self.l3_use_time = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_forward_steps = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_backward_steps = wx.BoxSizer(wx.HORIZONTAL)
         self.l3_forward_time = wx.BoxSizer(wx.HORIZONTAL)
@@ -241,11 +264,25 @@ class popup_window(wx.Frame):
         self.settings["h"] = float(self.h_setting_box.GetValue())
         self.settings["xdensity"] = float(self.xdensity_setting_box.GetValue())
         self.settings["ydensity"] = float(self.ydensity_setting_box.GetValue())
-        self.settings["specify_time"] = True if (self.specify_time_setting_box.GetValue() == "True") else False
-        self.settings["forward_steps"] = int(self.forward_steps_setting_box.GetValue())
-        self.settings["backward_steps"] = int(self.backward_steps_setting_box.GetValue())
-        self.settings["forward_time"] = int(self.forward_time_setting_box.GetValue())
-        self.settings["backward_time"] = int(self.backward_time_setting_box.GetValue())
+        self.settings["use_time"] = True if (self.use_time_setting_box.GetValue() == "True") else False
+        if(self.settings["use_time"]==False):
+            self.settings["forward_steps"] = int(self.forward_steps_setting_box.GetValue())
+            self.settings["backward_steps"] = int(self.backward_steps_setting_box.GetValue())
+            forward_time = self.settings["forward_steps"]*self.settings["h"]
+            backward_time = self.settings["backward_steps"]*self.settings["h"]
+            self.settings["forward_time"] = forward_time
+            self.settings["backward_time"] = backward_time
+            self.forward_time_setting_box.SetValue(str(self.settings["forward_time"]))
+            self.backward_time_setting_box.SetValue(str(self.settings["backward_time"]))
+        else:
+            self.settings["forward_time"] = float(self.forward_time_setting_box.GetValue())
+            self.settings["backward_time"] = float(self.backward_time_setting_box.GetValue())
+            forward_steps = round(self.settings["forward_time"]/self.settings["h"])
+            backward_steps = round(self.settings["backward_time"]/self.settings["h"])
+            self.settings["forward_steps"]= forward_steps
+            self.settings["backward_steps"]= backward_steps
+            self.forward_steps_setting_box.SetValue(str(self.settings["forward_steps"]))
+            self.backward_steps_setting_box.SetValue(str(self.settings["backward_steps"]))
         self.settings["method"] = self.method_setting_box.GetValue()
 
         self.settings["Warning_Settings"]= ""
@@ -339,6 +376,7 @@ class popup_window(wx.Frame):
                     f.write(json.dumps(temp_settings))
 
     def reset_settings_button_pushed(self, sig=None):
+        #Wrong Self
         if(self.settings["settings_file"][0]!="/" and self.settings["settings_file"][0:1]!="\\"):
             self.settings["settings_file"] = "/"+self.settings["settings_file"]
         elif(self.settings["settings_file"][0:1]=="\\"):#windows allows \\ and / in path names, Linux allows /, this prevents user errors
@@ -352,8 +390,11 @@ class popup_window(wx.Frame):
             variable_override_warning = popup_window(self).Error("Error: settings file specified "+ self.settings["settings_file"][1:] + " is missing so I don't know where to go", cwd=cwd)
             variable_override_warning.Show()
         else:
+            #NOTE: DO NOT USE "self.settings = json.load(json_file)", it will make it so things do not work properly 
             with open(self.settings["cwd"]+self.settings["settings_file"], "r") as json_file:
-                self.settings = json.load(json_file)
+                temp_settings = json.load(json_file)
+            for key in self.settings.keys():
+                self.settings[key] = temp_settings[key]
 
             # Graph_Visual:
             self.title_setting_box.SetValue(str(self.settings["title"]))
@@ -371,11 +412,29 @@ class popup_window(wx.Frame):
             self.h_setting_box.SetValue(str(self.settings["h"]))
             self.xdensity_setting_box.SetValue(str(self.settings["xdensity"]))
             self.ydensity_setting_box.SetValue(str(self.settings["ydensity"]))
-            self.specify_time_setting_box.SetValue(str(self.settings["specify_time"]))
-            self.forward_steps_setting_box.SetValue(int(self.settings["forward_steps"]))
-            self.backward_steps_setting_box.SetValue(int(self.settings["backward_steps"]))
-            self.forward_time_setting_box.SetValue(int(self.settings["forward_time"]))
-            self.backward_time_setting_box.SetValue(int(self.settings["backward_time"]))
+            self.use_time_setting_box.SetValue(str(self.settings["use_time"]))
+            if(self.settings["use_time"]==False):
+                self.forward_steps_setting_box.SetValue(str(self.settings["forward_steps"]))
+                self.backward_steps_setting_box.SetValue(str(self.settings["backward_steps"]))
+
+                forward_time = self.settings["forward_steps"]*self.settings["h"]
+                backward_time = self.settings["backward_steps"]*self.settings["h"]
+                self.settings["forward_time"] = forward_time
+                self.settings["backward_time"] = backward_time
+
+                self.forward_time_setting_box.SetValue(str(self.settings["forward_time"]))
+                self.backward_time_setting_box.SetValue(str(self.settings["backward_time"]))
+            else:
+                self.forward_time_setting_box.SetValue(str(self.settings["forward_time"]))
+                self.backward_time_setting_box.SetValue(str(self.settings["backward_time"]))
+                
+                forward_steps = round(self.settings["forward_time"]/self.settings["h"])
+                backward_steps = round(self.settings["backward_time"]/self.settings["h"])
+                self.settings["forward_steps"]= forward_steps
+                self.settings["backward_steps"]= backward_steps
+
+                self.forward_steps_setting_box.SetValue(str(self.settings["forward_steps"]))
+                self.backward_steps_setting_box.SetValue(str(self.settings["backward_steps"]))
             self.method_setting_box.SetValue(str(self.settings["method"]))
 
             #Warnings:
@@ -434,11 +493,12 @@ class popup_window(wx.Frame):
         self.settings["h"] = default_class_instance.settings["h"]
         self.settings["xdensity"] = default_class_instance.settings["xdensity"]
         self.settings["ydensity"] = default_class_instance.settings["ydensity"]
+        self.settings["use_time"] = default_class_instance.settings["use_time"] # No if statement needed since the Default setting have no contradiction
         self.settings["forward_steps"] = default_class_instance.settings["forward_steps"]
         self.settings["backward_steps"] = default_class_instance.settings["backward_steps"]
         self.settings["method"] = default_class_instance.settings["method"]
 
-        self.settings["Warning_Settings"]= default_class_instance.settings["Warning_Settings"]
+        self.settings["Warning_Settings"]= default_class_instance.settings["Warning_Settings"] # No if statement needed for the same reason
         self.settings["stop_all_warnings"] = default_class_instance.settings["stop_all_warnings"]
         self.settings["stop_variable_override_warning"] = default_class_instance.settings["stop_variable_override_warning"]
         self.settings["stop_termination_warning"] = default_class_instance.settings["stop_termination_warning"]
@@ -473,11 +533,11 @@ class popup_window(wx.Frame):
         self.h_setting_box.SetValue(str(self.settings["h"]))
         self.xdensity_setting_box.SetValue(str(self.settings["xdensity"]))
         self.ydensity_setting_box.SetValue(str(self.settings["ydensity"]))
-        self.specify_time_setting_box.SetValue(str(self.settings["specify_time"]))
+        self.use_time_setting_box.SetValue(str(self.settings["use_time"]))
         self.forward_steps_setting_box.SetValue(int(self.settings["forward_steps"]))
         self.backward_steps_setting_box.SetValue(int(self.settings["backward_steps"]))
-        self.forward_time_setting_box.SetValue(int(self.settings["forward_time"]))
-        self.backward_time_setting_box.SetValue(int(self.settings["backward_time"]))
+        self.forward_time_setting_box.SetValue(float(self.settings["forward_time"]))
+        self.backward_time_setting_box.SetValue(float(self.settings["backward_time"]))
         self.method_setting_box.SetValue(str(self.settings["method"]))
 
         #Warnings:
