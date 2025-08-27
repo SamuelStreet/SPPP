@@ -20,9 +20,8 @@ If working on project then note the following:
 
 To Do:
 -Functionality
-  - Need to be able to click on the plot to pick a point
-  - Time forward and time backwards are not implemented, need to implement
-  - need t implemented
+  - Need to be able to click on the plot to pick a point -- Dificult to actually implement
+  - need t implemented so functions may be f(x,y,t) -- Not so Dificult to implement, but have not taken the time to do it
 
 - Feature
   - should also save time based data as part of a numpy array so that  be nice you could also get different time based.

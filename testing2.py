@@ -1,40 +1,51 @@
-import plotly
+from waitress import serve
+import sys
+from dash import Dash, html, dcc, Input, Output, callback
 import plotly.graph_objects as go
-from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
-init_notebook_mode(connected=True)
-#cf.go_offline()
+global settings
+settings=[[0,0]]
 
-import numpy as np
-np.random.seed(1)
+app = Dash()
 
-x = np.random.rand(100)
-y = np.random.rand(100)
-
-f = go.FigureWidget([go.Scatter(x=x, y=y, mode='markers')])
-
-scatter = f.data[0]
-colors = ['#a3a7e4'] * 100
-scatter.marker.color = colors
-scatter.marker.size = [10] * 100
-f.layout.hovermode = 'closest'
+fig = go.Figure()
+xmin = -10
+xmax = 10
+ymin = -4
+ymax = 4
 
 
-# create our callback function
-def update_point(trace, points, selector):
-    c = list(scatter.marker.color)
-    s = list(scatter.marker.size)
-    for i in points.point_inds:
-        c[i] = '#bae2be'
-        s[i] = 20
-        with f.batch_update():
-            scatter.marker.color = c
-            scatter.marker.size = s
-    plotly.io.show(f, renderer="browser")
+fig.update_layout(
+    width = 629-20,
+    height = 385-20,
 
+)
+xpad = (xmax-xmin)/20
+ypad = (ymax-ymin)/20
+fig.update_layout(xaxis=dict(range=[xmin-xpad,xmax+xpad]))
+fig.update_layout(yaxis=dict(range=[ymin-ypad,ymax+ypad]))
+fig.update_layout(
+title=dict(
+    text= "title"
+),
+xaxis=dict(
+    title=dict(
+        text="x_axis_title"
+    )
+),
+yaxis=dict(
+    title=dict(
+        text="y_axis_title"
+    )
+)
+)
 
-scatter.on_click(update_point)
+app.layout = html.Div([
+    dcc.Graph(figure=fig)
+])
 
-#f.show(renderer="browser")
-f.show(renderer="iframe")
-#f.show(renderer="browser")
+app.layout.
+if __name__ == '__main__':
+    sevrer = serve(app, host="127.0.0.1", port=52244)
+    #https://stackoverflow.com/a/133891/18535692 says should use a port between 49152 and 65535 and avoid ones used by popular apps'''
+    #app.run(debug=True)

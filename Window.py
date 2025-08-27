@@ -260,9 +260,14 @@ class MainFrame(wx.Frame):
         self.Layout()
         self.display.display.SetSize(self.display.GetSize()) # window must be given a size to start or is made really small to start
         self.display.Bind(wx.EVT_SIZE, self.display_resize)
+
+        self.Bind(wx.EVT_CLOSE, self.onClose) # this line of code ws from https://discuss.wxpython.org/t/wx-windows-close-event mar 2013 comment by James_Scholes
         self.Show()
         ############LAYOUT ENDS ##############
 
+    def onClose(self, evt):
+        print("This is working")
+        print(self.settings)
     ###### Functions for Buttons #########
 
     #NOTE: every function must be passed at least a eventnal since the buttons all recieve an event

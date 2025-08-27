@@ -6,9 +6,12 @@ from dash.exceptions import PreventUpdate
 import plotly.express as px
 import numpy as np
 
+#This code is from a forum, I would have to re-find the exact one
+
 # create image and plotly express object
+see=np.zeros(shape=(5, 5, 4))
 fig = px.imshow(
-    np.zeros(shape=(90, 160, 4))
+    see
 )
 fig.add_scatter(
     x=[5, 20, 50],

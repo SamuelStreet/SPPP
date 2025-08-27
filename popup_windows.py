@@ -109,10 +109,10 @@ class popup_window(wx.Frame):
         else:
             icon = wx.Icon(settings["cwd"]+"/_internal/Photos/Settings_Icon.png")
         self.SetIcon(icon)
-        self.SetSize(size); self.SetMinSize(size); self.SetMaxSize(size)
+        self.SetSize(size); self.SetMinSize(size)
         self.panel = wx.Panel(self)
 
-        sw = 200 #setting box width
+        sw = 300 #setting box width
         sh = 20 #setting box height
         slw = 300 #setting label box width
         slh = 20 #setting label box height
@@ -182,7 +182,7 @@ class popup_window(wx.Frame):
             "self."+setting+"_setting_box.SetValue(str(self.settings[\""+setting+"\"]))\n" \
             "#\n" \
             "self.l3_"+setting+".Add(self."+setting+"_panel_1, proportion=3)\n" \
-            "self.l3_"+setting+".Add(self."+setting+"_panel_2, proportion=2)\n"
+            "self.l3_"+setting+".Add(self."+setting+"_panel_2, proportion=3)\n"
 
             return(setting_string)
 

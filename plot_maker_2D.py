@@ -482,7 +482,7 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
                                 x_orig=[x_temp, x_temp + dxdt(x_temp, y_temp)*xdif]
                                 y_orig=[y_temp, y_temp + dydt(x_temp, y_temp)*xdif]
                                 if(x_orig[0]==np.float64(np.nan) or x_orig[1]==np.float64(np.nan) or y_orig[0]==np.float64(np.nan) or y_orig[1]==np.float64(np.nan) or x_orig[0]==np.float64(np.inf) or x_orig[1]==np.float64(np.inf) or y_orig[0]==np.float64(np.inf) or y_orig[1]==np.float64(np.inf) or x_orig[0]==np.float64(-np.inf) or x_orig[1]==np.float64(-np.inf) or y_orig[0]==np.float64(-np.inf) or y_orig[1]==np.float64(-np.inf)):
-                                    continue # NOTE: Efficiency, does not yet work, but if properly implemented would save potentially quite a few operations.
+                                    continue # NOTE: Efficiency, could be improved here
                                 v=[x_orig[1]-x_orig[0], y_orig[1]-y_orig[0]]
                                 L=(v[0]**2+v[1]**2)**0.5
                                 v=[arrow_length*(v[0]/L), arrow_length*(v[1]/L)]
