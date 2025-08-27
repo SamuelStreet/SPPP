@@ -391,23 +391,32 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
     try:
         exec(variables_text.strip())
     except:
-        variable_error_window = popup_windows.popup_window(main_frame)
-        variable_error_window.Error("ERROR, please check over your variables", cwd=settings["cwd"])
-        variable_error_window.Show()
-    
+        if(auto_initial_plot_creation==True):
+            pass #no reason to throw error for setting not being there in this case. 
+        else:
+            variable_error_window = popup_windows.popup_window(main_frame)
+            variable_error_window.Error("ERROR, please check over your variables", cwd=settings["cwd"])
+            variable_error_window.Show()
+        
     try:
         dxdt = eval(dxdt_text)
     except:
-        dxdt_error_window = popup_windows.popup_window(main_frame)
-        dxdt_error_window.Error("ERROR, I think there might be something wrong with your dx/dt statement, are all your variables defined?", cwd=settings["cwd"])
-        dxdt_error_window.Show()
+        if(auto_initial_plot_creation==True):
+            pass #no reason to throw error for setting not being there in this case. 
+        else:
+            dxdt_error_window = popup_windows.popup_window(main_frame)
+            dxdt_error_window.Error("ERROR, I think there might be something wrong with your dx/dt statement, are all your variables defined?", cwd=settings["cwd"])
+            dxdt_error_window.Show()
     
     try:
         dydt = eval(dydt_text)
     except:
-        dydt_error_window = popup_windows.popup_window(main_frame)
-        dydt_error_window.Error("ERROR, I think there might be something wrong with your dy/dt statement, are all your variables defined?", cwd=settings["cwd"])
-        dydt_error_window.Show()
+        if(auto_initial_plot_creation==True):
+            pass #no reason to throw error for setting not being there in this case. 
+        else:
+            dydt_error_window = popup_windows.popup_window(main_frame)
+            dydt_error_window.Error("ERROR, I think there might be something wrong with your dy/dt statement, are all your variables defined?", cwd=settings["cwd"])
+            dydt_error_window.Show()
 
     starting_points = settings["starting_points"]
     xdensity = settings["xdensity"]
