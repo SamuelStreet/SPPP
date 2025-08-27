@@ -13,6 +13,10 @@ Ubuntu24.04.2
 3) Expand Window a little
 4) Use
 
+Ubuntu 22.04.5 LTS
+1) Download+Unzip
+2)
+
 Other: afraid you will have to comile the project using the steps below, sorry.
 
 
@@ -69,7 +73,8 @@ python -m venv SPPP_Environment/location/you/want/it
 path\of\SPPP_Environment\Scripts\activate
 
 DEBIAN/Ubuntu:
-Install python + pip
+sudo apt-get install python3
+sudo apt-get install python3-pip
 sudo apt install python3-venv
 python3 -m venv SPPP_Environment (makes a virtual environment for storing python packages this is used to store python packages)
 source directory/of/SPPP_Environment/bin/activate (will make it so that, when compiling SPPP, only packages loaded in SPPP_Environment will be used so less space is taken up)
@@ -92,6 +97,16 @@ and it will work (saved wheel file so it will work from the .whl file to make th
 
 Ubuntu:
 pip install numpy plotly pyinstaller
+sudo add-apt-repository "deb http://gb.archive.ubuntu.com/ubuntu jammy main"; sudo apt-get update; sudo apt-get install libwebkit2gtk-4.0-dev -y;
+
+(((might not be necessary:
+  had some difuculty sudo apt-get install python-dev-is-python3 libgtk-3-dev snapd  libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio freeglut3-dev libjpeg62 libpng-dev libtiff-dev libsdl2-2.0-0 libnotify-bin libsm6 -y
+)))
+(((
+  This alternate might work, but have not yet tested:
+  sudo apt install aptitude; sudo aptitude install libwebkitgtk-1.0-0
+  a solution from https://stackoverflow.com/questions/62301866/how-to-install-the-libwebkitgtk-package-on-ubuntu-20-04-lts
+)))
 pip install -U     -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-24.04.2     wxPython
 
 3)
@@ -121,3 +136,8 @@ cp --dereference -r old/file/path new/file/path
 to get source of all symbolic links
 
 5) In the Dist\internals folder cut the Graphs and Photos 
+
+LINUX Ubuntu 22.04.5 LTS
+a) pyinstaller -D --clean --strip --name "SPPP v0.2.1" --icon="/home/samuelstreet/Downloads/PPP_Github_Spot/PPP/Photos/PPP_Logo.ico" --noconsole --add-data "/home/samuelstreet/Downloads/PPP_Github_Spot/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/PPP_Github_Spot/PPP/Photos:Photos" "/home/samuelstreet/Downloads/PPP_Github_Spot/PPP/Phase_Plot_App_Launcher.py"
+
+b) 
