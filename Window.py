@@ -21,7 +21,7 @@ class Display_Window(wx.Panel):
 #This is the main class for the application, settings stored here when running
 class MainFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.1.8")
+        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.1.9")
         
         self.cwd = os.getcwd()
         
