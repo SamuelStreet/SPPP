@@ -63,6 +63,9 @@ Low Priority
   (low priority since it requires that user went into json file and then modified it)
 
 To work in vscode will need
+git config --global user.email "samuelcstreet@gmail.com"
+git config --global user.name "SamuelStreet"
+
 1)
 Windows:
 Install python + pip
