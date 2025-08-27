@@ -22,6 +22,7 @@ To Do:
 -Functionality
   - Need to be able to click on the plot to pick a point -- Dificult to actually implement
   - need t implemented so functions may be f(x,y,t) -- Not so Dificult to implement, but have not taken the time to do it
+  - Make it so the blank graph is made after the program user first downloads the program, this will make the program downlaod take up less space. 
 
 - Feature
   - should also save time based data as part of a numpy array so that  be nice you could also get different time based.
@@ -102,7 +103,7 @@ If using Windows make sure vs code changes directory to venv directory
 (when using pyinstaller use -D to get a way faster program, slightly more work for user to accesss first time but loads way quicker)
 
 Windows
-pyinstaller -D --name "SPPP V0.1.9" --icon="C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos/PPP_Logo.ico" --noconsole --add-binary "c:\Users\Samuel\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\WebView2Loader.dll;.\wx" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Graphs;Graphs" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos;Photos" "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Phase_Plot_App_Launcher.py"
+pyinstaller -D --name "SPPP V0.2.0" --icon="C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos/PPP_Logo.ico" --noconsole --add-binary "c:\Users\Samuel\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\WebView2Loader.dll;.\wx" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Graphs;Graphs" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos;Photos" "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Phase_Plot_App_Launcher.py"
 
 
 FOR ALL LINUX -- Should find a way to add --strip to make files smaller

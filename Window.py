@@ -21,7 +21,7 @@ class Display_Window(wx.Panel):
 #This is the main class for the application, settings stored here when running
 class MainFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.1.9")
+        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.2.0")
         
         self.cwd = os.getcwd()
         
@@ -119,10 +119,20 @@ class MainFrame(wx.Frame):
         bh = 40 # button height
         bw = 40 # button width
         global filepath
-        if os.path.exists(self.cwd+"/Graphs"):
+        if os.path.exists(self.cwd+"/Graphs/Display_Plot_Clear.html"):
             filepath = "file:///"+self.cwd+"/Graphs/Display_Plot_Clear.html"
-        else:
+        elif os.path.exists(self.cwd+"/_internal/Graphs/Display_Plot_Clear.html"):
             filepath = "file:///"+self.cwd+"/_internal/Graphs/Display_Plot_Clear.html"
+        else:
+            make_figure(main_frame=None, dxdt_text="", dydt_text="", settings=self.settings, variables_text="", from_settings=False, auto_initial_plot_creation=True)
+            if os.path.exists(self.cwd+"/Graphs"):
+                filepath = "file:///"+self.cwd+"/Graphs/Display_Plot_Clear.html"
+            elif os.path.exists(self.cwd+"/_internal/Graphs"):
+                filepath = "file:///"+self.cwd+"/_internal/Graphs/Display_Plot_Clear.html"
+            else:
+                folder_missing_error = popup_windows.popup_window(self)
+                folder_missing_error.Error("ERROR: Graphs folder missing, please make a folder called \"Graphs\" you may place this either in the same spot as your executable file or inside the /_internal folder. Or re-instaling the program will likely fix this issue.", cwd=self.settings["cwd"])
+                folder_missing_error.Show()
         self.display = Display_Window(self.panel)
         self.display.SetBackgroundColour("#ffffff")
 
@@ -268,6 +278,7 @@ class MainFrame(wx.Frame):
     def onClose(self, evt):
         print("This is working")
         print(self.settings)
+        wx.Exit()
     ###### Functions for Buttons #########
 
     #NOTE: every function must be passed at least a eventnal since the buttons all recieve an event
@@ -531,7 +542,32 @@ class MainFrame(wx.Frame):
                         +"\tprogram for if you don't mind sharing, feel free to reach out at samuelcstreet@gmail.com\n"
                         +"\n"
                         +"\tIf you happen to find a bug I would be happy to know about it so I can fix it, feel\n"
-                        +"\tfree to let me know at samuelcstreet@gmail.com\n", self.settings["cwd"])
+                        +"\tfree to let me know at samuelcstreet@gmail.com\n\n"
+                    +"THANKS:\n"
+                        +"\tThanks to Dr. Tyson for the idea to have uniform arrows and first teaching me differential equations\n"
+                        +"\tThanks to PPlane which is a program which I was inspired by to create this program\n"
+                        +"\tThanks to the following websites (which is far from a complete list, but are some of the\n"
+                        +"\tmany forums I have used):\n"
+                        +"\thttps://www.youtube.com/watch?v=95ResI6x7Ww very usefule tutorial on wxPython\n"
+                        +"\thttps://www.youtube.com/watch?v=h9uGgngvr10 also very useful video\n"
+                        +"\thttps://htmlcolorcodes.com/ for finding html colors from scratch\n"
+                        +"\thttps://stackoverflow.com/questions/12498691/how-can-i-place-a-panel-in-another-panel to help with class based set up\n"
+                        +"\thttps://www.youtube.com/watch?v=GV6dx82E_PE buttons (also used other videos in this series for other information)\n"
+                        +"\thttps://www.youtube.com/watch?v=C3VX74g75Kc&t=1s for placing a photo on background of panel\n"
+                        +"\thttps://stackoverflow.com/a/21378718/18535692 for aid with making verticle scroll bars\n"
+                        +"\thttps://discuss.python.org/t/runtime-warnings-in-python/52172/5 for catching warnings\n"
+                        +"\thttps://www.geeksforgeeks.org/python/one-liner-for-python-if-elif-else-statements/ one line if statements\n"
+                        +"\thttps://stackoverflow.com/a/82846/18535692 -- how to check if a path exists.\n"
+                        +"\thttps://www.myphysicslab.com/explain/runge-kutta-en.html Runge-Kutta multivariable (All >= 1D) explination\n"
+                        +"\thttps://math.libretexts.org/Bookshelves/Calculus/Calculus_(OpenStax)/14%3A_Differentiation_of_Functions_of_Several_Variables/14.05%3A_The_Chain_Rule_for_Multivariable_Functions --- For Chain rule in multiple dimentions\n"
+                        +"\tchrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://www.math.ntnu.no/emner/TMA4130/2021h/lectures/IntroductionNuMeODE.pdf -- Heun's method (there is also an explination for Eulers method there)\n"
+                        +"\tstack overflow in general - many questions\n"
+                        +"\twxPython documentation - of course\n"
+                        +"\tmany wxPython comment groups\n"
+                        +"\tGoogle Draw - for icons\n"
+                        +"\tScreen Shot of folder for folder icon\n"
+                        +"\tw3 schools for python questions\n"
+                        +"\thttps://www.geeksforgeeks.org also for python questions", self.settings["cwd"])
 
     def load_button_pushed(self, event=None, from_settings = False):
         #For this function all variables have been made longer than 10 characters long so that the user input does not inpact the program

@@ -47,7 +47,7 @@ class popup_window(wx.Frame):
         self.SetSize(size)
         font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         textbox_sizer = wx.BoxSizer(wx.VERTICAL) 
-        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-40, 2200), pos=(10,10))
+        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-40, 2600), pos=(10,10))
         textbox.SetFont(font)
         textbox_sizer.Add(textbox)
         self.panel.SetSizer(textbox_sizer)

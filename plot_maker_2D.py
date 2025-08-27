@@ -387,7 +387,7 @@ def get_points_for_backward_Heun(start, backward_steps, h, fbar, main_frame, xmi
     check_warnings_plotted_lines(main_frame, settings, w)
     return x_points_backwards, y_points_backwards
 
-def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from_settings=False):    
+def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from_settings=False,auto_initial_plot_creation=False):    
     try:
         exec(variables_text.strip())
     except:
@@ -435,8 +435,7 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
             width = main_frame.display.display.GetSize().Width-20,
             height = main_frame.display.display.GetSize().Height-20,
         )
-    else: #This is used if making an image manually for initial plot 
-        #(if making initial image comment out everything below this else statement)
+    elif(auto_initial_plot_creation==True):
         fig.update_layout(
             width = 629-20,
             height = 385-20,
@@ -461,10 +460,43 @@ def make_figure(main_frame, dxdt_text, dydt_text, settings, variables_text, from
             )
         )
         )
+        settings["cwd"] = os.getcwd()
         if os.path.exists(settings["cwd"]+"/Graphs"):
             fig.write_html(settings["cwd"]+"/Graphs/Display_Plot_Clear.html")
         else:
             fig.write_html(settings["cwd"]+"/_internal/Graphs/Display_Plot_Clear.html")
+        return
+    else: #This is used only if making an image manually for initial plot with this file 
+        fig.update_layout(
+            width = 629-20,
+            height = 385-20,
+
+        )
+        xpad = (xmax-xmin)/20
+        ypad = (ymax-ymin)/20
+        fig.update_layout(xaxis=dict(range=[xmin-xpad,xmax+xpad]))
+        fig.update_layout(yaxis=dict(range=[ymin-ypad,ymax+ypad]))
+        fig.update_layout(
+        title=dict(
+            text= settings["title"]
+        ),
+        xaxis=dict(
+            title=dict(
+                text=settings["x_axis_title"]
+            )
+        ),
+        yaxis=dict(
+            title=dict(
+                text=settings["y_axis_title"]
+            )
+        )
+        )
+        settings["cwd"] = os.getcwd()
+        if os.path.exists(settings["cwd"]+"/Graphs"):
+            fig.write_html(settings["cwd"]+"/Graphs/Display_Plot_Clear.html")
+        else:
+            fig.write_html(settings["cwd"]+"/_internal/Graphs/Display_Plot_Clear.html")
+        return
 
     #### phase plot
     if(from_settings==False or (dxdt_text.strip() !='lambda x, y: ()' and dydt_text.strip() !='lambda x, y: ()')):
@@ -667,23 +699,42 @@ if __name__ == "__main__":
     dxdt_text = 'lambda x,y: 5'
     dydt_text = 'lambda x,y: 5'
     settings = {
-        "xmin": -5.0,
-        "xmax": 5.0,
+        "Graph_Visual_Settings": "",
+        "x_axis_title": "x_axis title",
+        "y_axis_title": "y_axis title",
+        "title": "Graph Title",
+        "xmin": -10.0,
+        "xmax": 10.0,
         "ymin": -5.0,
         "ymax": 5.0,
         "arrow_scale": 0.5,
         "starting_points": [[1,1],],
+        "show_legend": True,
+        "Graph_Background_Settings": "",
         "h": 0.01,
         "xdensity": 20,
         "ydensity": 20,
-        "steps": 1000,
-        "method": "Euler",
+        "use_time": False,
+        "forward_steps": 1000,
+        "backward_steps": 1000,
+        "forward_time": 10,
+        "backward_time": 10,
+        "method": "Runge Kutta",
+        "Warning_Settings": "",
+        "stop_all_warnings": False,
         "stop_variable_override_warning": False,
         "stop_termination_warning": False,
-        "settings_file": "/settings.json",
-        "cwd": "C:/Users/Samuel/Downloads/Programming related/Python/PPP",
-        "x_axis_title": "x_axis title",
-        "y_axis_title": "y_axis title",
-        "title": "Graph Title"
+        "stop_numerical_termination_warning": False,
+        "stop_improper_power_plotted_lines_warning": False,
+        "stop_improper_power_phase_plot_warning": False,
+        "stop_invalid_value_in_function_in_phase_plot_warning": False,
+        "stop_invalid_value_in_function_in_plotted_lines_warning": False,
+        "stop_overflow_in_phase_plot_warning": False,
+        "stop_overflow_in_plotted_lines_warning": False,
+        "stop_underflow_in_phase_plot_warning": False,
+        "stop_underflow_in_plotted_lines_warning": False,
+        "Files_Settings": "",
+        "settings_file": "\settings.json",
+        "cwd": "current_working_directory_stored_here"
     }
     make_figure(main_frame=None, dxdt_text=dxdt_text, dydt_text=dydt_text, settings=settings, variables_text="")
