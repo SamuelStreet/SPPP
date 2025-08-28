@@ -107,55 +107,62 @@ and it will work (saved wheel file so it will work from the .whl file to make th
 
 
 Ubuntu:
-#gtk 3
-sudo apt-get install python3
+Explination only for one line
+                                                                                              #gtk 3
+                                                                                              sudo apt-get install python3
 
-sudo apt-get install libgtk-3-dev
+                                                                                              sudo apt-get install libgtk-3-dev
 
-#gstreamer and gstreamer-plugins-base
-apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+                                                                                              #gstreamer and gstreamer-plugins-base
+                                                                                              apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
 
-#glut
-sudo apt-get install freeglut3-dev
+                                                                                              #glut
+                                                                                              sudo apt-get install freeglut3-dev
 
-#libwebkit
-sudo add-apt-repository "deb http://gb.archive.ubuntu.com/ubuntu jammy main"; sudo apt-get update; sudo apt-get install libwebkit2gtk-4.0-dev -y;
+                                                                                              #libwebkit
+                                                                                              sudo add-apt-repository "deb http://gb.archive.ubuntu.com/ubuntu jammy main"; sudo apt-get update; sudo apt-get install libwebkit2gtk-4.0-dev -y;
 
-#libjpeg 
-sudo apt-get install libjpeg-dev
+                                                                                              #libjpeg 
+                                                                                              sudo apt-get install libjpeg-dev
 
-#libpng
-sudo apt-get install libpng-dev
+                                                                                              #libpng
+                                                                                              sudo apt-get install libpng-dev
 
-#libtiff
-Ubuntu 14.04-22.04
-sudo apt install libtiff5
-Ubuntu 23.04-24.10
-sudo apt install libtiff6
+                                                                                              #libtiff
+                                                                                              Ubuntu 14.04-22.04
+                                                                                              sudo apt install libtiff5
+                                                                                              Ubuntu 23.04-24.10
+                                                                                              sudo apt install libtiff6
 
-#libsdl (from gemni instructions with some optional packages that might make things work better)
-sudo apt install libsdl2-dev
-sudo apt install libsdl2-image-dev
-sudo apt install libsdl2-mixer-dev
-sudo apt install libsdl2-ttf-dev
+                                                                                              #libsdl (from gemni instructions with some optional packages that might make things work better)
+                                                                                              sudo apt install libsdl2-dev
+                                                                                              sudo apt install libsdl2-image-dev
+                                                                                              sudo apt install libsdl2-mixer-dev
+                                                                                              sudo apt install libsdl2-ttf-dev
 
-#libnotify
-sudo apt-get install libnotify4
+                                                                                              #libnotify
+                                                                                              sudo apt-get install libnotify4
 
-# libsm
-sudo apt-get install libsm6:i386
+                                                                                              # libsm
+                                                                                              sudo apt-get install libsm6:i386
 
 #As One Command:
-sudo apt-get 
-sudo apt-get install python3 install libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio freeglut3-dev; sudo add-apt-repository "deb http://gb.archive.ubuntu.com/ubuntu jammy main"; sudo apt-get update; sudo apt-get install libwebkit2gtk-4.0-dev libjpeg-dev libpng-dev; sudo apt install libtiff5 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev; sudo apt-get install libnotify4 libsm6:i386
+Ubuntu 22.04
+sudo apt-get install update; sudo apt-get install libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio freeglut3-dev; sudo add-apt-repository "deb http://gb.archive.ubuntu.com/ubuntu jammy main"; sudo apt-get update; sudo apt-get install libwebkit2gtk-4.0-dev libjpeg-dev libpng-dev; sudo apt install libtiff5 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev; sudo apt-get install libnotify4 libsm6:i386
+Ubuntu 24.04
+sudo apt-get install update; sudo apt-get install libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio freeglut3-dev; sudo add-apt-repository "deb http://gb.archive.ubuntu.com/ubuntu jammy main"; sudo apt-get update; sudo apt-get install libwebkit2gtk-4.0-dev libjpeg-dev libpng-dev; sudo apt install libtiff6 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev; sudo apt-get install libnotify4 libsm6:i386
 
-
+Ubuntu 22.04
 pip install -U     -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04.5     wxPython
-
+Ubunut 24.04
+pip install -U     -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-24.04.2     wxPython
 (to make it so popups will work, might only be required for some hardware)
 sudo apt-get install libnvidia-egl-wayland1
 
-pip install numpy plotly pyinstaller
+pip install plotly pyinstaller
+
+(possibly need sudo apt-get install libnvidia-egl-wayland1 then re-start, but I think it wont make a difference)
+
 3)
 If using Windows make sure vs code changes directory to venv directory
 
@@ -165,7 +172,7 @@ If using Windows make sure vs code changes directory to venv directory
 (when using pyinstaller use -D to get a way faster program, slightly more work for user to accesss first time but loads way quicker)
 
 Windows
-pyinstaller -D --name "SPPP V0.2.3" --icon="C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos/PPP_Logo.ico" --noconsole --add-binary "c:\Users\Samuel\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\WebView2Loader.dll;.\wx" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Graphs;Graphs" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos;Photos" "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Phase_Plot_App_Launcher.py"
+pyinstaller -D --name "SPPP V0.2.4" --icon="C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos/PPP_Logo.ico" --noconsole --add-binary "c:\Users\Samuel\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\WebView2Loader.dll;.\wx" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Graphs;Graphs" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos;Photos" "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Phase_Plot_App_Launcher.py"
 
 
 FOR ALL LINUX -- Should find a way to add --strip to make files smaller
@@ -185,6 +192,6 @@ to get source of all symbolic links
 5) In the Dist\internals folder cut the Graphs and Photos 
 
 LINUX Ubuntu 22.04.5 LTS
-a) pyinstaller -D --clean --strip --name "SPPP v0.2.3" --noconsole --add-data "/home/samuelstreet/Downloads/sppp_gitbug_code/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/sppp_gitbug_code/PPP/Photos:Photos" "/home/samuelstreet/Downloads/sppp_gitbug_code/PPP/Phase_Plot_App_Launcher.py"
+a) pyinstaller -D --clean --strip --name "SPPP v0.2.4" --noconsole --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/samuelstreet/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
 
 b) 

@@ -62,14 +62,17 @@ class popup_window(wx.Frame):
         self.SetSize(size)
         self.SetMinSize(size)
         self.SetMaxSize(size)
-        self.panel = wx.Panel(self)
-        textbox = wx.TextCtrl(parent=self.panel, id=-1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
-        textbox.SetLabelText(text)
-        textbox.SetEditable(False)
+        self.panel = wx.Panel(self, -1, pos=(0,0), size=size, style=wx.SIMPLE_BORDER)
         font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        textbox_sizer = wx.BoxSizer(wx.VERTICAL) 
+        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-40, 500), pos=(10,10))
         textbox.SetFont(font)
+        textbox_sizer.Add(textbox)
+        self.panel.SetSizer(textbox_sizer)
+        self.Show()
 
     def Warning(self, text, size = (400, 250), cwd=""):
+        #For some reason Ubunutu likes scroll panneles better, would not show popups of the previous formate
         if os.path.exists(cwd+"/Photos/Warning_Icon.png"):
             icon = wx.Icon(cwd+"/Photos/Warning_Icon.png")
         else:
@@ -78,12 +81,14 @@ class popup_window(wx.Frame):
         self.SetSize(size)
         self.SetMinSize(size)
         self.SetMaxSize(size)
-        self.panel = wx.Panel(self)
-        textbox=wx.TextCtrl(parent=self.panel, id=-1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
-        textbox.SetLabelText(text)
-        textbox.SetEditable(False)
+        self.panel = wx.Panel(self, -1, pos=(0,0), size=size, style=wx.SIMPLE_BORDER)
         font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        textbox_sizer = wx.BoxSizer(wx.VERTICAL) 
+        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-40, 500), pos=(10,10))
         textbox.SetFont(font)
+        textbox_sizer.Add(textbox)
+        self.panel.SetSizer(textbox_sizer)
+        self.Show()
 
     def Error(self, text, size = (400, 250), cwd=""):
         if os.path.exists(cwd+"/Photos/Error_Icon.png"):
@@ -94,12 +99,14 @@ class popup_window(wx.Frame):
         self.SetSize(size)
         self.SetMinSize(size)
         self.SetMaxSize(size)
-        self.panel = wx.Panel(self)
-        textbox = wx.TextCtrl(parent=self.panel, id=-1, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-30, size[1]-50), pos=(10,10))
-        textbox.SetLabelText(text)
-        textbox.SetEditable(False)
+        self.panel = wx.Panel(self, -1, pos=(0,0), size=size, style=wx.SIMPLE_BORDER)
         font = wx.Font(12, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
+        textbox_sizer = wx.BoxSizer(wx.VERTICAL) 
+        textbox = wx.StaticText(parent=self.panel, id=-1, label=text, style=wx.ALIGN_LEFT|wx.TE_MULTILINE, size=(size[0]-40, 500), pos=(10,10))
         textbox.SetFont(font)
+        textbox_sizer.Add(textbox)
+        self.panel.SetSizer(textbox_sizer)
+        self.Show()
 
     def Update_Self_for_Settings(self, settings, load, size = (500, 500)):
         self.load = load
