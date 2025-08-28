@@ -21,7 +21,7 @@ class Display_Window(wx.Panel):
 #This is the main class for the application, settings stored here when running
 class MainFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.2.2")
+        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.2.3")
         
         self.cwd = os.getcwd()
         
@@ -164,7 +164,11 @@ class MainFrame(wx.Frame):
         image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
         settings_photo = wx.BitmapFromImage(image)'''
 
-        settings_photo.Rescale(settings_photo, wx.Size(bw,bh))
+        #Donnot use settings_photo.Rescale(settings_photo, wx.Size(bw,bh)) instead of the next 3 lines as there is a fairlyb large loss in quality
+        image = wx.Bitmap.ConvertToImage(settings_photo)
+        image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
+        settings_photo = wx.Bitmap(image)
+        
         settings_button=wx.BitmapButton(self.panel, -1, settings_photo, pos=(bw, bh), style=wx.NO_BORDER)
         settings_button.Bind(wx.EVT_BUTTON, self.settings_button_pushed)
         settings_button.SetBackgroundColour("#282a30")
@@ -176,7 +180,11 @@ class MainFrame(wx.Frame):
             save_file_photo = wx.Bitmap(self.cwd+"/Photos/Save_Icon.png")
         else:
             save_file_photo = wx.Bitmap(self.cwd+"/_internal/Photos/Save_Icon.png")
-        save_file_photo.Rescale(save_file_photo,wx.Size(bw, bh))
+
+        image = wx.Bitmap.ConvertToImage(save_file_photo)
+        image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
+        save_file_photo = wx.Bitmap(image)
+
         save_file = wx.BitmapButton(self.panel, -1, save_file_photo, pos=(bw, bh), style=wx.NO_BORDER)
         save_file.Bind(wx.EVT_BUTTON, self.save_file_button_pushed)
         save_file.SetBackgroundColour("#282a30")
@@ -187,7 +195,10 @@ class MainFrame(wx.Frame):
             open_file_photo = wx.Bitmap(self.cwd+"/Photos/File_Icon.png")
         else:
             open_file_photo = wx.Bitmap(self.cwd+"/_internal/Photos/File_Icon.png")
-        open_file_photo.Rescale(open_file_photo,wx.Size(bw, bh))
+        image = wx.Bitmap.ConvertToImage(open_file_photo)
+        image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
+        open_file_photo = wx.Bitmap(image)
+
         open_file = wx.BitmapButton(self.panel, -1, open_file_photo, pos=(bw, bh), style=wx.NO_BORDER)
         open_file.Bind(wx.EVT_BUTTON, self.open_file_button_pushed)
         open_file.SetBackgroundColour("#282a30")
@@ -196,7 +207,10 @@ class MainFrame(wx.Frame):
             help_photo = wx.Bitmap(self.cwd+"/Photos/Help_Icon.png")
         else:
             help_photo = wx.Bitmap(self.cwd+"/_internal/Photos/Help_Icon.png")
-        help_photo.Rescale(help_photo,wx.Size(bw, bh))
+        image = wx.Bitmap.ConvertToImage(help_photo)
+        image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
+        help_photo = wx.Bitmap(image)
+        
         help = wx.BitmapButton(self.panel, -1, help_photo, pos=(bw, bh), style=wx.NO_BORDER)
         help.Bind(wx.EVT_BUTTON, self.help_button_pushed)
         help.SetBackgroundColour("#282a30")
@@ -207,7 +221,10 @@ class MainFrame(wx.Frame):
             load_photo = wx.Bitmap(self.cwd+"/Photos/Load_Icon.png")
         else:
             load_photo = wx.Bitmap(self.cwd+"/_internal/Photos/Load_Icon.png")
-        load_photo.Rescale(load_photo,wx.Size(bw, bh))
+        image = wx.Bitmap.ConvertToImage(load_photo)
+        image = image.Scale(bw, bh, wx.IMAGE_QUALITY_HIGH)
+        load_photo = wx.Bitmap(image)
+        
         load = wx.BitmapButton(self.panel, -1, load_photo, pos=(bw, bh), style=wx.NO_BORDER)
         load.Bind(wx.EVT_BUTTON, self.load_button_pushed)
         load.SetBackgroundColour("#282a30")
@@ -295,7 +312,9 @@ class MainFrame(wx.Frame):
             dxdt_label_file_photo = wx.Bitmap(self.cwd+"/Photos/dx__dt.png")
         else:
             dxdt_label_file_photo = wx.Bitmap(self.cwd+"/_internal/Photos/dx__dt.png")
-        dxdt_label_file_photo.Rescale(dxdt_label_file_photo,wx.Size(30, 40))
+        image = wx.Bitmap.ConvertToImage(dxdt_label_file_photo)
+        image = image.Scale(30, 40, wx.IMAGE_QUALITY_HIGH)
+        dxdt_label_file_photo = wx.Bitmap(image)
         dc.DrawBitmap(dxdt_label_file_photo, 5, 0)
     
     
@@ -312,7 +331,9 @@ class MainFrame(wx.Frame):
             dydt_label_file_photo = wx.Bitmap(self.cwd+"/Photos/dy__dt.png")
         else:
             dydt_label_file_photo = wx.Bitmap(self.cwd+"/_internal/Photos/dy__dt.png")
-        dydt_label_file_photo.Rescale(dydt_label_file_photo,wx.Size(30, 40))
+        image = wx.Bitmap.ConvertToImage(dydt_label_file_photo)
+        image = image.Scale(30, 40, wx.IMAGE_QUALITY_HIGH)
+        dydt_label_file_photo = wx.Bitmap(image)
         dc.DrawBitmap(dydt_label_file_photo, 5, 0)
 
     def variable_text_box_resize(self, evt=None):
