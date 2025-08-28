@@ -1,25 +1,3 @@
-Installation instructions:
-Windows:
-1) Download+Unzip
-2) Use
-
-Debian12:
-1) Download+Unzip
-2) Use
-
-Ubuntu24.04.2
-1) Download+Unzip
-2) sudo add-apt-repository "deb http://gb.archive.ubuntu.com/ubuntu jammy main"; sudo apt-get update; sudo apt-get install libwebkit2gtk-4.0-dev -y;
-3) Expand Window a little
-4) Use
-
-Ubuntu 22.04.5 LTS
-1) Download+Unzip
-2)
-
-Other: afraid you will have to comile the project using the steps below, sorry.
-
-
 If working on project then note the following:
 
 To Do:
