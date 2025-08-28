@@ -182,16 +182,13 @@ LINUX Debian12
 pyinstaller -D --clean --strip --name "SPPP v0.2.4" --noconsole --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/samuelstreet/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
 
 LINUX Ubuntu 24.04.2 LTS
-a) pyinstaller -D --icon="/home/Downloads/SPPP_code/PPP/Photos/PPP_Logo.ico" --noconsole --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Graphs:Graphs" --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Photos:Photos" "/home/samuelcstreet/Downloads/SPPP_code/PPP/Phase_Plot_App_Launcher.py"
-Go into internals once compiled grab Graphs and Photos then place them in parent directory
+a) pyinstaller -D --clean --strip --name "SPPP v0.2.4" --noconsole --add-data "/home/vboxuser/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/vboxuser/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/vboxuser/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
 
-b) after application is made with pyinstaller copy and past the file using:
-cp --dereference -r old/file/path new/file/path
+b) cp --dereference -r old/file/path new/file/path
 to get source of all symbolic links
-
-5) In the Dist\internals folder cut the Graphs and Photos 
 
 LINUX Ubuntu 22.04.5 LTS
 a) pyinstaller -D --clean --strip --name "SPPP v0.2.4" --noconsole --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/samuelstreet/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
 
-b) 
+b) cp --dereference -r old/file/path new/file/path
+to get source of all symbolic links
