@@ -179,7 +179,7 @@ FOR ALL LINUX -- Should find a way to add --strip to make files smaller
 https://pyinstaller.org/en/stable/usage.html
 
 LINUX Debian12
-/home/samuelstreet/Downloads/PPP_python_environtment/bin/pyinstaller -D --icon="/home/samuelstreet/Downloads/PPP Github Space/PPP/Photos/PPP_Logo.ico" --noconsole --add-data "/home/samuelstreet/Downloads/PPP Github Space/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/PPP Github Space/PPP/Photos:Photos" "/home/samuelstreet/Downloads/PPP Github Space/PPP/Phase_Plot_App_Launcher.py"
+pyinstaller -D --clean --strip --name "SPPP v0.2.4" --noconsole --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/samuelstreet/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
 
 LINUX Ubuntu 24.04.2 LTS
 a) pyinstaller -D --icon="/home/Downloads/SPPP_code/PPP/Photos/PPP_Logo.ico" --noconsole --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Graphs:Graphs" --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Photos:Photos" "/home/samuelcstreet/Downloads/SPPP_code/PPP/Phase_Plot_App_Launcher.py"
