@@ -160,7 +160,7 @@ LINUX Debian12
 pyinstaller -D --clean --name "SPPP v0.2.4" --noconsole --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/samuelstreet/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
 
 LINUX Ubuntu 24.04.2 LTS
-a) pyinstaller -D --clean --name "SPPP v0.2.4" --noconsole --add-data "/home/vboxuser/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/vboxuser/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/vboxuser/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
+a) pyinstaller -D --clean --noconsole --name "SPPP v0.2.4" --add-data "/home/vboxuser/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/vboxuser/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/vboxuser/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
 
 b) cp --dereference -r old/file/path new/file/path
 to get source of all symbolic links
