@@ -1,25 +1,3 @@
-Installation instructions:
-Windows:
-1) Download+Unzip
-2) Use
-
-Debian12:
-1) Download+Unzip
-2) Use
-
-Ubuntu24.04.2
-1) Download+Unzip
-2) sudo add-apt-repository "deb http://gb.archive.ubuntu.com/ubuntu jammy main"; sudo apt-get update; sudo apt-get install libwebkit2gtk-4.0-dev -y;
-3) Expand Window a little
-4) Use
-
-Ubuntu 22.04.5 LTS
-1) Download+Unzip
-2)
-
-Other: afraid you will have to comile the project using the steps below, sorry.
-
-
 If working on project then note the following:
 
 To Do:
@@ -179,19 +157,16 @@ FOR ALL LINUX -- Should find a way to add --strip to make files smaller
 https://pyinstaller.org/en/stable/usage.html
 
 LINUX Debian12
-/home/samuelstreet/Downloads/PPP_python_environtment/bin/pyinstaller -D --icon="/home/samuelstreet/Downloads/PPP Github Space/PPP/Photos/PPP_Logo.ico" --noconsole --add-data "/home/samuelstreet/Downloads/PPP Github Space/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/PPP Github Space/PPP/Photos:Photos" "/home/samuelstreet/Downloads/PPP Github Space/PPP/Phase_Plot_App_Launcher.py"
+pyinstaller -D --clean --name "SPPP v0.2.4" --noconsole --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/samuelstreet/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
 
 LINUX Ubuntu 24.04.2 LTS
-a) pyinstaller -D --icon="/home/Downloads/SPPP_code/PPP/Photos/PPP_Logo.ico" --noconsole --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Graphs:Graphs" --add-data "/home/samuelcstreet/Downloads/SPPP_code/PPP/Photos:Photos" "/home/samuelcstreet/Downloads/SPPP_code/PPP/Phase_Plot_App_Launcher.py"
-Go into internals once compiled grab Graphs and Photos then place them in parent directory
+a) pyinstaller -D --clean --noconsole --name "SPPP v0.2.4" --add-data "/home/vboxuser/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/vboxuser/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/vboxuser/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
 
-b) after application is made with pyinstaller copy and past the file using:
-cp --dereference -r old/file/path new/file/path
+b) cp --dereference -r old/file/path new/file/path
 to get source of all symbolic links
 
-5) In the Dist\internals folder cut the Graphs and Photos 
-
 LINUX Ubuntu 22.04.5 LTS
-a) pyinstaller -D --clean --strip --name "SPPP v0.2.5" --noconsole --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/samuelstreet/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
+a) pyinstaller -D --clean --name "SPPP v0.2.5" --noconsole --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/samuelstreet/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
 
-b) 
+b) cp --dereference -r old/file/path new/file/path
+to get source of all symbolic links
