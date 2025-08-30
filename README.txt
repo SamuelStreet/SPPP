@@ -73,15 +73,21 @@ Windows:
 pip install wxpython numpy plotly pyinstaller
 
 Debian:
-pip install numpy plotly pyinstaller
 sudo apt-get update;
 sudo apt-get install python-dev-is-python3 libgtk-3-dev snapd  libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio freeglut3-dev libwebkit2gtk-4.0-dev libjpeg62 libpng-dev libtiff-dev libsdl2-2.0-0 libnotify-bin libsm6 -y
 sudo snap install snapd -y;
 sudo snap install gstreamer --edge;
 sudo ldconfig;
-(was told in instructions to get same version as gtk, this is not the same version, but it could be downloaded)
-Then follow https://wxpython.org/blog/2017-08-17-builds-for-linux-with-pip/index.html
-and it will work (saved wheel file so it will work from the .whl file to make things easier)
+
+pip install -U pip; pip install -U six wheel setuptools; pip download wxPython;
+
+##IMPORTANT: Replace the install with the actual file name
+pip wheel -v wxPython-4.2.3.tar.gz  2>&1 | tee build.log
+pip install wxPython-4.0.1-cp35-cp35m-linux_x86_64.whl
+
+pip install plotly pyinstaller
+
+#Can also look at instructions from: https://wxpython.org/blog/2017-08-17-builds-for-linux-with-pip/index.html
 
 
 Ubuntu:
