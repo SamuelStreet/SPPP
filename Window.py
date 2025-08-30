@@ -8,6 +8,7 @@ from Default_Settings import Default
 import popup_windows
 import json
 import os
+from other_funtions import ensure_directory_will_work_on_linxu
 
 global filepath 
 filepath = ''
@@ -21,7 +22,7 @@ class Display_Window(wx.Panel):
 #This is the main class for the application, settings stored here when running
 class MainFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.2.4")
+        wx.Frame.__init__(self, None, title = "S Phase Plane Plotter -- V0.2.5")
         
         self.cwd = os.getcwd()
         
@@ -44,6 +45,7 @@ class MainFrame(wx.Frame):
         # Sets up the settings allow allowing for multiple files. 
         if not os.path.exists(self.cwd+'/settings.json'):
             default_class_instance = Default()
+            default_class_instance.settings["settings_file"] = ensure_directory_will_work_on_linxu(default_class_instance.settings["settings_file"])
             self.settings = default_class_instance.settings
             with open(self.cwd+'/settings.json', "w") as f:
                 f.write(json.dumps(default_class_instance.settings))
@@ -51,6 +53,7 @@ class MainFrame(wx.Frame):
             default_class_instance = Default() 
             with open(self.cwd+'/settings.json', "r") as json_file:
                 self.settings = json.load(json_file)
+                self.settings["settings_file"] = ensure_directory_will_work_on_linxu(self.settings["settings_file"])
             if not os.path.exists(self.cwd+self.settings["settings_file"]):
                 variable_override_warning = popup_windows.popup_window(self)
                 variable_override_warning.Error("ERROR: settings file specified "+ self.settings["settings_file"][1:] + " is missing so I have reverted to default settings", cwd=self.settings["cwd"])
@@ -407,6 +410,7 @@ class MainFrame(wx.Frame):
             
             #makes directory
             #Need to fix this bit so old directory can be created
+            self.settings["settings_file"] = ensure_directory_will_work_on_linxu(self.settings["settings_file"]) # just to make sure nothing is messed up
             if(os.path.exists(self.settings["cwd"]+self.settings["settings_file"]) != True):
                 os.makedirs(self.settings["cwd"]+self.settings["settings_file"], exist_ok=True)
             #copies contents of loaded settings file

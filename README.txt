@@ -172,7 +172,7 @@ If using Windows make sure vs code changes directory to venv directory
 (when using pyinstaller use -D to get a way faster program, slightly more work for user to accesss first time but loads way quicker)
 
 Windows
-pyinstaller -D --name "SPPP V0.2.4" --icon="C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos/PPP_Logo.ico" --noconsole --add-binary "c:\Users\Samuel\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\WebView2Loader.dll;.\wx" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Graphs;Graphs" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos;Photos" "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Phase_Plot_App_Launcher.py"
+pyinstaller -D --name "SPPP V0.2.5" --icon="C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos/PPP_Logo.ico" --noconsole --add-binary "c:\Users\Samuel\AppData\Local\Programs\Python\Python312\Lib\site-packages\wx\WebView2Loader.dll;.\wx" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Graphs;Graphs" --add-data "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Photos;Photos" "C:/Users/Samuel/Downloads/Programming related/Python/PPP/Phase_Plot_App_Launcher.py"
 
 
 FOR ALL LINUX -- Should find a way to add --strip to make files smaller
@@ -192,6 +192,6 @@ to get source of all symbolic links
 5) In the Dist\internals folder cut the Graphs and Photos 
 
 LINUX Ubuntu 22.04.5 LTS
-a) pyinstaller -D --clean --strip --name "SPPP v0.2.4" --noconsole --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/samuelstreet/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
+a) pyinstaller -D --clean --strip --name "SPPP v0.2.5" --noconsole --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Graphs:Graphs" --add-data "/home/samuelstreet/Downloads/sppp_github_code/PPP/Photos:Photos" "/home/samuelstreet/Downloads/sppp_github_code/PPP/Phase_Plot_App_Launcher.py"
 
 b) 
